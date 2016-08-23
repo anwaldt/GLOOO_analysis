@@ -50,17 +50,17 @@ nFiles = length(wavNames);% length(unproc);
 %% Confirm processing
 
 
-if nFiles == nSinFiles
-    button = questdlg('A complete set of sinusoids exists. Do you want to start a re-calculation?');
-    if strcmp(button,'No') || strcmp(button,'Cancel')
-        break
-    end
-else
-    button = questdlg([prepare_samples(baseName, paths, param) 'Complete calculation of ' num2str(nFiles) ' ?' ]);
-    if strcmp(button,'No') || strcmp(button,'Cancel')
-        break
-    end
-end
+% if nFiles == nSinFiles
+%     button = questdlg('A complete set of sinusoids exists. Do you want to start a re-calculation?');
+%     if strcmp(button,'No') || strcmp(button,'Cancel')
+%         break
+%     end
+% else
+%     button = questdlg([prepare_samples(baseName, paths, param) 'Complete calculation of ' num2str(nFiles) ' ?' ]);
+%     if strcmp(button,'No') || strcmp(button,'Cancel')
+%         break
+%     end
+% end
 
 
 
