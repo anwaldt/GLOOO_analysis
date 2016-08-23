@@ -1,0 +1,49 @@
+
+%% find the spectral envelope by using the temporal course harmonics
+%% and linear interpolation
+% \cite{rossignol:1999}
+
+function SPEC_ENV = get_spectral_envelope_harm(tempFreq, tempAmp, nFFT, fs)
+
+% express tempFreq in Bins
+tempFreq = round(tempFreq *nFFT/fs);
+
+% get memory
+SPEC_ENV = zeros(nFFT,size(tempFreq,1));
+    
+%% for each frame
+
+    for i=1 : size(tempFreq)
+        
+        env_frame = zeros(nFFT,1);
+        
+        % add first and last bin for interpolation
+        tempFreqFrame = tempFreq(:,i);
+        tempAmpFrame = tempAmp(:,i);
+        
+        tempFreqFrame = [0; tempFreqFrame ;nFFT];
+        tempAmpFrame  = [0; tempAmpFrame ;0];
+        
+%% for each intersection
+
+        for k=1 : length(tempAmpFrame)-1
+            
+            % get points for interpolation
+            x1 = tempFreqFrame(k);
+            x2 = tempFreqFrame(k+1);
+            y1 = tempAmpFrame(k);
+            y2 = tempAmpFrame(k+1);
+            
+            % get line parameters (y = m*x+b)
+            m = (y2-y1) / (x2-x1);
+            b = y1 - m * x1;
+            
+%% for each frame
+
+            for l=x1+1 : x2-1
+                env_frame(l) = m*l+b;
+            end    
+        end
+        SPEC_ENV(:,i)=env_frame';
+    end
+end
