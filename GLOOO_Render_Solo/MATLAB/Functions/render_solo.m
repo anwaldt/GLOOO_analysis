@@ -43,28 +43,36 @@ for frameIDX = 1:nWin
     % times (in sec.) to be filled in this loop run
     targetTimes = (targetInds-1)/paramSynth.fs;
     
-    % indices of onsets which are within this frame
+    % get segments which begin within this frame
     if segCNT<=nSeg
         newSegment = ...
             intersect(find([SEG{segCNT}.start]>=targetTimes(1)),  ...
             find([SEG{segCNT}.start]<=targetTimes(end)));
         
         
-        % get next segment
+        % if there is one
         if ~isempty(newSegment)
-            
+           
+            % get next segment
             tmpSeg = SEG{segCNT};
             
             % if it is a transition
             if strcmp(class(tmpSeg),'trans') == 1
                 
-                
+                % what kind of transition do we have?
                 switch tmpSeg.type
                     
                     % ATTACK AND legato and release do not create
-                    % independent transitions
+                    % independent transitions.
+                    % They just trigger a note with specific properties.
                     case 'attack'
+                        
                         disp('Got an attack!')
+                        
+                       
+                        
+                        % in transition is not left blank in this case
+                        inTrans = SEG{segCNT};
                         
                         % use next note at once
                         segCNT = segCNT+1;
@@ -78,16 +86,22 @@ for frameIDX = 1:nWin
                         [tmpName, ~]  = SM.pick_sample(recMIDInote,recMIDIvel);
                         
                         % create new player
-                        preNote = [];
-                        smsp = single_sinmod_player(tmpSeg, SM, [], expMod, tmpName,paths, paramSynth);
+                        % handing over an emty pre-note assumes 
+                        smsp = single_sinmod_player(tmpSeg, [], inTrans , SM, expMod, tmpName,paths, paramSynth);
                         SMSP = [SMSP smsp];
-                        
                         
                         
                     case 'legato'
+                        
                         disp('Got a legato!')
-                        % kill old note
+                        
+                        % set the old note released
                         SMSP.isReleased = 1;
+                        
+                       
+                        
+                        % in transition is not left blank in this case
+                        inTrans = SEG{segCNT};
                         
                         % use next note at once
                         segCNT = segCNT+1;
@@ -103,19 +117,24 @@ for frameIDX = 1:nWin
                         
                         % create new player
                         preNote = [];
-                        smsp = single_sinmod_player(tmpSeg, SM, [], expMod, tmpName,paths, paramSynth);
+                        smsp = single_sinmod_player(tmpSeg,  [], inTrans, SM,expMod, tmpName,paths, paramSynth);
                         SMSP = [SMSP smsp];
                         
+                     
+                    % a glissando transtions KILLS the recent note at once
+                    % and lets the new note create the transition trajectories 
                     case 'glissando'
+                        
                         % connect with next note at once
                         % kill last note at once
                         disp('Got a glissando!')
                         
-                          SMSP.isFinished = 1;
-                          
-                          inTrans = SEG{segCNT};
-                         
-                          % use next note at once
+                     
+                        
+                        % in transition is not left blank in this case
+                        inTrans = SEG{segCNT};
+                        
+                        % use next note at once
                         segCNT = segCNT+1;
                         tmpSeg = SEG{segCNT};
                         
@@ -128,8 +147,15 @@ for frameIDX = 1:nWin
                         [tmpName, ~]  = SM.pick_sample(recMIDInote,recMIDIvel);
                         
                         % create new player
-                        preNote = [];
-                        smsp = single_sinmod_player(tmpSeg, SM, inTrans, expMod, tmpName,paths, paramSynth);
+                        
+                        % find (indexes of) playere which are not released or finished
+                        % (can only be one in the monophonic case
+                        actIND = ~([SMSP.isReleased] | [SMSP.isFinished]);
+                         
+                        % and finish it
+                           SMSP(actIND).isFinished = 1;
+                         
+                        smsp = single_sinmod_player(tmpSeg, SMSP(actIND), inTrans, SM, expMod, tmpName,paths, paramSynth);
                         SMSP = [SMSP smsp];
                           
                         

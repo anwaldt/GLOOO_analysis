@@ -106,12 +106,15 @@ else
         % the position in the spectrum which is treated:
         framePos =  shiftCnt;
         
-        
-        if (framePos)>=1 && framePos <= lWin
+        % check, whether lobe is within the range
+        if (framePos)>=1 && framePos <= lWin && shiftCnt <= length(tmpKernel)
             
+            try 
             % the window value taken from the kernel:
             interpComp = tmpKernel(shiftCnt);%;(1-offset) * WIN(lowBound) + offset * WIN(highBound);
-            
+            catch
+               1; 
+            end
             %  apply window to sine
             FRAME(framePos) = FRAME(framePos) + sinusoid.a * sinusoid.compSine  * interpComp;
             

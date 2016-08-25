@@ -28,7 +28,7 @@ nSegments = length(SEG);
 
 % Depending on the MODE of the expression model,
 % the control trajectories are composed, differently:
-switch expMod.MODE
+switch expMod.transMODE
     
     %% just copy the original trajectories
     case 'original'
