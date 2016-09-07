@@ -9,10 +9,10 @@
 %
 %
 
-function [ y ] = render_solo(C, SEG, SM, expMod, paths, paramSynth)
+function [ y ] = render_solo(~, SEG, SM, expMod, paths, paramSynth)
 
 
-t = (0:(SEG{end}.stop)*paramSynth.fs-1)/paramSynth.fs;
+t = (0:(SEG{end}.stopSEC)*paramSynth.fs-1)/paramSynth.fs;
 
 % a zero padded output stream
 y = [zeros(size(t))'; zeros(paramSynth.fs,1)];
@@ -40,14 +40,15 @@ segCNT = 1;
 
 for frameIDX = 1:nWin
     
+    disp(['Rendering frame ' num2str(frameIDX) ' of ' num2str(nWin)]);
     % times (in sec.) to be filled in this loop run
     targetTimes = (targetInds-1)/paramSynth.fs;
     
     % get segments which begin within this frame
     if segCNT<=nSeg
         newSegment = ...
-            intersect(find([SEG{segCNT}.start]>=targetTimes(1)),  ...
-            find([SEG{segCNT}.start]<=targetTimes(end)));
+            intersect(find([SEG{segCNT}.startSEC]>=targetTimes(1)),  ...
+            find([SEG{segCNT}.startSEC]<=targetTimes(end)));
         
         
         % if there is one
@@ -128,9 +129,7 @@ for frameIDX = 1:nWin
                         % connect with next note at once
                         % kill last note at once
                         disp('Got a glissando!')
-                        
-                     
-                        
+                         
                         % in transition is not left blank in this case
                         inTrans = SEG{segCNT};
                         

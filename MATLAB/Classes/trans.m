@@ -17,14 +17,14 @@ classdef trans < segment
         function    obj = trans(start, stop,t)
             
             % assign boundaries
-            obj.start = start;
-            obj.stop = stop;
+            obj.startSEC = start;
+            obj.stopSEC = stop;
             
             if      strcmp(t,'attack') == 1 || ...
                     strcmp(t,'release') ==1 || ...
                     strcmp(t,'legato') ==1 || ...
-                    strcmp(t,'glissando') ==1
-                
+                    strcmp(t,'glissando') ==1 || ...
+                    strcmp(t,'detached') ==1
                 obj.type = t;
             else
                 error('Bad Transition Type')

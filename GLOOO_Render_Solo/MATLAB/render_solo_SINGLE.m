@@ -18,7 +18,7 @@ close all
 restoredefaultpath
 
 % FILE
-baseName    = 'TwoNote_DPA_15';
+baseName    = 'TwoNote_DPA_24';
 
 % STARTUP
 
@@ -29,4 +29,4 @@ render_solo_PARAM;
 
 %% RUN
 
-render_solo_wrapper(baseName, paramSynth, param,  paths);
+y = render_solo_wrapper(baseName, paramSynth, param,  paths);

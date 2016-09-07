@@ -5,10 +5,7 @@ classdef note < segment
     
     properties
         
-        
-        
         MIDI
-        
         vibrato
         
     end
@@ -17,9 +14,9 @@ classdef note < segment
         
         function obj = note(start, stop, vibrato)
             
-            obj.start = start;
-            obj.stop = stop;
-            obj.vibrato = vibrato;
+            obj.startSEC    = start;
+            obj.stopSEC     = stop;
+            obj.vibrato     = vibrato;
         end
     end
     

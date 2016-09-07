@@ -12,13 +12,15 @@
 
 %% PATHS
 
-
+% on server
 samplibDIR = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/';
-
-% GLOOO processing
 paths.wavPrepared   = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/WAV/TwoNote/';
 paths.segSV         = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Segmentation/TwoNote/';
 
+% % local
+% samplibDIR          = '/media/anwaldt/HVC/GLOOO/GLOOO_Sample_Preparation/';
+% paths.wavPrepared   = '/media/anwaldt/HVC/GLOOO/WAV/Two_Note/';
+% paths.segSV         = '/media/anwaldt/HVC/GLOOO/GLOOO_Solo_Analysis/Segmentation/';
 
 %  for Master thesis processing
 % paths.segSV         = ('/home/anwaldt/Work/PROJECTS/Master_Thesis/Audio/Segmentation/');
@@ -56,3 +58,4 @@ paths.FILELISTS     = '../../WAV/File_Lists/';
 paths.tonal         = '../Tonal/';
 paths.residual      = '../Residual/';
 
+paths.plot          = '../Plots/';

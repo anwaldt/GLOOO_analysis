@@ -8,13 +8,13 @@
 %
 %%
 
-function [S] = modeling_segments(baseName, param, paths)
+function [SEG, INF, CTL] = modeling_segments(baseName, param, paths)
 
 
 %% load properties of sequence
 % this could be needed, is not yet used.
 
-I = load_solo_properties(regexprep(baseName,'BuK','DPA') , paths);
+INF = load_solo_properties(regexprep(baseName,'BuK','DPA') , paths);
 
 
 %% READ WAV
@@ -31,26 +31,22 @@ end
 param.fs    = fs;
 
 
-%% just get all individual segment boundaries
-
-segBounds = load([paths.segSV regexprep(baseName,'BuK','DPA') '.txt']);
-
 
 %% Controll parameter ANALYSIS
 
-controlTrajectories = get_controll_trajectories(x, param, audioPath);
+CTL = get_controll_trajectories(x, param, audioPath);
 
 if param.plotit == true
     
     figure
     subplot(2,1,1)
-    plot(controlTrajectories.f0swipe,'r')
+    plot(CTL.f0swipe,'r')
     
     hold off
     legend({'FO (swipe)'});
     title('F0 estimation')
     subplot(2,1,2)
-    plot(controlTrajectories.pitchStrenght)
+    plot(CTL.pitchStrenght)
     title('Pitch Strength')
     legend({'pitch-strength'});
     
@@ -58,12 +54,16 @@ if param.plotit == true
     figure
     plot(x);
     hold on;
-    plot((1:length(controlTrajectories.rmsVec))*param.lHop, controlTrajectories.rmsVec*2,'r')
+    plot((1:length(CTL.rmsVec))*param.lHop, CTL.rmsVec*2,'r')
     legend({'x(t)','RMS x 2'});
     title('RMS ')
     
 end
 
+
+%% just get all individual segment boundaries
+
+segBounds = load([paths.segSV regexprep(baseName,'BuK','DPA') '.txt']);
 
 
 
@@ -71,7 +71,7 @@ end
 
 %[noteBounds, transBounds, noteTrans]  = analyze_segments(segBounds, param, controlTrajectories);
 
-[S]  = prepare_segments(segBounds, I, param, controlTrajectories);
+[SEG]  = prepare_segments(segBounds, INF, param, CTL);
 
 
 
@@ -84,7 +84,7 @@ partialName = [paths.sinusoids baseName '.mat'];
 if exist(partialName,'file') == 0
     
     [f0vec, partials, noiseFrames, residual, tonal]  =  ...
-        get_partial_trajectories(x, param, controlTrajectories.f0swipe);
+        get_partial_trajectories(x, param, CTL.f0swipe);
     
     save(partialName, 'partials');
     
@@ -99,7 +99,7 @@ end
 
 %%
 
-SEG = get_segment_parameters(S, controlTrajectories, param);
+SEG = get_segment_parameters(SEG, CTL, param, paths);
 
 
 %% Get the note models
@@ -110,8 +110,6 @@ SEG = get_segment_parameters(S, controlTrajectories, param);
 %% Get the transition models
 
 %transModels     = get_transition_parameters(transBounds, controlTrajectories, param);
-
-
 
 
 %% TODO: Write MIDI File (usable by matrix2midi)
@@ -125,12 +123,8 @@ if param.saveit == true
     
     %writemidi(tMID,[paths.MIDI  baseName '.mid']);
     
-    save([paths.features regexprep(baseName,'.wav','.mat')],'controlTrajectories')
+    save([paths.features regexprep(baseName,'.wav','.mat')],'CTL')
     
     save([paths.segments regexprep(baseName,'.txt','.mat')],'SEG')
-    
-%     save([paths.notes  (baseName)],'noteModels');
-%     
-%     save([paths.transitions  (baseName)],'transModels')
     
 end

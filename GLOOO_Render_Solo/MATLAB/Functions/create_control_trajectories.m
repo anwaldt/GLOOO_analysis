@@ -11,7 +11,7 @@
 function [C] = create_control_trajectories(thisName, paths, expMod)
 
 
-thisName = regexprep(thisName,'DPA','BuK');
+% thisName = regexprep(thisName,'DPA','BuK');
 
 
 %% load the data

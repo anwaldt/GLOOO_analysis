@@ -8,7 +8,7 @@
 % Author:  Henrik von Coler
 % Created: 2016-08-16
 
-function [] = render_solo_wrapper(baseName, paramSynth, param, paths)
+function [y] = render_solo_wrapper(baseName, paramSynth, param, paths)
 
 
 %% Load Sample Library
@@ -25,7 +25,8 @@ I = load_solo_properties(baseName, paths);
 
 
 %% load segments
-load([paths.segments regexprep(baseName,'DPA','BuK')]);
+% load([paths.segments regexprep(baseName,'DPA','BuK')]);
+load([paths.segments baseName]);
 
 
 %% here comes the expression model
@@ -35,7 +36,7 @@ expMod  = expression_model('original');
 
 %% load SOLO analysis parameters and create control trajectories
 
-[C] = create_control_trajectories(baseName,paths,expMod);
+%[C] = create_control_trajectories(baseName,paths,expMod);
 
 
 
@@ -55,7 +56,7 @@ expMod  = expression_model('original');
 
 % [y]      = render_solo_OLD(noteModels, transModels, sampMAT, expMod, paths, paramSynth);
 
-[y]      = render_solo(C, SEG, sampMAT, expMod, paths, paramSynth);
+[y]      = render_solo([], SEG, sampMAT, expMod, paths, paramSynth);
 
 
 

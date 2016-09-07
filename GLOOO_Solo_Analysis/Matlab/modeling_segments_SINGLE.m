@@ -24,16 +24,15 @@ modeling_segments_PARAM
 
 %% Base Name of wav file
 
-baseName    = 'TwoNote_BuK_92';
+baseName    = 'TwoNote_DPA_24';
 
 
 %% CALL analysis FUNCTION
 
-modeling_segments(baseName, param, paths);
+[SEG, INF, CTL] = modeling_segments(baseName, param, paths);
 
 
 %% VISUALIZE Segments?
  
 % visualize_segments(baseName, paths, [2], [2]);
-
 

@@ -28,6 +28,7 @@ classdef single_sinmod_player
         
         % this is the mean power spectral density of the noise
         meanNoise;
+        
         % and the trajectory of the noise energy
         noiseEnergy;
         
@@ -38,12 +39,12 @@ classdef single_sinmod_player
         nFrames
         
         % the f0synth-trajectory for the transitional segment (if needed)
-        f0_trans;
+        %         f0_trans;
         
         % when a glissando is played, the index is counted
-        gliss_IDX;
+        %         gliss_IDX;
         
-        f0vec;
+        
         
         % the fluctuations of the lowest partial around the fundamental
         % frequency
@@ -157,9 +158,9 @@ classdef single_sinmod_player
             
             
             % the noise envelope must be  zero padded
-            obj.meanNoise   = [meanNoise zeros(1,length(meanNoise))]';
+            obj.meanNoise   = [obj.meanNoise  zeros(1,length(obj.meanNoise ))]';
             % @TODO: this is tuned HEURISTICALLY
-            obj.noiseEnergy = noiseEnergy * 50;
+            obj.noiseEnergy = obj.meanNoise  * 50;
             
             
             %% all the windows
@@ -186,7 +187,7 @@ classdef single_sinmod_player
             
             
             
-            obj.f0vec       = noteModel.F0.trajectory;
+            
             
             %obj.f0samp      = median(f0vec);
             
@@ -198,7 +199,7 @@ classdef single_sinmod_player
             %% prepare the amplitude trajectories
             
             % @TODO: careful, this should be done in the analysis stage
-            obj.A           = partialAmp(1:paramSynth.nPartials, 2:end-1);
+            obj.A           = partialAmp(1:paramSynth.nPartials, 2:end-1); %#ok<*COLND>
             obj.F           = partialFre(1:paramSynth.nPartials, 2:end-1);
             
             
@@ -220,7 +221,7 @@ classdef single_sinmod_player
             %             obj.A  = (obj.A ./ max(sum(obj.A)));
             
             % the initial synthesis volume:
-            obj.ampSynth =  obj.vel/127;
+            %             obj.ampSynth =  obj.vel/127;
             
             
             %% initialize note
@@ -245,8 +246,16 @@ classdef single_sinmod_player
             for partCnt=1:obj.paramSynth.nPartials
                 
                 
-                obj.s(partCnt).thisPhas    = rand*pi;
-                obj.s(partCnt).lastPhas    = rand*pi;
+                if isempty(lastNoteModel)
+                    obj.s(partCnt).thisPhas    = rand*pi;
+                    obj.s(partCnt).lastPhas    = rand*pi;
+                else
+                    % if we come from a glissando: get phase
+                    obj.s(partCnt).thisPhas    = lastNoteModel.s(partCnt).thisPhas;
+                    obj.s(partCnt).lastPhas    = lastNoteModel.s(partCnt).lastPhas;
+                    
+                end
+                
                 obj.s(partCnt).compSine =    1;
                 % 'floating point position' of this partial
                 obj.s(partCnt).fracBin =1;
@@ -254,11 +263,10 @@ classdef single_sinmod_player
                 
                 % we use an harmonic model, for the start
                 obj.s(partCnt).f0  = obj.f0synth * partCnt; %10.87/hop_ms;
-                %start with 0-amplitude
-                obj.s(partCnt).a   = obj.A(partCnt,1);
+                
                 % random phase
-                obj.s(partCnt).phi =  rand*pi;
-                obj.s(partCnt).lastPhas    = rand*pi;
+                % obj.s(partCnt).phi =  rand*pi;
+                
                 
                 % 'floating point bin' of this frequency
                 obj.s(partCnt).bin = obj.s(partCnt).f0 / obj.df +1;
@@ -315,34 +323,34 @@ classdef single_sinmod_player
             
             
             
-            %% fo management
+            %% fo management            
             
-            
-            
-            tmpVal = obj.interp_value(obj.noteModel.F0.AC, obj.notePOS);
-            
+%             if  obj.notePOS <= obj.noteModel.stopIND - obj.noteModel.startIND
+%             tmpVal = obj.interp_value(obj.noteModel.F0.AC, obj.notePOS);  
+%             else
+%                 tmpVal = 
+%             end
+                
             switch obj.paramSynth.f0mode
                 
                 case 'original'
                     %                         obj.f0synth =  2^(tmpVal/1200) * (2^((obj.nn-69)/12)*440 );
                     % correction of the sample rate ratios needs to go
                     % her:
-                    obj.f0synth =  obj.f0vec(obj.smsPOS)*0.5;
+                    if obj.notePOS <= obj.noteModel.stopIND - obj.noteModel.startIND
+                    obj.f0synth =  obj.noteModel.F0.trajectory(obj.notePOS);
+                    else
+                      obj.f0synth = obj.f0synth;
+                    end
                 case 'vib_orig'
                     obj.f0synth =  2^(tmpVal/1200) * (2^((obj.nn-69)/12)*440 );
                     
                 case 'plain'
                     obj.f0synth = (2^((obj.nn-69)/12)*440 );
                     
+                otherwise
+                    error('Unknown FO-Mode!');
             end
-            
-            
-            
-            if isnan(obj.f0synth)
-                error('Problems with the F0 management!')
-            end
-            
-            
             
             
             %% loop over all partials
@@ -353,42 +361,37 @@ classdef single_sinmod_player
                     
                     % F0 management:
                     % just take the note value if played detatched
-                    if isempty(obj.f0_trans)
-                        
-                        try
-                            % each partial frequency (is always exactly N*f0synth)
-                            obj.s(partCnt).f0   = (obj.f0synth * partCnt)  ;
-                            
-                        catch
-                            1;
-                        end
-                        % but use the trajectory if played glissando
-                    else
-                        
-                        % clear transition stuff when done
-                        if obj.gliss_IDX>length(obj.f0_trans)
-                            obj.f0_trans =[];
-                        else
-                            obj.s(partCnt).f0   = obj.f0_trans(obj.gliss_IDX) * partCnt;
-                        end
-                        
-                    end
+                    %                     if isempty(obj.f0_trans)
+                    
+                    % each partial frequency (is always exactly N*f0synth)
+                    obj.s(partCnt).f0   = (obj.f0synth * partCnt)  ;
+                    
+                    
+                    %                         % but use the trajectory if played glissando
+                    %                     else
+                    %
+                    %                         % clear transition stuff when done
+                    %                         if obj.gliss_IDX>length(obj.f0_trans)
+                    %                             obj.f0_trans =[];
+                    %                         else
+                    %                             obj.s(partCnt).f0   = obj.f0_trans(obj.gliss_IDX) * partCnt;
+                    %                         end
+                    %
+                    %                     end
                     
                     % get amplitude from matrix at interpolated POSITION
                     % (linear)
-                    try
-                        obj.s(partCnt).a   = obj.A(partCnt,obj.smsPOS);
-                    catch
-                        'xxx';
-                    end
-                                        
-                        obj.s(partCnt).f0  = partCnt* obj.f0synth ;
-
+                    obj.s(partCnt).a   = obj.A(partCnt,obj.smsPOS);
+                    
+                    
+                    % the fundamental frequency can only change in the
+                    % sustain part - e.g. 'not released'
+                    
+                    
                     % if released - enter this:
                 else
                     
-                    %                     thisReleaseInds = obj.releasePos:obj.releasePos+obj.paramSynth.lWin-1;
-                    % get release indices
+                    obj.s(partCnt).f0  = partCnt* obj.f0synth ;
                     
                     % if we are within release range
                     if obj.releasePos<=length(obj.releaseEnv)
@@ -398,6 +401,8 @@ classdef single_sinmod_player
                         obj.ampSynth     = obj.ampSynth * obj.releaseAmp;
                         
                         obj.s(partCnt).a = obj.s(partCnt).a * obj.releaseAmp;
+                        
+                        obj.s(partCnt).f0  = obj.s(partCnt).f0;
                         
                         % if we exceed it
                     else
@@ -447,7 +452,7 @@ classdef single_sinmod_player
                 case 'off'
                     % do nothing
                     
-                case 'on'
+                case 'on' 
                     % @TODO: we need to add the NOISE BEFORE the transform - but this is the
                     % easier way :::
                     
@@ -465,6 +470,20 @@ classdef single_sinmod_player
                     frame = frame + noise;
                     
                 case 'only'
+                    
+                    % @TODO: we need to add the NOISE BEFORE the transform - but this is the
+                    % easier way :::
+                    
+                    % create noise spectrum with random phase
+                    NOISE = ( exp(2*pi*(rand(size(obj.meanNoise)))*1j) .* obj.meanNoise );
+                    
+                    % transform
+                    noise  = (ifft(NOISE,'symmetric'));
+                    
+                    % apply windows
+                    noise = obj.noiseEnergy(obj.smsPOS) * noise ...
+                        .* obj.win3 * obj.ampSynth ;
+                    
                     % add the noise with the energy level at this frame
                     frame =     noise ;
                     
@@ -473,24 +492,24 @@ classdef single_sinmod_player
             % global volume
             %             frame = frame * obj.ampSynth;
             
-            % increment counter(s)
+            %% increment counter(s)
+            
             %             obj.currPos     = obj.currPos+obj.paramSynth.lHop;
             % taske care that the stepsize regards the ratio of analysis and synthesis
             % hopsize AND the respective samplerates
             obj.smsPOS     = obj.smsPOS   + 1;
-  
-            %...
-            %   (obj.paramAna.lHop / obj.paramSynth.lHop);
-            
+          
+             if obj.notePOS <= obj.noteModel.stopIND - obj.noteModel.startIND
             obj.notePOS    = obj.notePOS  + ...
-                obj.noteStretchFactor *  ( (obj.noteModel.param.lHop * obj.noteModel.param.fs) / (obj.paramAna.lHop * obj.paramAna.fs)  );
+                obj.noteStretchFactor *  2/( (obj.noteModel.param.lHop * obj.noteModel.param.fs) / (obj.paramAna.lHop * obj.paramAna.fs)  );
+             else
+                obj.notePOS = obj.notePOS ;
+                
+             end
             
-            
-%             obj.gliss_IDX   = obj.gliss_IDX+1;
-            
-        end
+         end
         
-        function val =  interp_value(obj, vector, index)
+        function val =  interp_value(~,vector, index)
             
             lB      = floor(index);
             uB      = ceil(index);

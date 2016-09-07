@@ -1,10 +1,17 @@
-%% function [] = prepare(segBounds, paths,param)
+%% function [SEG] = prepare(segBounds, paths,param)
 %
-% adjusted to the two-note sequences, only ...
-% later, this has to be changed and 
+%   This function prepares the SEGMENT properties.
+%   It creates a cell array of segments, setting only 
+%   those attributes mutual to both 'notes' and 'trans'.
 %
-% Henrik von Coler
-% Created:  2016-08-18
+%   MIND:
+%   adjusted to the two-note (T-N-T-N-T) sequences, only ...
+%   later, this has to be changed and sequences 
+%   of any kind should be processed.
+%
+%
+%   Henrik von Coler
+%   Created:  2016-08-18
 %
 %%
 
@@ -25,7 +32,7 @@ segINF{4}.vib = I.note2.vibrato;
 segBounds(:,1)  = segBounds(:,1) - segBounds(1,1);
 
 segBounds(1,:)      = [];
-segBounds(end,:)    = [];
+% segBounds(end,:)    = [];
 
 nSegments           = size(segBounds,1)-1;
 
