@@ -14,7 +14,7 @@
 
 % on server
 samplibDIR = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/';
-paths.wavPrepared   = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/WAV/TwoNote/';
+paths.wavPrepared   = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/WAV/TwoNote/DPA/';
 paths.segSV         = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Segmentation/TwoNote/';
 
 % % local
