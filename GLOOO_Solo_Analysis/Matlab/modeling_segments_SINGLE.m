@@ -24,7 +24,7 @@ modeling_segments_PARAM
 
 %% Base Name of wav file
 
-baseName    = 'TwoNote_DPA_24';
+baseName    = 'TwoNote_DPA_194';
 
 
 %% CALL analysis FUNCTION

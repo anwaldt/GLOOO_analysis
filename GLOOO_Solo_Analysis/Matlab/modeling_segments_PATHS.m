@@ -13,9 +13,9 @@
 %% PATHS
 
 % on server
-samplibDIR = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/';
-paths.wavPrepared   = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/WAV/TwoNote/DPA/';
-paths.segSV         = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Segmentation/TwoNote/';
+%samplibDIR          = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/';
+paths.wavPrepared   = '/media/anwaldt/HVC/GLOOO/WAV/Two_Note/DPA/';
+paths.segSV         = '/media/anwaldt/HVC/Violin_Library_2015/Segmentation/TwoNote/';
 
 % % local
 % samplibDIR          = '/media/anwaldt/HVC/GLOOO/GLOOO_Sample_Preparation/';

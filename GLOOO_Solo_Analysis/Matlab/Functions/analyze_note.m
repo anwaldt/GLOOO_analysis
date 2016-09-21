@@ -115,7 +115,7 @@ noteModel.param = param;
 
 %% PLOT?
 
-if param.plotit == true
+if param.plotit == true &&  strcmp(noteModel.vibrato,'true') == 1
     
     figure
     subplot(2,1,1)
