@@ -3,19 +3,17 @@
 %
 %
 % Henrik von Coler
-% 2014-02-17
+% Created: 2014-02-17
+% Edited:  2016-09-21 
 %%
-
-%% PARAMETERS
 
  
 
 %% PATHS
 
 % on server
-%samplibDIR          = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/';
-paths.wavPrepared   = '/media/anwaldt/HVC/GLOOO/WAV/Two_Note/DPA/';
-paths.segSV         = '/media/anwaldt/HVC/Violin_Library_2015/Segmentation/TwoNote/';
+paths.wavPrepared   = '../../../Violin_Library_2015/WAV/TwoNote/DPA/';
+paths.segSV         = '../../../Violin_Library_2015/Segmentation/TwoNote/';
 
 % % local
 % samplibDIR          = '/media/anwaldt/HVC/GLOOO/GLOOO_Sample_Preparation/';
@@ -52,10 +50,28 @@ paths.notes         = '../Notes/';
 paths.transitions   = '../Transitions/';
 paths.sinusoids     = '../Sinusoids/';
 paths.MIDI          = '../MIDI/';
-
 paths.FILELISTS     = '../../WAV/File_Lists/';
-
 paths.tonal         = '../Tonal/';
 paths.residual      = '../Residual/';
-
 paths.plot          = '../Plots/';
+
+%% Check for existence of paths
+%  and make them, if necessary
+
+fn      = fieldnames(paths);
+nFields = length(fn); 
+
+for fieldCNT = 1:nFields
+    
+     tmpDir = eval(['paths.' fn{fieldCNT}]);
+     
+     
+     if isdir(tmpDir) == 0
+        mkdir(tmpDir);
+     end
+    
+    
+end
+
+ 
+
