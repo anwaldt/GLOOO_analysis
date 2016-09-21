@@ -127,7 +127,7 @@ if param.plotit == true
     ylabel('F0')
     legend({'trajectory','envelope','polynom'})
     text(10,-1,['vib-freq= ' num2str( noteModel.F0.fVib) ' Hz'])
-    suptitle(['Note Trajectory Modeling: Vibrato = ' noteModel.vibrato]);
+    title(['Note Trajectory Modeling: Vibrato = ' noteModel.vibrato]);
  
     subplot(2,1,2)
     plot(noteModel.AMP.trajectory)

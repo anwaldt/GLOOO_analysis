@@ -91,7 +91,8 @@ if param.plotit == true
     plot(transModel.AMP.trajectory);
     % ylim([0, max(transModel.AMP.trajectory)*1.2]);
     ylabel('rms')
-    suptitle(['Transition Trajectory Modeling: ' transModel.type]);
+  
+    title(['Transition Trajectory Modeling: ' transModel.type]);
     
 end
 
