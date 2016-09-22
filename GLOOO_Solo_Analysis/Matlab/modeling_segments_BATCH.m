@@ -1,4 +1,4 @@
-%% modelling_segments_BATCH.m
+%% modelling_segments_MAIN.m
 %
 % This project needs the audio files to be segmented
 % according to the Note-Rest-Transition model!
@@ -21,28 +21,18 @@ modeling_segments_STARTUP
 modeling_segments_PATHS
 modeling_segments_PARAM
 
-%%
 
-matlabpool
+%% Base Name of wav file
 
-
-%% get list of files
-
-fileNames = dir(paths.wavPrepared);
-fileNames = {fileNames(3:end).name};
-
-nFiles   = length(fileNames);
-
-%% LOOP over all files
-
-parfor fileCNT = 1:nFiles
-    
-[~,baseName,~]    = fileparts(fileNames{fileCNT});
+baseName    = 'TwoNote_DPA_43';
 
 
-% CALL analysis FUNCTION
+%% CALL analysis FUNCTION
 
 [SEG, INF, CTL] = modeling_segments(baseName, param, paths);
 
 
-end
+%% VISUALIZE Segments?
+ 
+% visualize_segments(baseName, paths, [2], [2]);
+
