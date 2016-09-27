@@ -66,7 +66,7 @@ classdef sample_matrix
             for i=1:nSamples
                 
                 % prepare the filename
-                xxx = strsplit('_',obj.sampleFiles(i).name);
+                xxx = strsplit(obj.sampleFiles(i).name,'_');
                 obj.samples(i).name = regexprep(obj.sampleFiles(i).name,'.wav','');
                 
                 sortStrings(i) = str2double(regexprep(xxx{3},'.wav',''));

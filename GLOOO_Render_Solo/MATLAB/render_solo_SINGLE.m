@@ -2,7 +2,7 @@
 %
 %
 %   This script renders an audio stream
-%   from a previously anayzed passage!
+%   from a previously analyzed passage!
 %
 %
 %   HvC
@@ -18,7 +18,7 @@ close all
 restoredefaultpath
 
 % FILE
-baseName    = 'TwoNote_DPA_24';
+baseName    = 'TwoNote_DPA_80';
 
 % STARTUP
 
