@@ -36,7 +36,7 @@ classdef expression_model
         function obj = expression_model(transMODE)
             
             % set some defaults
-            obj.lTrans  = 100;
+            obj.lTrans  = 50;
             
             obj.fVib    = 7;
             obj.pVib    = 0;
@@ -86,12 +86,12 @@ classdef expression_model
                 
                 inTrans.startIND
                 % f0-trajectory - transition
-                F0_trans = f0_start + abs(f0_start-f0_end) * 1./(1+exp(-1*(linspace(-5,5,lTrans) )));
+                F0_trans = f0_start + abs(f0_start-f0_end) * 1./(1+exp(-1*(linspace(-5,5,obj.lTrans) )));
                 
             else
                 
                 
-                F0_trans = f0_start - abs(f0_start-f0_end) * 1./(1+exp(-1*(linspace(-5,5,lTrans) )));
+                F0_trans = f0_start - abs(f0_start-f0_end) * 1./(1+exp(-1*(linspace(-5,5,obj.lTrans) )));
                 
             end
             
@@ -101,9 +101,9 @@ classdef expression_model
             for i=1:nPart
                 
                 if   lastSMSplayer.s(i).a <= smsPlayer.A(i,1)
-                    A_trans(i,:) =  lastSMSplayer.s(i).a + abs( lastSMSplayer.s(i).a-smsPlayer.A(i,1)) * 1./(1+exp(-1*(linspace(-5,5,lTrans) )));
+                    A_trans(i,:) =  lastSMSplayer.s(i).a + abs( lastSMSplayer.s(i).a-smsPlayer.A(i,1)) * 1./(1+exp(-1*(linspace(-5,5,obj.lTrans) )));
                 else
-                    A_trans(i,:) =  lastSMSplayer.s(i).a - abs( lastSMSplayer.s(i).a-smsPlayer.A(i,1)) * 1./(1+exp(-1*(linspace(-5,5,lTrans) )));
+                    A_trans(i,:) =  lastSMSplayer.s(i).a - abs( lastSMSplayer.s(i).a-smsPlayer.A(i,1)) * 1./(1+exp(-1*(linspace(-5,5,obj.lTrans) )));
                 end
                 % additional damping of (higher!?) partials during the transition:
                 % Atrans(i,:) =   Atrans(i,:).* (1- (4*i/nPart)* sin(linspace(0,pi,obj.lTrans)));
