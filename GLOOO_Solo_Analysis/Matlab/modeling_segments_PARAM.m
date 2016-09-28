@@ -33,7 +33,7 @@ param.F0decomp.cutLowHZ     = 10;
 %% Partial tracking
 
 param.PART.getPhases    = true;
-param.PART.info         = false;
+param.PART.info         = true;
 param.PART.lWin         = 2^12;
 
 % upsampling for the autocorr f0-detection
