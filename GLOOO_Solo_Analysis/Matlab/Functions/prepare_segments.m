@@ -57,6 +57,8 @@ for segCNT = 1:nSegments
            
    end
    
+   tmpSeg.param = param;
+   
    SEG{segCNT} = tmpSeg;
        
     

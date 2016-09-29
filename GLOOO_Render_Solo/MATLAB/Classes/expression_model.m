@@ -66,9 +66,9 @@ classdef expression_model
             
             
             % delete attack segment
-            smsPlayer.A(:,1:smsPlayer.loop.loopPoints(1))   = [];
+            smsPlayer.A(:,1:smsPlayer.loop.points(1))   = [];
 
-            smsPlayer.noteModel.F0.trajectory(1:smsPlayer.loop.loopPoints(1)) = [];
+            smsPlayer.noteModel.F0.trajectory(1:smsPlayer.loop.points(1)) = [];
 
             
             nPart       = smsPlayer.nPart;

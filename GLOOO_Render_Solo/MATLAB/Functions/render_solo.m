@@ -9,8 +9,18 @@
 %
 %
 
-function [ y ] = render_solo(~, SEG, SM, expMod, paths, paramSynth)
+function [ y ] = render_solo(~, SOLO, SM, expMod, paths, paramSynth)
 
+
+%% unpack the solo
+SEG     = SOLO.SEG;
+param   = SOLO.param;
+
+
+
+
+
+%%
 
 t = (0:(SEG{end}.stopSEC)*paramSynth.fs-1)/paramSynth.fs;
 

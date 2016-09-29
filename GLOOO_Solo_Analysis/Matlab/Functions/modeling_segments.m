@@ -52,9 +52,13 @@ SEG = get_segment_parameters(SEG, CTL, param, paths);
 
 %% SAVE STUFF
 
+SOLO.SEG = SEG;
+SOLO.param = param;
+
+
 if param.saveit == true
     
   
-    save([paths.segments regexprep(baseName,'.txt','.mat')],'SEG')
+    save([paths.segments baseName],'SOLO')
     
 end

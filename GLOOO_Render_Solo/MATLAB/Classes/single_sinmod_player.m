@@ -16,12 +16,12 @@ classdef single_sinmod_player
         noteModel;
         
         % this is the counter for the position within the frames of the
-        % partials:
+        % partial trajectories:
         smsPOS;
         
         % this is the counter for the position within the
         % trajectories of the note model:
-        notePOS;
+        ctlPOS;
         
         % this one can chage the speed we index through the note:
         noteStretchFactor;
@@ -93,7 +93,7 @@ classdef single_sinmod_player
         
         win;
         %         WIN;
-        win2;
+        winTD;
         win3;
         % time axis within one frame
         t;
@@ -156,7 +156,6 @@ classdef single_sinmod_player
             obj.noteModel   = noteModel;
             
             
-            
             % the noise envelope must be  zero padded
             obj.meanNoise   = [obj.meanNoise  zeros(1,length(obj.meanNoise ))]';
             % @TODO: this is tuned HEURISTICALLY
@@ -168,7 +167,7 @@ classdef single_sinmod_player
             obj.win     = calculate_BH92_complete(paramSynth.lWin) ;
             %             obj.WIN     = fftshift(    fft(obj.win) );
             % the time-domain window, regarding the freq-win, too
-            obj.win2    = (triang(paramSynth.lWin))./obj.win;
+            obj.winTD    = (triang(paramSynth.lWin))./obj.win;
             % the mere time domain window
             obj.win3    = (triang(paramSynth.lWin));
             
@@ -184,9 +183,6 @@ classdef single_sinmod_player
             
             
             %% f0 stuff
-            
-            
-            
             
             
             %obj.f0samp      = median(f0vec);
@@ -207,8 +203,8 @@ classdef single_sinmod_player
             obj.loop        = SM.samples(ismember({SM.samples.name},fileName));
             
             
-            obj.loop.loopPoints(1) = 50;
-            obj.loop.loopPoints(2) = length(obj.A)-50;
+            obj.loop.points(1) = 50;
+            obj.loop.points(2) = length(obj.A)-50;
             
             
             % this smoothing is 'just for fun'
@@ -227,9 +223,9 @@ classdef single_sinmod_player
             %% initialize note
             
             % al notes need this
-            obj.smsPOS      = 1;
-            obj.notePOS     = 1;
-            obj.noteStretchFactor = 1;
+            obj.smsPOS              = 1;
+            obj.ctlPOS              = 1;
+            obj.noteStretchFactor   = 1;
             
             
             % if note is detached from preceeding event
@@ -279,13 +275,10 @@ classdef single_sinmod_player
             
             
             %% release stuff and co. HAS TO GO TO THE EXPRESSION MODEL
-            %
-            %            obj.gliss_IDX   = 1;
-            %
-            %             obj.f0_trans    =  [];
-            %
+            
             % release duration in seconds
             Lrelease = 3;
+            % responding number of samples
             Nrelease = ceil(Lrelease / (obj.paramSynth.lHop/obj.paramSynth.fs));
             
             % for now, it is just one global envelope: @TODO: one for each partial
@@ -311,45 +304,35 @@ classdef single_sinmod_player
             % allocate output frame
             FRAME       = zeros(obj.paramSynth.lWin,1);
             
-            % check for loop point
-            if obj.smsPOS >= obj.loop.loopPoints(2)
-                % reset frame position, if necessary
-                obj.smsPOS = obj.loop.loopPoints(1);
-                
-                % @TODO: create a smooth transition when jumping
-                % @TODO: randomly switch to different A-points
-            end
             
+            %% fo management
             
-            
-            
-            %% fo management            
-            
-%             if  obj.notePOS <= obj.noteModel.stopIND - obj.noteModel.startIND
-%             tmpVal = obj.interp_value(obj.noteModel.F0.AC, obj.notePOS);  
-%             else
-%                 tmpVal = 
-%             end
-                
+            % get the f0-value for this frame, based on the different
+            % methods:
             switch obj.paramSynth.f0mode
                 
+                % use the trajectory from the two note sequence
                 case 'original'
-                    %                         obj.f0synth =  2^(tmpVal/1200) * (2^((obj.nn-69)/12)*440 );
-                    % correction of the sample rate ratios needs to go
-                    % her:
-                    if obj.notePOS <= obj.noteModel.stopIND - obj.noteModel.startIND
-                    obj.f0synth =  obj.noteModel.F0.trajectory(obj.notePOS);
-                    else
-                      obj.f0synth = obj.f0synth;
+                    
+                    try
+                        obj.f0synth =  obj.noteModel.F0.trajectory(obj.ctlPOS);
+                    catch
+                        'xxx'
                     end
+                    % this is needed in non-integer positions
+                    %obj.f0synth =  obj.interp_value(obj.noteModel.F0.trajectory, obj.ctlPOS);
+                    
+                    % use only the original vibrato
                 case 'vib_orig'
                     obj.f0synth =  2^(tmpVal/1200) * (2^((obj.nn-69)/12)*440 );
                     
+                    % use a plain f0-trajectory
                 case 'plain'
                     obj.f0synth = (2^((obj.nn-69)/12)*440 );
                     
                 otherwise
                     error('Unknown FO-Mode!');
+                    
             end
             
             
@@ -358,10 +341,6 @@ classdef single_sinmod_player
                 
                 % if note is not released - do the standard things
                 if obj.isReleased == 0
-                    
-                    % F0 management:
-                    % just take the note value if played detatched
-                    %                     if isempty(obj.f0_trans)
                     
                     % each partial frequency (is always exactly N*f0synth)
                     obj.s(partCnt).f0   = (obj.f0synth * partCnt)  ;
@@ -381,16 +360,17 @@ classdef single_sinmod_player
                     
                     % get amplitude from matrix at interpolated POSITION
                     % (linear)
-                    obj.s(partCnt).a   = obj.A(partCnt,obj.smsPOS);
                     
-                    
-                    % the fundamental frequency can only change in the
-                    % sustain part - e.g. 'not released'
-                    
+                    try
+                        obj.s(partCnt).a   = obj.A(partCnt,obj.smsPOS);
+                    catch
+                        1;
+                    end
                     
                     % if released - enter this:
                 else
                     
+                    % in release the f0 does not change (for now)
                     obj.s(partCnt).f0  = partCnt* obj.f0synth ;
                     
                     % if we are within release range
@@ -404,7 +384,7 @@ classdef single_sinmod_player
                         
                         obj.s(partCnt).f0  = obj.s(partCnt).f0;
                         
-                        % if we exceed it
+                        % if we exceed the release trajectory
                     else
                         
                         % drop dead
@@ -418,22 +398,13 @@ classdef single_sinmod_player
                     
                 end
                 
-                % it might be cool to randomize the phase slightly
-                %                  obj.s(partCnt).thisPhas = obj.s(partCnt).thisPhas + rand*2;
                 
-                % add this partial to the spectrum
-                
+                % calculate this partial
                 [tmpFrame, obj.s(partCnt)]  = place_mainlobe( obj.s(partCnt),obj.paramSynth.lWin,obj.paramSynth.fs,obj.kernels,obj.kernels_LF,obj.fracVec, obj.fracVec_LF);
                 
-                
+                % and add this partial to the spectrum
                 FRAME = FRAME + tmpFrame;%./4;
                 
-            end
-            
-            
-            if obj.isReleased == 1
-                % increment release counter
-                obj.releasePos = obj.releasePos + 1;
             end
             
             
@@ -442,7 +413,7 @@ classdef single_sinmod_player
             
             
             % Apply TimeDomain window:
-            frame  = frame.*obj.win2;
+            frame  = frame.*obj.winTD;
             
             
             %%
@@ -452,7 +423,7 @@ classdef single_sinmod_player
                 case 'off'
                     % do nothing
                     
-                case 'on' 
+                case 'on'
                     % @TODO: we need to add the NOISE BEFORE the transform - but this is the
                     % easier way :::
                     
@@ -494,20 +465,31 @@ classdef single_sinmod_player
             
             %% increment counter(s)
             
-            %             obj.currPos     = obj.currPos+obj.paramSynth.lHop;
-            % taske care that the stepsize regards the ratio of analysis and synthesis
+            % take care that the stepsize regards the ratio of analysis and synthesis
             % hopsize AND the respective samplerates
-            obj.smsPOS     = obj.smsPOS   + 1;
-          
-             if obj.notePOS <= obj.noteModel.stopIND - obj.noteModel.startIND
-            obj.notePOS    = obj.notePOS  + ...
-                obj.noteStretchFactor *  2/( (obj.noteModel.param.lHop * obj.noteModel.param.fs) / (obj.paramAna.lHop * obj.paramAna.fs)  );
-             else
-                obj.notePOS = obj.notePOS ;
-                
-             end
+            if obj.smsPOS <   size(obj.A,2)
+                obj.smsPOS     = obj.smsPOS   + 1;
+            end
             
-         end
+            if obj.ctlPOS < length(obj.noteModel.F0.trajectory)
+                
+                % for now, we work with analysis=snthesis hop-size
+                obj.ctlPOS    = obj.ctlPOS  + 1;
+                
+                % this is for the case wher we have different hop-sizes
+                %  obj.ctlPOS    = obj.ctlPOS  +obj.noteStretchFactor *  ...
+                %  2/( (obj.noteModel.param.lHop * obj.noteModel.param.fs) / (obj.paramAna.lHop * obj.paramAna.fs)  );
+            else
+                obj.ctlPOS = obj.ctlPOS ;
+                
+            end
+            
+            % increment release counter if neccessary
+            if obj.isReleased == 1
+                obj.releasePos = obj.releasePos + 1;
+            end
+            
+        end
         
         function val =  interp_value(~,vector, index)
             

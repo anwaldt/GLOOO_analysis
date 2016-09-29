@@ -8,7 +8,7 @@
 % Author:  Henrik von Coler
 % Created: 2016-08-16
 
-function [y] = render_solo_wrapper(baseName, paramSynth, param, paths)
+function [y] = render_solo_wrapper(baseName, paramSynth, paths)
 
 
 %% Load Sample Library
@@ -27,7 +27,12 @@ I = load_solo_properties(baseName, paths);
 %% load segments
 % load([paths.segments regexprep(baseName,'DPA','BuK')]);
 load([paths.segments baseName]);
+ 
+% % we get 
+% load([paths.features baseName]);
+% param = CTL.param;
 
+% paramSynth.nPartials    = param.PART.nPartials;
 
 %% here comes the expression model
 
@@ -56,7 +61,7 @@ expMod  = expression_model('original');
 
 % [y]      = render_solo_OLD(noteModels, transModels, sampMAT, expMod, paths, paramSynth);
 
-[y]      = render_solo([], SEG, sampMAT, expMod, paths, paramSynth);
+[y]      = render_solo([], SOLO, sampMAT, expMod, paths, paramSynth);
 
 
 
