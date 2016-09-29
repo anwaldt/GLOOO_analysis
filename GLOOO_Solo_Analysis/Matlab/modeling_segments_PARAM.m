@@ -1,14 +1,28 @@
+%% modelling_segments_PARAM.m
+%
+%   Sets parameters for
+%       
+%       - control trajectories and features
+%       - 
+%
+% Author : Henrik von Coler
+%
+% Created: 2014-02-17
+% Edited : 2016-08-08
+%
+%
+
 %% BASIC PARAMTERS
 
 param.plotit      = false;
 param.saveit      = true;
 param.info        = true;
-
+param.parallel    = false;
 
 %% GLOABAL analyis parameters
 
 % the hop-size is GLOBAL:
-param.lHop          = 2^8;
+param.lHop          = 2^10;
 
 param.lWinRMS       = 2^11;
 param.lWinNoise     = 2^12;
@@ -48,4 +62,4 @@ param.PART.fMax          = 4000;
 % this is for the precision of the phase estimation
 % keep in mind: it takes 'param.nPhaseSteps' coarse
 %               and 'param.nPhaseSteps' fine steps
-param.PART.nPhaseSteps   = 10  ;
+param.PART.nPhaseSteps   = 10;

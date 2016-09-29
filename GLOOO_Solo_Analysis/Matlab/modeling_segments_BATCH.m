@@ -1,5 +1,7 @@
 %% modelling_segments_BATCH.m
 %
+%   Does the solo analysis for a batch of files.
+%
 % This project needs the audio files to be segmented
 % according to the Note-Rest-Transition model!
 %
@@ -11,20 +13,29 @@
 % Edited : 2016-08-08
 %
 %
-%% RESET and SET
-
+%% RESET 
 close all
 clearvars
 restoredefaultpath
+
+%% Set the outup path for this set
+
+outPath = '../Results/1/';
+
+
+%% SET
 
 modeling_segments_STARTUP
 modeling_segments_PATHS
 modeling_segments_PARAM
 
-%%
+%% start pool
 
-% matlabpool
+s = matlabpool('size');
 
+if s == 0 && param.parallel ==1
+    matlabpool
+end
 
 %% get list of files
 
@@ -35,14 +46,19 @@ nFiles   = length(fileNames);
 
 %% LOOP over all files
 
-parfor fileCNT = 1:nFiles
+for fileCNT = 1:nFiles
     
-[~,baseName,~]    = fileparts(fileNames{fileCNT});
-
-
-% CALL analysis FUNCTION
-
-[SEG, INF, CTL] = modeling_segments(baseName, param, paths);
-
-
+    [~,baseName,~]    = fileparts(fileNames{fileCNT});
+    
+    
+    % Get gontrol- and   trajectories and features
+    [CTL]           = basic_analysis(baseName, paths, param);
+    
+    % Get partial trajectories
+    [SMS]           = partial_analysis(baseName,  paths);
+    
+    % Analysis
+    [SEG, INF]      = modeling_segments(baseName, paths);
+    
+    
 end

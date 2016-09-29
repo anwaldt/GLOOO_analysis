@@ -11,12 +11,13 @@ function [transModel] = analyze_transition(transModel, features,param )
 
 % select the f0-trajectory
 switch param.F0.f0Mode
+
     case 'swipe'
-
-
         f0vec = features.f0swipe;
+    
     case 'yin'
         f0vec = features.f0yin;
+
 end
 
 start = transModel.startSEC;
