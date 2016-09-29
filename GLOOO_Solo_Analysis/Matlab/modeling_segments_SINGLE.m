@@ -20,7 +20,7 @@ restoredefaultpath
 
 %% define in and output
 
-baseName    = 'TwoNote_DPA_275';
+baseName    = 'TwoNote_DPA_44';
 outPath     = '../Results/Single/';
 
 

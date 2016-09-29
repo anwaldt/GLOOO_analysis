@@ -403,7 +403,7 @@ classdef single_sinmod_player
                 [tmpFrame, obj.s(partCnt)]  = place_mainlobe( obj.s(partCnt),obj.paramSynth.lWin,obj.paramSynth.fs,obj.kernels,obj.kernels_LF,obj.fracVec, obj.fracVec_LF);
                 
                 % and add this partial to the spectrum
-                FRAME = FRAME + tmpFrame;%./4;
+                FRAME = FRAME + tmpFrame / 2;
                 
             end
             

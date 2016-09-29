@@ -70,9 +70,7 @@ expMod  = expression_model('original');
 
 
 if paramSynth.saveit == true
-    
-    y = 0.9* y/max(abs(y));
-    
+ 
     wavwrite( y, paramSynth.fs,['../WAV/' baseName '_Synth-' paramSynth.f0mode '.wav']);
 end
 
