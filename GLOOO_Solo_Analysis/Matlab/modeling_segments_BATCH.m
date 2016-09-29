@@ -33,7 +33,7 @@ modeling_segments_PARAM
 
 s = matlabpool('size');
 
-if s == 0 && param.parallel ==1
+if s == 0 && param.parallel == true
     matlabpool
 end
 
@@ -46,7 +46,7 @@ nFiles   = length(fileNames);
 
 %% LOOP over all files
 
-for fileCNT = 1:nFiles
+parfor fileCNT = 1:nFiles
     
     [~,baseName,~]    = fileparts(fileNames{fileCNT});
     

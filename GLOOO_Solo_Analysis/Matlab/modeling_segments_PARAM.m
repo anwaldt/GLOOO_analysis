@@ -17,7 +17,7 @@
 param.plotit      = false;
 param.saveit      = true;
 param.info        = true;
-param.parallel    = false;
+param.parallel    = true;
 
 %% GLOABAL analyis parameters
 
@@ -47,7 +47,7 @@ param.F0decomp.cutLowHZ     = 10;
 %% Partial tracking
 
 param.PART.getPhases    = true;
-param.PART.info         = true;
+param.PART.info         = false;
 param.PART.lWin         = 2^12;
 
 % upsampling for the autocorr f0-detection
