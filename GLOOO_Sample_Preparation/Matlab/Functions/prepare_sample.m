@@ -2,11 +2,9 @@
 function  [x, tonal, noise] = prepare_sample(inFile, paths, param)
 
 
+[x,fs]              = audioread([paths.inDir inFile '.wav']);
 
-[x,fs] = audioread([paths.inDir inFile '.wav']);
-
-
-[f0coarse, ~, ~]  = get_f0_trajectories(x, fs, param.lHop, 2*param.lHop, 30, 3000, 'swipe');
+[f0coarse, ~, ~]    = get_f0_trajectories(x, fs, param.lHop, 2*param.lHop, 30, 3000, 'swipe');
 
 %
 %     f0med             = median(f0coarse);
@@ -31,7 +29,7 @@ noiseEnergy = mean(noiseFrames,2);
 %% Model the trajectories
 
 % close all
-% [partMod] = model_partial_trajectories(partialAmp, partialFre);
+% [partMod] = model_partuntitleial_trajectories(partialAmp, partialFre);
 
 
 %% this reassambles the noise from the average-representation and the

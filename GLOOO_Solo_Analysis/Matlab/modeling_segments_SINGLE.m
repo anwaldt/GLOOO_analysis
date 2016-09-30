@@ -34,11 +34,14 @@ modeling_segments_PARAM
 %% RUN analysis
 
 % Get gontrol- and   trajectories and features
-[CTL]           = basic_analysis(baseName, paths, param);
-
-% Get partial trajectories
-[SMS]           = partial_analysis(baseName, paths);
-
-% Analysis
-[SEG, INF]      = modeling_segments(baseName, paths);
+    [CTL]           = basic_analysis(baseName, paths, param);
+    
+    % Get partial trajectories
+    [SMS]           = partial_analysis(baseName,  paths);
+    
+    % transform partial data
+    
+    
+    % Analysis
+    [SEG, INF]      = modeling_segments(baseName, paths);
 

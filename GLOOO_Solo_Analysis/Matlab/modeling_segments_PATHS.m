@@ -21,6 +21,7 @@ paths.segments      = [outPath 'Segments/'];
 
 paths.sinusoids     = [outPath 'Sinusoids/'];
 
+
 paths.tonal         = [outPath 'Tonal/'];
 paths.residual      = [outPath 'Residual/'];
 

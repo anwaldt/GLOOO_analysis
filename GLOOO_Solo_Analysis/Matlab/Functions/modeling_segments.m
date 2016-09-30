@@ -58,7 +58,6 @@ SOLO.param = param;
 
 if param.saveit == true
     
-  
     save([paths.segments baseName],'SOLO')
     
 end

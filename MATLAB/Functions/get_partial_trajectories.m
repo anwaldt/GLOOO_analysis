@@ -9,7 +9,7 @@
 %   2014-12-10
 %%
 
-function [f0vec, partials, noiseSynth,  resVec, tonalVec] = get_partial_trajectories(x, param, f0vec)
+function [f0vec, SMS, noiseSynth,  resVec, tonalVec] = get_partial_trajectories(x, param, f0vec)
 
 
 
@@ -27,9 +27,9 @@ nSamples    = length(x);
 
 
 % allocate memory for sinusoidal parameter trajectories and co
-partialFre  = zeros(param.PART.nPartials,nFrames);
-partialAmp  = zeros(param.PART.nPartials,nFrames);
-partialPha  = zeros(param.PART.nPartials,nFrames);
+SMS.FRE  = zeros(param.PART.nPartials,nFrames);
+SMS.AMP  = zeros(param.PART.nPartials,nFrames);
+SMS.PHA  = zeros(param.PART.nPartials,nFrames);
 
 
 % zero pad input at the end
@@ -101,12 +101,12 @@ for frameIDX = frameStart:nFrames-1
         
         % call the main analysis function for each frame
         % and get:
-        [partials,resFrame,sinusoidal] = ...
+        [tmpPartials,resFrame,sinusoidal] = ...
             get_partial_frame(frame, lastPartials, f0est, param);
-%         
-%         partialFre(:,frameIDX) = partials.FREQ;
-%         partialAmp(:,frameIDX) = partials.AMPL;
-%         partialPha(:,frameIDX) = partials.PHAS;
+        
+        SMS.FRE(:,frameIDX) = tmpPartials.FREQ;
+        SMS.AMP(:,frameIDX) = tmpPartials.AMPL;
+        SMS.PHA(:,frameIDX) = tmpPartials.PHAS;
         
         % calculate the distribution of the residual
         % noiseSynth(idxs)   = noiseSynth(idxs) + get_residual_distribution(residual);

@@ -10,12 +10,18 @@
 % Modified:     2016-08-04
 
 %% RESET
-% Get parameters, paths and co.
-
 
 close all
 clearvars
 restoredefaultpath
+
+
+%% OUTPUT directory
+
+rootDIR = '../Results/2/';
+
+
+%% SET
 
 prepare_samples_STARTUP
 prepare_samples_PATHS
@@ -24,15 +30,15 @@ prepare_samples_PARAM
 
 %% Start Matlab Pool
 
-try
-    % try to start pool
-    matlabpool('open','AttachedFiles',{'Functions/', '../../Matlab'});
-catch
-    % if not possible: notify
-    disp('Can not open Pool ...')
-    % and set parameter value
-    param.parallel = false;
-end
+% try
+%     % try to start pool
+%     matlabpool('open','AttachedFiles',{'Functions/', '../../Matlab'});
+% catch
+%     % if not possible: notify
+%     disp('Can not open Pool ...')
+%     % and set parameter value
+%     param.parallel = false;
+% end
 
 
 %% List of File Names
@@ -50,6 +56,7 @@ sinNames      = cellfun(@(x)regexprep(x, '.snmd',''),  {sinFiles.name}, 'Uniform
 
 unproc = wavNames(d);
 nFiles = length(wavNames);% length(unproc);
+
 
 %% Confirm processing
 
@@ -71,41 +78,43 @@ nFiles = length(wavNames);% length(unproc);
 %% Process all files
 
 % either in  a for-loop or a parfor-loop
-if param.parallel == false
-    
-    for fileCnt = 1:nFiles
-        
-        
-        % get file name
-        disp(['File ' num2str(fileCnt) ' of ' num2str(nFiles)]);
-        baseName = wavNames{fileCnt} ;
-        
-        % the main analysis function
-        [original, tonal, noise] = prepare_sample(baseName, paths, param);
-        
-        
-    end
-    
-elseif param.parallel == true
-    
-    parfor fileCnt = 1:nFiles
-               
-        disp('I am here');
+% if param.parallel == false
+%
+%     for fileCnt = 1:nFiles
+%
+%
+%         % get file name
+%         disp(['File ' num2str(fileCnt) ' of ' num2str(nFiles)]);
+%         baseName = wavNames{fileCnt} ;
+%
+%         % the main analysis function
+%         [original, tonal, noise] = prepare_sample(baseName, paths, param);
+%
+%
+%     end
 
-        % get file name
-        disp(['File ' num2str(fileCnt) ' of ' num2str(nFiles)]);
-        baseName = wavNames{fileCnt} ;
-        
-        % the main analysis function
-        [original, tonal, noise] = prepare_sample(baseName, paths, param);
-        
-    end
+% elseif param.parallel == true
+
+ for fileCnt = 1:nFiles
+    
+    disp('I am here');
+    
+    % get file name
+    disp(['File ' num2str(fileCnt) ' of ' num2str(nFiles)]);
+    baseName = wavNames{fileCnt} ;
+    
+    % the main analysis function
+    [original, tonal, noise] = prepare_sample(baseName, paths, param);
+    
+    [SMS] = model_trajectories(baseName, paths);
     
 end
+
+% end
 
 %% save parameters
 % with stamp for the date
 
-tmpName = ['parameters_' date '_' ];
-save(tmpName, 'param')
+%tmpName = ['parameters_' date '_' ];
+%save(tmpName, 'param')
 

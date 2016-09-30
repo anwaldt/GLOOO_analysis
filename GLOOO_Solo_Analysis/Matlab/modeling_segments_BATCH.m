@@ -57,6 +57,9 @@ parfor fileCNT = 1:nFiles
     % Get partial trajectories
     [SMS]           = partial_analysis(baseName,  paths);
     
+    % transform partial data
+    
+    
     % Analysis
     [SEG, INF]      = modeling_segments(baseName, paths);
     
