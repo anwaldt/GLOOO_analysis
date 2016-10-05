@@ -70,12 +70,17 @@ if param.writeTxt == true
     
     tmpName     =[ paths.txtDir inFile '.AMPL'];
     fid         = fopen(tmpName,'w');
-    fprintf(fid, [repmat('%e ', 1, size(partials.AMPL, 1) ), ';\n'], partials.AMPL );
+    fprintf(fid, [repmat('%e ', 1, size(partials.AMP, 1) ), ';\n'], partials.AMP );
     fclose(fid);
     
     tmpName     =[ paths.txtDir inFile '.FREQ'];
     fid         = fopen(tmpName,'w');
-    fprintf(fid, [repmat('%e ', 1, size(partials.FREQ, 1) ), ';\n'], partials.FREQ );
+    fprintf(fid, [repmat('%e ', 1, size(partials.FRE, 1) ), ';\n'], partials.FRE );
+    fclose(fid);
+    
+        tmpName     =[ paths.txtDir inFile '.PHA'];
+    fid         = fopen(tmpName,'w');
+    fprintf(fid, [repmat('%e ', 1, size(partials.FRE, 1) ), ';\n'], partials.FRE );
     fclose(fid);
     
     tmpName     =[ paths.txtDir inFile '.NENV'];

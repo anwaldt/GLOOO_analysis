@@ -97,8 +97,6 @@ nFiles = length(wavNames);% length(unproc);
 
  for fileCnt = 1:nFiles
     
-    disp('I am here');
-    
     % get file name
     disp(['File ' num2str(fileCnt) ' of ' num2str(nFiles)]);
     baseName = wavNames{fileCnt} ;
