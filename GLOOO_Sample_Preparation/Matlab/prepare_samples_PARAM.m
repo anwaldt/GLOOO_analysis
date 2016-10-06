@@ -3,7 +3,7 @@
 
 %% choose basic settings
 
-param.parallel      = false;
+param.parallel      = true;
 param.plotit        = false;
 param.saveit        = false;
 

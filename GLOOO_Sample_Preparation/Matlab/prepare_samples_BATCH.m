@@ -30,15 +30,17 @@ prepare_samples_PARAM
 
 %% Start Matlab Pool
 
-% try
-%     % try to start pool
-%     matlabpool('open','AttachedFiles',{'Functions/', '../../Matlab'});
-% catch
-%     % if not possible: notify
-%     disp('Can not open Pool ...')
-%     % and set parameter value
-%     param.parallel = false;
-% end
+matlabpool
+
+%try
+%    % try to start pool
+%    matlabpool('open','AttachedFiles',{'Functions/', '../../Matlab'});
+%catch
+%    % if not possible: notify
+%    disp('Can not open Pool ...')
+%    % and set parameter value
+%    param.parallel = false;
+%end
 
 
 %% List of File Names
@@ -95,7 +97,7 @@ nFiles = length(wavNames);% length(unproc);
 
 % elseif param.parallel == true
 
- for fileCnt = 1:nFiles
+ parfor fileCnt = 1:nFiles
     
     % get file name
     disp(['File ' num2str(fileCnt) ' of ' num2str(nFiles)]);
