@@ -18,7 +18,7 @@ restoredefaultpath
 
 %% OUTPUT directory
 
-rootDIR = '../Results/2/';
+rootDIR = '../Results/3/';
 
 
 %% SET
@@ -28,17 +28,13 @@ prepare_samples_PATHS
 prepare_samples_PARAM
 
 
-%% Start Matlab Pool
+%% Start Matlab Pool ???
 
-% try
-%     % try to start pool
-%     matlabpool('open','AttachedFiles',{'Functions/', '../../Matlab'});
-% catch
-%     % if not possible: notify
-%     disp('Can not open Pool ...')
-%     % and set parameter value
-%     param.parallel = false;
-% end
+s = matlabpool('size');
+
+if s == 0 && param.parallel == true
+    matlabpool
+end
 
 
 %% List of File Names
@@ -47,14 +43,7 @@ wavFiles      = dir(paths.inDir);
 wavFiles(1:2) = [];
 wavNames      = cellfun(@(x)regexprep(x, '.wav',''),  {wavFiles.name}, 'UniformOutput', false);
 
-sinFiles      = dir(paths.matDir);
-sinFiles(1:2) = [];
-nSinFiles     = length(sinFiles);
-sinNames      = cellfun(@(x)regexprep(x, '.snmd',''),  {sinFiles.name}, 'UniformOutput', false);
 
-[i,d]  = setxor(  wavNames, sinNames);
-
-unproc = wavNames(d);
 nFiles = length(wavNames);% length(unproc);
 
 
@@ -77,24 +66,6 @@ nFiles = length(wavNames);% length(unproc);
 
 %% Process all files
 
-% either in  a for-loop or a parfor-loop
-% if param.parallel == false
-%
-%     for fileCnt = 1:nFiles
-%
-%
-%         % get file name
-%         disp(['File ' num2str(fileCnt) ' of ' num2str(nFiles)]);
-%         baseName = wavNames{fileCnt} ;
-%
-%         % the main analysis function
-%         [original, tonal, noise] = prepare_sample(baseName, paths, param);
-%
-%
-%     end
-
-% elseif param.parallel == true
-
  for fileCnt = 1:nFiles
     
     % get file name
@@ -104,15 +75,9 @@ nFiles = length(wavNames);% length(unproc);
     % the main analysis function
     [original, tonal, noise] = prepare_sample(baseName, paths, param);
     
-    [SMS] = model_trajectories(baseName, paths);
+ %   [SMS] = model_trajectories(baseName, pa    ths);
     
 end
 
-% end
-
-%% save parameters
-% with stamp for the date
-
-%tmpName = ['parameters_' date '_' ];
-%save(tmpName, 'param')
+ 
 
