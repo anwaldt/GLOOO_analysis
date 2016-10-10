@@ -30,11 +30,25 @@ prepare_samples_PARAM
 
 %% Start Matlab Pool ???
 
+<<<<<<< HEAD
 s = matlabpool('size');
 
 if s == 0 && param.parallel == true
     matlabpool
 end
+=======
+matlabpool
+
+%try
+%    % try to start pool
+%    matlabpool('open','AttachedFiles',{'Functions/', '../../Matlab'});
+%catch
+%    % if not possible: notify
+%    disp('Can not open Pool ...')
+%    % and set parameter value
+%    param.parallel = false;
+%end
+>>>>>>> e7cf9a0e8bf8e381f813daf6c4b599e47c228573
 
 
 %% List of File Names
@@ -66,7 +80,29 @@ nFiles = length(wavNames);% length(unproc);
 
 %% Process all files
 
+<<<<<<< HEAD
  for fileCnt = 1:nFiles
+=======
+% either in  a for-loop or a parfor-loop
+% if param.parallel == false
+%
+%     for fileCnt = 1:nFiles
+%
+%
+%         % get file name
+%         disp(['File ' num2str(fileCnt) ' of ' num2str(nFiles)]);
+%         baseName = wavNames{fileCnt} ;
+%
+%         % the main analysis function
+%         [original, tonal, noise] = prepare_sample(baseName, paths, param);
+%
+%
+%     end
+
+% elseif param.parallel == true
+
+ parfor fileCnt = 1:nFiles
+>>>>>>> e7cf9a0e8bf8e381f813daf6c4b599e47c228573
     
     % get file name
     disp(['File ' num2str(fileCnt) ' of ' num2str(nFiles)]);
