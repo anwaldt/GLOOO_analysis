@@ -19,7 +19,7 @@ clearvars
 %% BASIC PARAMETERS
 
 % this starts the animated plot, if set to '1'
-plotit = 0;
+plotit = 1;
 
 % sampling frequency
 fs      = 44100;
@@ -198,7 +198,7 @@ for frameCnt=1:nFrames
         ylim([-100 200]);
         xlabel('Frequency Bin'), ylabel('|X|[n], real(X), imag(X)')
         title('Spectral Frame (zoom)')
-        
+        xlim([1 40])
         
         subplot(2,2,2)
         plot(tmpFrame)
@@ -228,7 +228,7 @@ for frameCnt=1:nFrames
         title('Instantaneous Phase')
         hold off
         
-        pause(0.1)
+        pause(0.5)
         %         drawnow
         shg
         
