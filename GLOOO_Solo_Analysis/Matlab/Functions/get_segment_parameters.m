@@ -28,8 +28,8 @@ for segCNT = 1:nSeg
             tmpSeg = analyze_transition(tmpSeg, CTL,param);
             
         otherwise
-            
             error('Unknown Segment Type!');
+    
     end
     
     SEG{segCNT} = tmpSeg;

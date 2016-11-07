@@ -15,7 +15,7 @@ function [SEG, INF, CTL] = modeling_segments(baseName, paths)
 
 %% load controll and sinusoid data
 
-load([paths.sinusoids baseName]);
+% load([paths.sinusoids baseName]);
 load([paths.features baseName]);
 
 param = SMS.param;
