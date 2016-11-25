@@ -68,9 +68,7 @@ expMod  = expression_model('original');
 
 %% and EXPORT
 
-
 if paramSynth.saveit == true
- 
     wavwrite( y, paramSynth.fs,[paths.OUTPUT baseName '_Synth-' paramSynth.f0mode '.wav']);
 end
 

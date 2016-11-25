@@ -50,7 +50,10 @@ segCNT = 1;
 
 for frameIDX = 1:nWin
     
-    disp(['Rendering frame ' num2str(frameIDX) ' of ' num2str(nWin)]);
+    if paramSynth.verbose == true
+        disp(['Rendering frame ' num2str(frameIDX) ' of ' num2str(nWin)]);
+    end
+    
     % times (in sec.) to be filled in this loop run
     targetTimes = (targetInds-1)/paramSynth.fs;
     
@@ -78,8 +81,9 @@ for frameIDX = 1:nWin
                     % They just trigger a note with specific properties.
                     case 'attack'
                         
-                        disp('Got an attack!')
-                        
+                        if paramSynth.verbose == true
+                            disp('Got an attack!')
+                        end
                         
                         
                         % in transition is not left blank in this case
@@ -103,8 +107,9 @@ for frameIDX = 1:nWin
                         
                     case 'detached'
                         
-                        disp('Got a detachee!')
-                        
+                        if paramSynth.verbose == true
+                            disp('Got a detachee!')
+                        end
                         
                         % set the old note released
                         SMSP.isReleased = 1;
@@ -134,7 +139,9 @@ for frameIDX = 1:nWin
                         
                     case 'legato'
                         
-                        disp('Got a legato!')
+                        if paramSynth.verbose == true
+                            disp('Got a legato!')
+                        end
                         
                         % set the old note released
                         SMSP.isReleased = 1;
@@ -168,7 +175,9 @@ for frameIDX = 1:nWin
                         
                         % connect with next note at once
                         % kill last note at once
-                        disp('Got a glissando!')
+                        if paramSynth.verbose == true
+                            disp('Got a glissando!')
+                        end
                         
                         % in transition is not left blank in this case
                         inTrans = SEG{segCNT};
@@ -199,8 +208,10 @@ for frameIDX = 1:nWin
                         
                         
                     case 'release'
-                        disp('Got a release!')
                         
+                        if paramSynth.verbose == true
+                            disp('Got a release!')
+                        end
                         SMSP.isReleased = 1;
                         
                 end
@@ -209,8 +220,9 @@ for frameIDX = 1:nWin
                 % if it is a note
             elseif strcmp(class(tmpSeg),'note') == 1
                 
-                disp('Got a note!')
-                
+                if paramSynth.verbose == true
+                    disp('Got a note!')
+                end
             end
             
             segCNT = segCNT+1;

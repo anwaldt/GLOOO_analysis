@@ -11,8 +11,9 @@
 
 %% script parameters
 
-paramSynth.plotit = true;
-paramSynth.saveit = true;
+paramSynth.plotit   = false;
+paramSynth.saveit   = true;
+paramSynth.verbose = false;
 
 %%  BASIC synthesis  parameters
  
@@ -41,11 +42,9 @@ paramSynth.noiseMode    = 'off';
 % paramSynth.noiseMode    = 'on';
 % paramSynth.noiseMode    = 'only';
 
- 
-
-
 
 %% which approach is used (only IFFT implemented, yet)
 
 paramSynth.synthMode = 'IFFT';
+
 

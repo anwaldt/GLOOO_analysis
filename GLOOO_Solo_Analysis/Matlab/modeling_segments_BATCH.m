@@ -40,7 +40,7 @@ end
 %% get list of files
 
 fileNames = dir(paths.wavPrepared);
-fileNames = {fileNames(3:end).name};
+fileNames = fileNames(~[fileNames.isdir]);
 
 nFiles   = length(fileNames);
 
