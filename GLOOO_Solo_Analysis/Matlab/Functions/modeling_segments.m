@@ -18,7 +18,7 @@ function [SEG, INF, CTL] = modeling_segments(baseName, paths)
 % load([paths.sinusoids baseName]);
 load([paths.features baseName]);
 
-param = SMS.param;
+param = CTL.param;
 
 %% load properties of sequence
 % this could be needed, is not yet used.

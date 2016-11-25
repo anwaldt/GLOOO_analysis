@@ -195,8 +195,8 @@ classdef single_sinmod_player
             %% prepare the amplitude trajectories
             
             % @TODO: careful, this should be done in the analysis stage
-            obj.A           = partialAmp(1:paramSynth.nPartials, 2:end-1); %#ok<*COLND>
-            obj.F           = partialFre(1:paramSynth.nPartials, 2:end-1);
+            obj.A           = partials.AMP(1:paramSynth.nPartials, 2:end-1); %#ok<*COLND>
+            obj.F           = partials.FRE(1:paramSynth.nPartials, 2:end-1);
             
             
             % read the samples infos

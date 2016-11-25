@@ -225,5 +225,9 @@ for frameCnt=1:nKernels
     
 end
 
+%% Save kernels
 
-save('kernel_data_LF','fracVec_LF','kernels_LF')
+if ~isdir('../Data')
+    mkdir('../Data')
+end
+save('../Data/kernel_data_LF','fracVec_LF','kernels_LF')

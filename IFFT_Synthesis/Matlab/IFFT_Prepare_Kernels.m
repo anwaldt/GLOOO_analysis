@@ -221,11 +221,17 @@ for frameCnt=1:nFrames
     
 end
 
-%% 
+%% Save kernels
 
-dlmwrite('kernels',kkk,'delimiter','\t')
-dlmwrite('fracVec',fracVec,'delimiter','\t')
+if ~isdir('../Data')
+    mkdir('../Data')
+end
+
+dlmwrite('../Data/kernels',kkk,'delimiter','\t')
+dlmwrite('../Data/fracVec',fracVec,'delimiter','\t')
 
 
-save('kernel_data','fracVec','kernels')
+
+
+save('../Data/kernel_data','fracVec','kernels')
 

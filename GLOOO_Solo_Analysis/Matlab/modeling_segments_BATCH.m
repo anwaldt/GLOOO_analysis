@@ -55,12 +55,28 @@ parfor fileCNT = 1:nFiles
     % Get gontrol- and   trajectories and features
     [CTL]           = basic_analysis(baseName, paths, param);
     
+end  
+    
+%%
+
+parfor fileCNT = 1:nFiles
+    
+    [~,baseName,~]    = fileparts(fileNames{fileCNT});
+ 
     % Get partial trajectories
     [SMS]           = partial_analysis(baseName,  paths);
     
     % transform partial data
+    % ...
     
+ end   
     
+%%
+
+ for fileCNT = 1:nFiles
+    
+    [~,baseName,~]    = fileparts(fileNames{fileCNT});
+
     % Analysis
     [SEG, INF]      = modeling_segments(baseName, paths);
     

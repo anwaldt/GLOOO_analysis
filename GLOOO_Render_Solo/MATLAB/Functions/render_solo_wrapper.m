@@ -71,7 +71,7 @@ expMod  = expression_model('original');
 
 if paramSynth.saveit == true
  
-    wavwrite( y, paramSynth.fs,['../WAV/' baseName '_Synth-' paramSynth.f0mode '.wav']);
+    wavwrite( y, paramSynth.fs,[paths.OUTPUT baseName '_Synth-' paramSynth.f0mode '.wav']);
 end
 
 %% PLOT
