@@ -79,7 +79,34 @@ nFiles = length(wavNames);% length(unproc);
     
  %   [SMS] = model_trajectories(baseName, pa    ths);
     
-end
+ end
 
  
+%% MODEL 
+ 
+MOD = [];
+
+ for fileCnt = 1:nFiles
+ 
+    
+    % get file name
+    disp(['File ' num2str(fileCnt) ' of ' num2str(nFiles)]);
+    
+    baseName = wavNames{fileCnt} ;
+    
+    [MODELS{fileCnt}] = model_trajectories(baseName, paths);
+     
+ end
+
+
+%%
+
+AMP     = MODELS{2}.AMP;
+aaa     =(AMP.dist{1});
+picks   = max(1,round(rand(1,1000)*length(aaa)));
+
+plot(sort(aaa(picks)))
+
+
+
 

@@ -10,6 +10,7 @@ paths.tonDir        = [ rootDIR 'Tonal/Violin_2015/BuK/'];
 paths.comDir        = [ rootDIR 'Complete/Violin_2015/BuK/'];
 
 
+paths.segDIR = '\\NAS-AK\Forschungsprojekte\Klanganalyse_und_Synthese\Violin_Library_2015\SamplePositions\';
 
 %% Check for existence of paths
 %  and make them, if necessary
