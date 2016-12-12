@@ -41,7 +41,7 @@ end
 
 fileNames = dir(paths.wavPrepared);
 fileNames = fileNames(~[fileNames.isdir]);
-
+fileNames = {fileNames.name};
 nFiles   = length(fileNames);
 
 %% LOOP over all files
