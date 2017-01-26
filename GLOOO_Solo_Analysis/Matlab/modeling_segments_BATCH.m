@@ -57,7 +57,7 @@ parfor fileCNT = 1:nFiles
     
 end  
     
-%%
+%% SMS LOOP
 
 parfor fileCNT = 1:nFiles
     
@@ -71,7 +71,7 @@ parfor fileCNT = 1:nFiles
     
  end   
     
-%%
+%% MODELING LOOP
 
  for fileCNT = 1:nFiles
     
