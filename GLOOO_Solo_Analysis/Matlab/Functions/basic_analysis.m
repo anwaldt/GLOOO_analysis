@@ -25,11 +25,13 @@ end
 % add sample rate to parameters
 param.fs    = fs;
 
+%% Get Info / Load Properties of Sequence 
 
+INF = load_solo_properties(regexprep(baseName,'BuK','DPA') , paths);
 
 %% Controll parameter ANALYSIS
 
-CTL = get_controll_trajectories(x, param, audioPath);
+CTL = get_controll_trajectories(x, param, audioPath, INF);
 
 if param.plotit == true
     

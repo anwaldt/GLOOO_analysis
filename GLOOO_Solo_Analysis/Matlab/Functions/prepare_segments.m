@@ -17,6 +17,10 @@
 
 function [SEG] = prepare_segments(segBounds, I, param, features)
 
+if param.info == true
+    disp('    prepare_segments(): Starting...');
+end
+
 % unpack / map transition properties
 segINF = cell(1,5);
 segINF{1} = 'attack';
@@ -53,7 +57,7 @@ for segCNT = 1:nSegments
        % create a TRANS    
        case 2
            
-           tmpSeg = trans(tmpStart, tmpStop, segINF{segCNT});
+           tmpSeg = trans(tmpStart, tmpStop, segINF{segCNT},I);
            
    end
    

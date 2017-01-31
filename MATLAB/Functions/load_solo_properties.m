@@ -57,5 +57,8 @@ if strcmp(    A{4}(1), A{4}(1)) == 1 && strcmp(A{11}(IDX+1),'leagato') == 1
     I.trans.articulation= [A{11}(IDX+1) '_1'];
 else
     I.trans.articulation= A{11}(IDX+1);
+  
+% Save Neme of File
+I.fileName = baseName;
     
 end

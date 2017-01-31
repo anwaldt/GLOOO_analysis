@@ -8,17 +8,21 @@ classdef trans < segment
         
         % type is either attack / release / transition
         type;
+        INF;
         
     end
     
     %% METHODS
     methods
         
-        function    obj = trans(start, stop,t)
+        function    obj = trans(start, stop,t, INF)
             
             % assign boundaries
             obj.startSEC = start;
             obj.stopSEC = stop;
+            
+            %assign Info
+            obj.INF = INF;
             
             if      strcmp(t,'attack') == 1 || ...
                     strcmp(t,'release') ==1 || ...
