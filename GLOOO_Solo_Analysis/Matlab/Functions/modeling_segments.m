@@ -12,16 +12,16 @@
 
 function [SEG, INF, CTL] = modeling_segments(baseName, paths)
 
-if param.info == true
-    disp(['    modeling_segments(): Starting with: ' baseName]);
-end
-
 %% load controll and sinusoid data
 
 % load([paths.sinusoids baseName]);
 load([paths.features baseName]);
 
 param = CTL.param;
+
+if param.info == true
+    disp(['    modeling_segments(): Starting with: ' baseName]);
+end
 
 %% load properties of sequence
 % this could be needed, is not yet used.

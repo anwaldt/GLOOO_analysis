@@ -18,6 +18,10 @@ close all
 clearvars
 restoredefaultpath
 
+% Decide which parts of the script should be executed
+do_basic_analysis    = true;
+do_partial_analysis  = true;
+do_modeling_segments = true;
 %% Set the outup path for this set
 
 outPath = '../Results/1/';
@@ -32,53 +36,76 @@ modeling_segments_PARAM
 %% start pool
 
 s = matlabpool('size');
-
 if s == 0 && param.parallel == true
     matlabpool
 end
 
 %% get list of files
+directoryFiles = dir(paths.wavPrepared);
+% only get the wave files out of the folder into the list of audio files
+% which should be processed
+validFileidx = 1;
+fileNames = cell(1);
+for n = 1:length(directoryFiles);
+    [pathstr,name,ext] = fileparts(directoryFiles(n).name);
+    if strcmp(ext,'.wav')
+        fileNames{validFileidx} = directoryFiles(n).name;
+        validFileidx = validFileidx + 1;
+    end
+end
 
-fileNames = dir(paths.wavPrepared);
-fileNames = fileNames(~[fileNames.isdir]);
-fileNames = {fileNames.name};
 nFiles   = length(fileNames);
 
 %% LOOP over all files
+if do_basic_analysis == true
+    parfor fileCNT = 1:nFiles
+        
+        if param.info == true
+            disp(['starting basic analysis for: ',fileNames{fileCNT}]); 
+        end
 
-parfor fileCNT = 1:nFiles
-    
-    
-    [~,baseName,~]    = fileparts(fileNames{fileCNT});
-    
-    
-    % Get gontrol- and   trajectories and features
-    [CTL]           = basic_analysis(baseName, paths, param);
-    
-end  
-    
+        [~,baseName,~]    = fileparts(fileNames{fileCNT});
+
+
+        % Get gontrol- and   trajectories and features
+        [CTL]           = basic_analysis(baseName, paths, param);
+
+    end  
+end    
 %%
+if do_partial_analysis == true
+    parfor fileCNT = 1:nFiles
+        
+        if param.info == true
+            disp(['starting partial analysis for: ',fileNames{fileCNT}]);
+        end
 
-parfor fileCNT = 1:nFiles
-    
-    [~,baseName,~]    = fileparts(fileNames{fileCNT});
- 
-    % Get partial trajectories
-    [SMS]           = partial_analysis(baseName,  paths);
-    
-    % transform partial data
-    % ...
-    
- end   
-    
+        [~,baseName,~]    = fileparts(fileNames{fileCNT});
+
+        % Get partial trajectories
+        [SMS]           = partial_analysis(baseName,  paths);
+
+        % transform partial data
+        % ...
+
+     end   
+end 
 %%
-
+if do_modeling_segments == true
  for fileCNT = 1:nFiles
+     
+    if param.info == true
+        disp(['starting modeling for: ',fileNames{fileCNT}]);
+    end
     
     [~,baseName,~]    = fileparts(fileNames{fileCNT});
 
     % Analysis
     [SEG, INF]      = modeling_segments(baseName, paths);
+        
+    if param.info == true
+        disp(['finished analysis for: ',fileNames{fileCNT}]);
+    end
     
-    
+ end
 end
