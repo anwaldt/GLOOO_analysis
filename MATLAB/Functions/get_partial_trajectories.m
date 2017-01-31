@@ -64,6 +64,11 @@ end
 lastPartials = [];
 
 %% LOOP over all frames
+
+% Variables for Info output
+percent_done = 5;
+percent_interval = 10;
+
 for frameIDX = frameStart:nFrames-1
     
     % Get index vectors
@@ -130,17 +135,28 @@ for frameIDX = frameStart:nFrames-1
         %         noise(idxs) = noise(idxs)+frameRes;%.*(triang(length(frame)));
         
         try
-            
             % assemble the "true" noise
-            resVec(idxs)     = resVec(idxs)+resFrame;%resDist{frameIDX};
+            resVec(idxs)     = resVec(idxs) + resFrame;%resDist{frameIDX};
             
-            % noise_mod(idxs) = noise_mod(idxs)+resDist{frameIDX};
-            
-            tonalVec(idxs)     = tonalVec(idxs)+sinusoidal;
-            
-        catch
-            disp(  'can#t add')
+        catch ME           
+            disp(['    get_partial_trajectories(): cant add:  - ' ME.message]);
+            disp(['    -> resVec frame:'  num2str(frameIDX) ...
+                ' - idxs(end): ' num2str(idxs(end)) ...
+                ' - size(resFrame): ' num2str(size(resFrame))]);
+                
         end
+
+        try
+            % noise_mod(idxs) = noise_mod(idxs)+resDist{frameIDX};            
+            tonalVec(idxs)     = tonalVec(idxs) + sinusoidal;
+            
+        catch ME
+            disp(['    get_partial_trajectories(): cant add: - ' ME.message]);
+            disp(['    -> tonalVec frame:' num2str(frameIDX) ...
+                ' - idxs(end): ' num2str(idxs(end)) ...
+                ' - size(resFrame): ' num2str(size(resFrame))]);
+                
+        end            
     else
         
         
@@ -148,10 +164,12 @@ for frameIDX = frameStart:nFrames-1
     end
     
     % increase sample index
-    sampleIDX = sampleIDX+param.lHop;
+    sampleIDX = sampleIDX + param.lHop;
     
-    if param.PART.info == true
-        disp(['Frame ' num2str(frameIDX) ' of ' num2str(nFrames)]);
+    
+    if param.PART.info == true && floor(frameIDX/nFrames*10000)/100 > percent_done        
+        disp(['    Frame: ' num2str(frameIDX) ', ' num2str(floor(frameIDX/nFrames*10000)/100) '% done']);
+        percent_done = percent_done + percent_interval;
     end
 end
 

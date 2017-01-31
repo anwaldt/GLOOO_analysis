@@ -11,9 +11,17 @@
 
 function  [SEG] = get_segment_parameters(SEG, CTL, param, paths)
 
+if param.info == true
+    disp('    get_segment_parameters(): Starting...');
+end
+
 nSeg = length(SEG);
 
 for segCNT = 1:nSeg
+    
+    if param.info == true
+        disp(['    get_segment_parameters(): Segment ' num2str(segCNT) ' of ' num2str(nSeg)]);
+    end
     
     tmpSeg  = SEG{segCNT};
     c       = class(tmpSeg);

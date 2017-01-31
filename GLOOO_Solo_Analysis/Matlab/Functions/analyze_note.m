@@ -8,6 +8,9 @@
 
 function [noteModel] = analyze_note(noteModel, CTL, param, paths )
 
+if param.info == true
+    disp('    analyze_note(): Starting...');
+end
 
 % select the f0-trajectory
 switch param.F0.f0Mode

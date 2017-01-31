@@ -14,6 +14,9 @@
 
 function [cleanVEC, corVEC, modVEC] = decompose_trajectory(inVEC, param)
 
+if param.info == true
+    disp('    decompose_trajectory(): Starting...');
+end
 
 % the f0-sampling rate:
 fs = 1/(param.lHop/param.fs); 

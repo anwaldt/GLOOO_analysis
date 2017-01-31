@@ -8,6 +8,9 @@
 
 function [transModel] = analyze_transition(transModel, features,param )
 
+if param.info == true
+    disp('    analyze_transition(): Starting...');
+end
 
 % select the f0-trajectory
 switch param.F0.f0Mode

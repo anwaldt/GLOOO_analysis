@@ -12,6 +12,9 @@
 
 function [SEG, INF, CTL] = modeling_segments(baseName, paths)
 
+if param.info == true
+    disp(['    modeling_segments(): Starting with: ' baseName]);
+end
 
 %% load controll and sinusoid data
 
