@@ -72,7 +72,7 @@ if do_basic_analysis == true
 
     end  
 end    
-%%
+%% SMS LOOP
 if do_partial_analysis == true
     parfor fileCNT = 1:nFiles
         
@@ -90,7 +90,7 @@ if do_partial_analysis == true
 
      end   
 end 
-%%
+%% MODELING LOOP
 if do_modeling_segments == true
  for fileCNT = 1:nFiles
      
