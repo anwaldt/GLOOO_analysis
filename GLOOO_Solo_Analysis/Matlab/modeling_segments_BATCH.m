@@ -18,10 +18,19 @@ close all
 clearvars
 restoredefaultpath
 
-% Decide which parts of the script should be executed
+%% Decide which parts of the script should be executed
 do_basic_analysis    = true;
 do_partial_analysis  = true;
 do_modeling_segments = true;
+
+
+%% Decide which files should be processed
+
+filesToDo = 1;
+% filesToDo = '44_DPA'
+% filesToDo = 'All';
+
+
 %% Set the outup path for this set
 
 outPath = '../Results/1/';
@@ -40,12 +49,14 @@ if s == 0 && param.parallel == true
     matlabpool
 end
 
+
 %% get list of files
 directoryFiles = dir(paths.wavPrepared);
 % only get the wave files out of the folder into the list of audio files
 % which should be processed
-validFileidx = 1;
-fileNames = cell(1);
+validFileidx    = 1;
+fileNames       = cell(1);
+
 for n = 1:length(directoryFiles);
     [pathstr,name,ext] = fileparts(directoryFiles(n).name);
     if strcmp(ext,'.wav')
@@ -58,7 +69,7 @@ nFiles   = length(fileNames);
 
 %% LOOP over all files
 if do_basic_analysis == true
-    parfor fileCNT = 1:nFiles
+    parfor fileCNT = filesToDo
         
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]); 
@@ -72,9 +83,11 @@ if do_basic_analysis == true
 
     end  
 end    
+
+
 %% SMS LOOP
 if do_partial_analysis == true
-    parfor fileCNT = 1:nFiles
+    parfor fileCNT = filesToDo
         
         if param.info == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);
@@ -90,9 +103,11 @@ if do_partial_analysis == true
 
      end   
 end 
+
+
 %% MODELING LOOP
 if do_modeling_segments == true
- for fileCNT = 1:nFiles
+ for fileCNT = filesToDo
      
     if param.info == true
         disp(['starting modeling for: ',fileNames{fileCNT}]);

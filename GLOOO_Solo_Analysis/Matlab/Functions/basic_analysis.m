@@ -3,7 +3,7 @@
 % Get control trajectories, features and sinusoidal trajectories
 %
 % Henrik von Coler
-%
+% 
 % Created : 2016-09-28
 %
 %%
