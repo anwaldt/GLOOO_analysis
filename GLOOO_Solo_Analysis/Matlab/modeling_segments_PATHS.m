@@ -10,10 +10,12 @@
 
 %% SET PATHS
 
-% input
+% input for TWO NOTE
 paths.wavPrepared   = '../../../Violin_Library_2015/WAV/TwoNote/DPA/';
 paths.segSV         = '../../../Violin_Library_2015/Segmentation/TwoNote/';
 paths.FILELISTS     = '../../../Violin_Library_2015/File_Lists/';
+
+
 
 % output paths are WITHIN the 'outPath'
 paths.features      = [outPath 'Features/'];  

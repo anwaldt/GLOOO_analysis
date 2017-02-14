@@ -18,7 +18,7 @@ restoredefaultpath
 
 %% OUTPUT directory
 
-rootDIR = '../Results/1/';
+rootDIR = '../Results/2/';
 
 
 %% SET
