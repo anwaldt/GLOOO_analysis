@@ -7,8 +7,6 @@
 %%
 
 addpath('../..//MATLAB/SWIPE');
-addpath('../../MATLAB/yin');
-addpath('../../MATLAB/kts-matlab-midi/src/');
 addpath('../../MATLAB/Functions/');
 addpath('../../MATLAB/Classes/');
 

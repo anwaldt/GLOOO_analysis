@@ -8,7 +8,7 @@
 %
 %%
 
-function [CTL, param] = basic_analysis(baseName, paths, param)
+function [CTL, param] = basic_analysis(baseName, paths, param, setToDo)
 
 
 
@@ -25,9 +25,14 @@ end
 % add sample rate to parameters
 param.fs    = fs;
 
-%% Get Info / Load Properties of Sequence 
+%% Get Info / Load Properties of Sequence
 
-INF = load_solo_properties(regexprep(baseName,'BuK','DPA') , paths);
+switch setToDo
+    case 'TwoNote'
+        INF = load_solo_properties(regexprep(baseName,'BuK','DPA') , paths);
+    case 'SingleSounds'
+        INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , paths);
+end
 
 %% Controll parameter ANALYSIS
 

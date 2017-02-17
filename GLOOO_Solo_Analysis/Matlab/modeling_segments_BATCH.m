@@ -18,7 +18,9 @@ close all
 clearvars
 restoredefaultpath
 
+
 %% Decide which parts of the script should be executed
+
 do_basic_analysis    = true;
 do_partial_analysis  = true;
 do_modeling_segments = true;
@@ -26,14 +28,17 @@ do_modeling_segments = true;
 
 %% Decide which files should be processed
 
-filesToDo = 1;
+%setToDo     = 'SingleSounds';
+setToDo     = 'TwoNote';
+
+filesToDo   = 1;
 % filesToDo = '44_DPA'
 % filesToDo = 'All';
 
 
 %% Set the outup path for this set
 
-outPath = '../Results/1/';
+outPath = '../Results/SingleSounds/';
 
 
 %% SET
@@ -69,7 +74,7 @@ nFiles   = length(fileNames);
 
 %% LOOP over all files
 if do_basic_analysis == true
-    parfor fileCNT = filesToDo
+    for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]); 
@@ -79,7 +84,7 @@ if do_basic_analysis == true
 
 
         % Get gontrol- and   trajectories and features
-        [CTL]           = basic_analysis(baseName, paths, param);
+        [CTL]           = basic_analysis(baseName, paths, param, setToDo);
 
     end  
 end    

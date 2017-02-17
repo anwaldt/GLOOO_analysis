@@ -1,6 +1,6 @@
 %% function I = load_solo_properties(baseName, paths)
 %
-%
+%   JUST FOR THE TWO NOTES
 %
 % Author : HvC
 % Created: 2016-08-11
@@ -15,7 +15,7 @@ function I = load_solo_properties(baseName, paths)
 
 % load file
 f1 = fopen([paths.FILELISTS 'list_TwoNote.txt'],'r');
-A  = textscan(f1,'%s %s %s %s %s %s %s %s %s %s %s %s \n ',inf);
+A  = textscan(f1,'%s %s %s %s %s %s %s %s %s %s %s %s',inf);
 fclose(f1);
 
 % get index

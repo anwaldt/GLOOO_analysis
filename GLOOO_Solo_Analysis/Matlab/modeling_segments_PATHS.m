@@ -13,9 +13,12 @@
 % input for TWO NOTE
 paths.wavPrepared   = '../../../Violin_Library_2015/WAV/TwoNote/DPA/';
 paths.segSV         = '../../../Violin_Library_2015/Segmentation/TwoNote/';
-paths.FILELISTS     = '../../../Violin_Library_2015/File_Lists/';
+paths.FILELISTS     = 'D:\Users\hvcoler_V2\Violin_Library_2015\File_Lists\';
 
-
+% input for single 
+%paths.wavPrepared   = 'D:\Users\hvcoler_V2\Violin_Library_2015\WAV\SingleSounds\DPA\';
+%paths.segSV         = 'D:\Users\hvcoler_V2\Violin_Library_2015\Segmentation\SingleSounds\';
+%paths.segSV         = 'D:\Users\hvcoler_V2\Violin_Library_2015\File_Lists\';
 
 % output paths are WITHIN the 'outPath'
 paths.features      = [outPath 'Features/'];  
