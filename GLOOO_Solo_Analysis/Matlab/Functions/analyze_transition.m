@@ -27,7 +27,7 @@ start = transModel.startSEC;
 stop  = transModel.stopSEC;
 
 % get related frame positions of features
-featStartInd = round(start /(param.lHop/param.fs));
+featStartInd = max(1,round(start /(param.lHop/param.fs)));
 featStopInd  = min(length(f0vec),     round(stop  /(param.lHop/param.fs)));
 
 %% extract F0 properties

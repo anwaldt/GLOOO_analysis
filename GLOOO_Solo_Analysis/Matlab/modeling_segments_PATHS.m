@@ -4,24 +4,28 @@
 %
 % Henrik von Coler
 % Created: 2014-02-17
-% Edited:  2016-09-21 
+% Edited:  2016-09-21
 %
 %%
 
 %% SET PATHS
 
 % input for TWO NOTE
-paths.wavPrepared   = '../../../Violin_Library_2015/WAV/TwoNote/DPA/';
-paths.segSV         = '../../../Violin_Library_2015/Segmentation/TwoNote/';
-paths.FILELISTS     = 'D:\Users\hvcoler_V2\Violin_Library_2015\File_Lists\';
+if strcmp(setToDo,'TwoNote') ==1
 
-% input for single 
-%paths.wavPrepared   = 'D:\Users\hvcoler_V2\Violin_Library_2015\WAV\SingleSounds\DPA\';
-%paths.segSV         = 'D:\Users\hvcoler_V2\Violin_Library_2015\Segmentation\SingleSounds\';
-%paths.segSV         = 'D:\Users\hvcoler_V2\Violin_Library_2015\File_Lists\';
+    paths.wavPrepared   = 'D:\Users\hvcoler_V2\Violin_Library_2015\WAV\TwoNote\DPA\';
+    paths.segSV         = 'D:\Users\hvcoler_V2\Violin_Library_2015\Segmentation\TwoNote\';
+    paths.FILELISTS     = 'D:\Users\hvcoler_V2\Violin_Library_2015\File_Lists\';
+
+elseif strcmp(setToDo,'SingleSounds') ==1
+    % input for single
+    paths.wavPrepared   = 'D:\Users\hvcoler_V2\Violin_Library_2015\WAV\SingleSounds\DPA\';
+    paths.segSV         = 'D:\Users\hvcoler_V2\Violin_Library_2015\Segmentation\SingleSounds\';
+    paths.FILELISTS     = 'D:\Users\hvcoler_V2\Violin_Library_2015\File_Lists\';
+end
 
 % output paths are WITHIN the 'outPath'
-paths.features      = [outPath 'Features/'];  
+paths.features      = [outPath 'Features/'];
 paths.segments      = [outPath 'Segments/'];
 
 paths.sinusoids     = [outPath 'Sinusoids/'];
@@ -38,16 +42,16 @@ paths.plot          = [outPath 'Plots/'];
 %  and make them, if necessary
 
 fn      = fieldnames(paths);
-nFields = length(fn); 
+nFields = length(fn);
 
 for fieldCNT = 1:nFields
     
-     tmpDir = eval(['paths.' fn{fieldCNT}]);
-     
-     
-     if isdir(tmpDir) == 0
+    tmpDir = eval(['paths.' fn{fieldCNT}]);
+    
+    
+    if isdir(tmpDir) == 0
         mkdir(tmpDir);
-     end
+    end
     
     
 end

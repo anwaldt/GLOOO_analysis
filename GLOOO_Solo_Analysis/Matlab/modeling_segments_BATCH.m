@@ -13,7 +13,7 @@
 % Edited : 2016-08-08
 %
 %
-%% RESET 
+%% RESET
 close all
 clearvars
 restoredefaultpath
@@ -21,22 +21,21 @@ restoredefaultpath
 
 %% Decide which parts of the script should be executed
 
-do_basic_analysis    = true;
-do_partial_analysis  = true;
+do_basic_analysis    = false;
+do_partial_analysis  = false;
 do_modeling_segments = true;
 
 
 %% Decide which files should be processed
 
-%setToDo     = 'SingleSounds';
-setToDo     = 'TwoNote';
+setToDo     = 'SingleSounds';
+%  setToDo     = 'TwoNote';
+ 
+%filesToDo = 'SampLib_DPA_99.wav';
+ filesToDo = 'All';
 
-filesToDo   = 1;
-% filesToDo = '44_DPA'
-% filesToDo = 'All';
 
-
-%% Set the outup path for this set
+%% Set the output path for this set
 
 outPath = '../Results/SingleSounds/';
 
@@ -72,22 +71,29 @@ end
 
 nFiles   = length(fileNames);
 
+if strcmp(filesToDo,'All')==1
+    
+   filesToDo = 1:nFiles;
+   
+else 
+     filesToDo =  find(ismember(fileNames,filesToDo));   
+end
+
 %% LOOP over all files
 if do_basic_analysis == true
-    for fileCNT = filesToDo
+   parfor fileCNT = filesToDo
         
         if param.info == true
-            disp(['starting basic analysis for: ',fileNames{fileCNT}]); 
+            disp(['starting basic analysis for: ',fileNames{fileCNT}]);
         end
-
+        
         [~,baseName,~]    = fileparts(fileNames{fileCNT});
-
-
+        
         % Get gontrol- and   trajectories and features
         [CTL]           = basic_analysis(baseName, paths, param, setToDo);
-
-    end  
-end    
+        
+    end
+end
 
 
 %% SMS LOOP
@@ -97,35 +103,35 @@ if do_partial_analysis == true
         if param.info == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);
         end
-
+        
         [~,baseName,~]    = fileparts(fileNames{fileCNT});
-
+        
         % Get partial trajectories
         [SMS]           = partial_analysis(baseName,  paths);
-
+        
         % transform partial data
         % ...
-
-     end   
-end 
+        
+    end
+end
 
 
 %% MODELING LOOP
 if do_modeling_segments == true
- for fileCNT = filesToDo
-     
-    if param.info == true
-        disp(['starting modeling for: ',fileNames{fileCNT}]);
-    end
-    
-    [~,baseName,~]    = fileparts(fileNames{fileCNT});
-
-    % Analysis
-    [SEG, INF]      = modeling_segments(baseName, paths);
+    for fileCNT = filesToDo
         
-    if param.info == true
-        disp(['finished analysis for: ',fileNames{fileCNT}]);
+        if param.info == true
+            disp(['starting modeling for: ',fileNames{fileCNT}]);
+        end
+        
+        [~,baseName,~]    = fileparts(fileNames{fileCNT});
+        
+        % Analysis
+         modeling_segments(baseName, paths, setToDo);
+        
+        if param.info == true
+            disp(['finished analysis for: ',fileNames{fileCNT}]);
+        end
+        
     end
-    
- end
 end

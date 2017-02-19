@@ -70,7 +70,12 @@ percent_done = 5;
 percent_interval = 10;
 
 for frameIDX = frameStart:nFrames-1
-    
+   
+     if param.PART.info == true && floor(frameIDX/nFrames*10000)/100 > percent_done        
+        disp(['    Frame: ' num2str(frameIDX) ', ' num2str(floor(frameIDX/nFrames*10000)/100) '% done']);
+        percent_done = percent_done + percent_interval;
+    end
+ 
     % Get index vectors
     idxs        = sampleIDX-(param.PART.lWin/2):sampleIDX+(param.PART.lWin/2)-1;
     idxsPEAK    = sampleIDX-(param.PART.lWin/2):sampleIDX+(param.PART.lWin/2)-1;
@@ -167,10 +172,7 @@ for frameIDX = frameStart:nFrames-1
     sampleIDX = sampleIDX + param.lHop;
     
     
-    if param.PART.info == true && floor(frameIDX/nFrames*10000)/100 > percent_done        
-        disp(['    Frame: ' num2str(frameIDX) ', ' num2str(floor(frameIDX/nFrames*10000)/100) '% done']);
-        percent_done = percent_done + percent_interval;
-    end
+   
 end
 
 %% Get statistical values for each partial's f0-deviation

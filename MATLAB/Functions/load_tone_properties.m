@@ -14,5 +14,7 @@ fclose(f1);
 
 % get index
 IDX = find(ismember(A{1},(baseName)));
+prop = [A{1}(IDX) A{2}(IDX) A{3}(IDX) A{4}(IDX) A{5}(IDX) A{6}(IDX)];
 
-I.note = [A{1}(IDX) A{2}(IDX) A{3}(IDX) A{4}(IDX) A{5}(IDX) A{6}(IDX)];
+I.note.f0 = (440/32) * (2^(str2double(prop{4})/12));
+

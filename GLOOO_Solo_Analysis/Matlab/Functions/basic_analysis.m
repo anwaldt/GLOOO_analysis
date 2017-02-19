@@ -11,6 +11,9 @@
 function [CTL, param] = basic_analysis(baseName, paths, param, setToDo)
 
 
+outName = [paths.features baseName '.mat'];
+
+if exist(outName,'file')==0
 
 %% READ WAV
 
@@ -65,6 +68,8 @@ end
 
 CTL.param = param;
 
-save([paths.features regexprep(baseName,'.wav','.mat')],'CTL')
+save(outName,'CTL')
 
-
+else
+  load( [paths.features regexprep(baseName,'.wav','.mat')] );
+end

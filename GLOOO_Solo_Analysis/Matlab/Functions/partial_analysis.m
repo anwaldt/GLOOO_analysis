@@ -18,38 +18,45 @@ load([paths.features baseName])
 
 param = CTL.param;
 
-%% READ WAV
-
-audioPath = [paths.wavPrepared baseName '.wav'];
-
-try
-    [x,fs]      = audioread(audioPath);
-catch
-    [x,fs]      = wavread(audioPath);
-end
-
-
-%% CALL the Partial Analysis
-
 partialName = [paths.sinusoids baseName '.mat'];
 
-% only calculate, if not existent
-% if exist(partialName,'file') == 0
+if exist(partialName,'file') == 0
+    
+    
+    %% READ WAV
+    
+    audioPath = [paths.wavPrepared baseName '.wav'];
+    
+    try
+        [x,fs]      = audioread(audioPath);
+    catch
+        [x,fs]      = wavread(audioPath);
+    end
+    
+    
+    %% CALL the Partial Analysis
+    
+    
+    
+    % only calculate, if not existent
+    %
+    
+    [f0vec, SMS, noiseFrames, residual, tonal]  = get_partial_trajectories(x, param, CTL.f0swipe);
+    
+    
+    SMS.param = param;
+    
+    save(partialName, 'SMS');
+    
+    wavwrite(tonal, param.fs, [paths.tonal baseName '.wav']);
+    wavwrite(residual, param.fs, [paths.residual baseName '.wav']);
+    
+else
+    
+    load(partialName)
+    
+end
 
-[f0vec, SMS, noiseFrames, residual, tonal]  = get_partial_trajectories(x, param, CTL.f0swipe);
-
-
-SMS.param = param;
-
-save(partialName, 'SMS');
-
-wavwrite(tonal, param.fs, [paths.tonal baseName '.wav']);
-wavwrite(residual, param.fs, [paths.residual baseName '.wav']);
-
-% else
-%
-%     load(partialName)
-%
-% end
+end
 
 
