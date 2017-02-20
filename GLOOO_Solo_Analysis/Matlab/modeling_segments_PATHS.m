@@ -18,10 +18,20 @@ if strcmp(setToDo,'TwoNote') ==1
     paths.FILELISTS     = 'D:\Users\hvcoler_V2\Violin_Library_2015\File_Lists\';
 
 elseif strcmp(setToDo,'SingleSounds') ==1
+    
+
+    
     % input for single
-    paths.wavPrepared   = 'D:\Users\hvcoler_V2\Violin_Library_2015\WAV\SingleSounds\DPA\';
-    paths.segSV         = 'D:\Users\hvcoler_V2\Violin_Library_2015\Segmentation\SingleSounds\';
-    paths.FILELISTS     = 'D:\Users\hvcoler_V2\Violin_Library_2015\File_Lists\';
+%    paths.wavPrepared   = 'D:\Users\hvcoler_V2\Violin_Library_2015\WAV\SingleSounds\DPA\';
+%   paths.segSV         = 'D:\Users\hvcoler_V2\Violin_Library_2015\Segmentation\SingleSounds\';
+%   paths.FILELISTS     = 'D:\Users\hvcoler_V2\Violin_Library_2015\File_Lists\';
+
+ paths.wavPrepared   = '../../../Violin_Library_2015/WAV/SingleSounds/DPA/';
+   paths.segSV         ='../../../Violin_Library_2015/Segmentation/SingleSounds/';
+   paths.FILELISTS     = '../../../Violin_Library_2015/File_Lists/';
+
+    
+
 end
 
 % output paths are WITHIN the 'outPath'
@@ -29,6 +39,8 @@ paths.features      = [outPath 'Features/'];
 paths.segments      = [outPath 'Segments/'];
 
 paths.sinusoids     = [outPath 'Sinusoids/'];
+paths.statSMS       = [outPath 'StatisticalSMS/'];
+
 
 
 paths.tonal         = [outPath 'Tonal/'];

@@ -11,8 +11,8 @@
 %
 % Created: 2014-02-17
 % Edited : 2016-08-08
-%
-%
+
+
 %% RESET
 close all
 clearvars
@@ -21,8 +21,8 @@ restoredefaultpath
 
 %% Decide which parts of the script should be executed
 
-do_basic_analysis    = false;
-do_partial_analysis  = false;
+do_basic_analysis    = true;
+do_partial_analysis  = true;
 do_modeling_segments = true;
 do_statistical_sms   = true;
 
@@ -32,8 +32,8 @@ do_statistical_sms   = true;
 setToDo     = 'SingleSounds';
 %  setToDo     = 'TwoNote';
  
-%filesToDo = 'SampLib_DPA_99.wav';
- filesToDo = 'All';
+filesToDo = 'SampLib_DPA_15.wav';
+% filesToDo = 'All';
 
 
 %% Set the output path for this set
@@ -70,19 +70,27 @@ for n = 1:length(directoryFiles);
     end
 end
 
+
+% resort filenames
+numVec              = regexprep(fileNames,'SampLib_DPA_','');
+numVec              = str2double(regexprep(numVec,'.wav',''));
+numVec(numVec>334)  =[];
+[s,i]               = sort(numVec);
+fileNames           = fileNames(i);
+
+% get number of files
 nFiles   = length(fileNames);
 
-if strcmp(filesToDo,'All')==1
-    
+% create file list
+if strcmp(filesToDo,'All')==1    
    filesToDo = 1:nFiles;
-   
 else 
      filesToDo =  find(ismember(fileNames,filesToDo));   
 end
 
 %% LOOP over all files
 if do_basic_analysis == true
-   parfor fileCNT = filesToDo
+   for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);
@@ -137,7 +145,7 @@ if do_modeling_segments == true
     end
 end
 
-%%
+%% Statistical SMS loop
 
 if do_statistical_sms == true
     for fileCNT = filesToDo
@@ -146,14 +154,11 @@ if do_statistical_sms == true
             disp(['starting statistical SMS for: ',fileNames{fileCNT}]);
         end
         
-        [~,baseName,~]    = fileparts(fileNames{fileCNT});
+        [~,baseName,~]   = fileparts(fileNames{fileCNT});
         
         % Analysis
          statistical_sms(baseName, param, paths);
         
-        if param.info == true
-            disp(['finished analysis for: ',fileNames{fileCNT}]);
-        end
         
     end
 end
