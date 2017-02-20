@@ -24,6 +24,7 @@ restoredefaultpath
 do_basic_analysis    = false;
 do_partial_analysis  = false;
 do_modeling_segments = true;
+do_statistical_sms   = true;
 
 
 %% Decide which files should be processed
@@ -128,6 +129,27 @@ if do_modeling_segments == true
         
         % Analysis
          modeling_segments(baseName, paths, setToDo);
+        
+        if param.info == true
+            disp(['finished analysis for: ',fileNames{fileCNT}]);
+        end
+        
+    end
+end
+
+%%
+
+if do_statistical_sms == true
+    for fileCNT = filesToDo
+        
+        if param.info == true
+            disp(['starting statistical SMS for: ',fileNames{fileCNT}]);
+        end
+        
+        [~,baseName,~]    = fileparts(fileNames{fileCNT});
+        
+        % Analysis
+         statistical_sms(baseName, param, paths);
         
         if param.info == true
             disp(['finished analysis for: ',fileNames{fileCNT}]);

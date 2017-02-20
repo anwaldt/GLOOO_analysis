@@ -18,8 +18,8 @@ bounds  = bound- bound(1);
 
 bSamp   =  round( bounds /(param.lHop / param.fs));
 
-startSamp  = max(1,bSamp(1));
-stopSamp = min( bSamp(2),length(partials.FRE));
+startSamp   = max(1,bSamp(1));
+stopSamp    = min( bSamp(2),length(partials.FRE));
 
 %%
 

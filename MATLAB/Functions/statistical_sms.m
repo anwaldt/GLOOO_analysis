@@ -1,0 +1,1 @@
+function [] = statistical_sms(baseName, param, paths)
