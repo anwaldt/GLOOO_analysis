@@ -1,9 +1,10 @@
 % statistical_sms.m
 %
-% Function for extracting some values from the patial trajectories!
-% The basic idea is to decompose the trajectories into a deterministic
-% part (mean freq. and amplitude) and stochastic deviations!
-% Also, attack and release have to be captured!
+% Function for extracting   and stochastic parxameters
+% fom the sustain!
+% Also, attack and release are captured!
+%
+% Writes the output to a yaml file.
 %
 % HVC
 % 2017-02-20
@@ -15,6 +16,10 @@ function [MOD] = statistical_sms(baseName, param, paths)
 
 inName     = [paths.sinusoids baseName '.mat'];
 load(inName);
+
+%% load control features
+
+load( [paths.features regexprep(baseName,'.wav','.mat')] );
 
 %% Read text labels
 
@@ -34,33 +39,68 @@ stopSamp    =   bSamp(2);
 
 %% Sustain part
 
-
-
+% 
+% figure
+% hold on
 
 SUS = struct();
 
 for partCNT = 1:param.PART.nPartials
     
-    
+    % get FRE partial trajectory for sustain part
     fSteady = SMS.FRE(:,startSamp:stopSamp);
-    fS  = fSteady(partCNT,: );
+    fS      = fSteady(partCNT,: );
+    
+    % normalize to: deviation from f / (f0*N)
+    fS      = fS./ mean(CTL.f0swipe(startSamp:stopSamp))'./partCNT;
+    
+    % decompose ?!
+    
+    
+    % create cmf
     [h,x]=hist(fS,50);
-    distFun = cumsum(h);
+
+    % normalize
+    h = h./sum(h);
     
-    SUS(partCNT).FRE.dist = distFun;
-    SUS(partCNT).FRE.vals = x;
+    % create cdf
+    cdf = cumsum(h);
     
+    % write to struct
+    %SUS(partCNT).FRE.dist = cdf;
+    %SUS(partCNT).FRE.vals = x;
+    eval(['SUS.P_' num2str(partCNT) '.FRE' '.dist = cdf;']);
+    eval(['SUS.P_' num2str(partCNT) '.FRE' '.xval = x;']);
+
+    
+    
+%       plot(x,cdf)
+%          drawnow
+%          pause(1)
+         
+    % get AMP partial trajectory for sustain part    
     aSteady = SMS.AMP(:,startSamp:stopSamp);
-    aS  = aSteady(partCNT,:);
+    aS      = aSteady(partCNT,:);
     
+    % normalize to: contribution to overall harmonic amplitude
+    aS = aS./smooth(sum(SMS.AMP(:,startSamp:stopSamp)),10)';
+    
+    % create cmf
     [h,x]=hist(aS,50);
-    distFun = cumsum(h);
-    SUS(partCNT).AMP.dist = distFun;
-    SUS(partCNT).AMP.vals= x;
+
+    % normalize
+    h = h./sum(h);
     
-    %     plot(distFun)
-    %     drawnow
-    %     pause(1)
+    % get cdf
+    cdf = cumsum(h);
+
+    % write to struct
+%    SUS(partCNT).AMP.cdf  = cdf;
+%    SUS(partCNT).AMP.xVal = x;
+    
+    eval(['SUS.P_' num2str(partCNT) '.AMP' '.dist = cdf;']);
+    eval(['SUS.P_' num2str(partCNT) '.AMP' '.xval = x;']);
+    
     
 end
 
@@ -71,11 +111,14 @@ ATT = struct();
 
 for partCNT = 1:param.PART.nPartials
     
+    tmpF = SMS.FRE(partCNT,1:startSamp);
+    tmpVal = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
+    eval(['ATT.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
     
-    ATT(partCNT).FRE.trajectory = SMS.FRE(partCNT,1:startSamp);
     
-    ATT(partCNT).AMP.trajectory = SMS.AMP(partCNT,1:startSamp);
-    
+    tmpTra = SMS.AMP(partCNT,1:startSamp);
+    eval(['ATT.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
+         
 end
 
 
@@ -85,21 +128,33 @@ REL = struct();
 
 for partCNT = 1:param.PART.nPartials
     
+            tmpF = SMS.FRE(partCNT,stopSamp:end);
+    tmpVal = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
+    eval(['REL.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
     
-    REL(partCNT).FRE.trajectory = SMS.FRE(partCNT,stopSamp:end);
     
-    REL(partCNT).AMP.trajectory = SMS.AMP(partCNT,stopSamp:end);    
+    tmpTra = SMS.AMP(partCNT,stopSamp:end);
+    eval(['REL.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
+
 end
 
 
+
 %% Put together and export
+
+if param.info == true
+    disp(['Writing output: ',baseName]);
+end
+
 
 MOD.param = param;
 MOD.ATT = ATT;
 MOD.SUS = SUS;
 MOD.REL = REL;
 
-name = [paths.statSMS baseName '.yml'];
+YAMLname = [paths.statSMS baseName '.yml'];
 %S = YAML.dump(MOD);
-YAML.write(name,MOD);
+YAML.write(YAMLname,MOD);
 
+MATname = [paths.statSMS baseName '.mat'];
+save(MATname, 'MOD');

@@ -14,6 +14,7 @@
 
 
 %% RESET
+
 close all
 clearvars
 restoredefaultpath
@@ -21,10 +22,10 @@ restoredefaultpath
 
 %% Decide which parts of the script should be executed
 
-do_basic_analysis    = true;
-do_partial_analysis  = true;
-do_modeling_segments = true;
-do_statistical_sms   = true;
+do_basic_analysis    = 1;
+do_partial_analysis  = 1;
+do_modeling_segments = 1;
+do_statistical_sms   = 1;
 
 
 %% Decide which files should be processed
@@ -32,7 +33,7 @@ do_statistical_sms   = true;
 setToDo     = 'SingleSounds';
 %  setToDo     = 'TwoNote';
  
-filesToDo = 'SampLib_DPA_15.wav';
+filesToDo = 'SampLib_DPA_01.wav';
 % filesToDo = 'All';
 
 
@@ -74,6 +75,7 @@ end
 % resort filenames
 numVec              = regexprep(fileNames,'SampLib_DPA_','');
 numVec              = str2double(regexprep(numVec,'.wav',''));
+% TODO: SOMETHING IS WRONG, HERE
 numVec(numVec>334)  =[];
 [s,i]               = sort(numVec);
 fileNames           = fileNames(i);
@@ -157,8 +159,8 @@ if do_statistical_sms == true
         [~,baseName,~]   = fileparts(fileNames{fileCNT});
         
         % Analysis
-         statistical_sms(baseName, param, paths);
-        
-        
+        MOD = statistical_sms(baseName, param, paths);
+          
     end
 end
+
