@@ -40,8 +40,7 @@ stopSamp    =   bSamp(2);
 %% Sustain part
 
 % 
-% figure
-% hold on
+%   figure
 
 SUS = struct();
 
@@ -66,17 +65,21 @@ for partCNT = 1:param.PART.nPartials
     % create cdf
     cdf = cumsum(h);
     
+%     
+%       subplot(2,1,1)
+%         hold on
+% 
+%      plot(x,cdf)
+%          drawnow
+%            pause(1)
+           
     % write to struct
     %SUS(partCNT).FRE.dist = cdf;
     %SUS(partCNT).FRE.vals = x;
     eval(['SUS.P_' num2str(partCNT) '.FRE' '.dist = cdf;']);
     eval(['SUS.P_' num2str(partCNT) '.FRE' '.xval = x;']);
 
-    
-    
-%       plot(x,cdf)
-%          drawnow
-%          pause(1)
+
          
     % get AMP partial trajectory for sustain part    
     aSteady = SMS.AMP(:,startSamp:stopSamp);
@@ -93,6 +96,15 @@ for partCNT = 1:param.PART.nPartials
     
     % get cdf
     cdf = cumsum(h);
+    
+%         
+%       subplot(2,1,2)
+%         hold on
+% 
+%      plot(x,cdf)
+%          drawnow
+%            pause(1)
+  
 
     % write to struct
 %    SUS(partCNT).AMP.cdf  = cdf;

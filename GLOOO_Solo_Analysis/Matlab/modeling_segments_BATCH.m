@@ -2,8 +2,8 @@
 %
 %   Does the solo analysis for a batch of files.
 %
-% This project needs the audio files to be segmented
-% according to the Note-Rest-Transition model!
+%   This project needs the audio files to be segmented
+%   according to the Note-Rest-Transition model!
 %
 %
 %
@@ -33,7 +33,7 @@ do_statistical_sms   = 1;
 setToDo     = 'SingleSounds';
 %  setToDo     = 'TwoNote';
  
-filesToDo = 'SampLib_DPA_01.wav';
+filesToDo = 'SampLib_DPA_08.wav';
 % filesToDo = 'All';
 
 

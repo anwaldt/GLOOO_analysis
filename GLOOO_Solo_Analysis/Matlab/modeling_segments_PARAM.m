@@ -23,7 +23,7 @@ param.parallel    = false;
 %% GLOABAL analyis parameters
 
 % the hop-size is GLOBAL:
-param.lHop          = 2^9;
+param.lHop          = 2^8;
 
 param.lWinRMS       = 2^11;
 param.lWinNoise     = 2^12;
@@ -50,7 +50,7 @@ param.F0decomp.cutLowHZ     = 10;
 param.PART.getPhases    = true;
 param.PART.info         = true;
 param.PART.lWin         = 2^12;
-
+    
 % upsampling for the autocorr f0-detection
 param.PART.upsampFactor  = 5;
 
