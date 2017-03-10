@@ -21,9 +21,9 @@ restoredefaultpath
 
 %% Decide which parts of the script should be executed
 
-do_basic_analysis    = 1;
-do_partial_analysis  = 1;
-do_modeling_segments = 1;
+do_basic_analysis    = 0;
+do_partial_analysis  = 0;
+do_modeling_segments = 0;
 do_statistical_sms   = 1;
 
 
@@ -164,7 +164,7 @@ if do_statistical_sms == true
         [~,baseName,~]   = fileparts(fileNames{fileCNT});
         
         % Analysis
-        MOD = statistical_sms(baseName, param, paths);
+        MOD = statistical_sms(baseName, param, paths, setToDo);
           
     end
 end
