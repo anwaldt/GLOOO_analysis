@@ -42,7 +42,7 @@ if strcmp(setToDo,'TwoNote') ==1
     segINF{4}.vib = I.note2.vibrato;
     
 
-      segBounds(1,:)      = [];
+    segBounds(1,:)      = [];
     
     
     

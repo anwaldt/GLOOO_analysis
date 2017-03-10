@@ -36,7 +36,7 @@ param.F0.f0Mode         = 'swipe';
 param.F0.lWinYIN        = 2^13;
 param.F0.lWinF0         = 2^13;
 
-param.F0.minStrength    = 0.25;
+param.F0.minStrength    = -Inf;
 
 %% f0 decomposition
 

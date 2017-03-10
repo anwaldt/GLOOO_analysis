@@ -29,31 +29,31 @@ end
 filter_type = 'fir';
 
 % Get cutoff frequencys for Filter
-cent_deviation = 200;
-f_interval = get_f_interval(INF,cent_deviation);
-Wn = f_interval/(fs/2);
-
-% Calculate Filter Coefficients
-if strcmp(filter_type,'iir') == true;
-    
-    order = 6;
-    
-    [B_high,A_high] = butter(order,Wn(1),'high');
-    [B_low,A_low]   = butter(order,Wn(2),'low');
-    
-elseif strcmp(filter_type,'fir') == true;
-    
-    order = 4096;
-
-    B_high = fir1(order,Wn(1),'high');
-    B_low  = fir1(order,Wn(2),'low');
-    A_high = 1;
-    A_low = 1;
-end
+%cent_deviation = 200;
+% f_interval = get_f_interval(INF,cent_deviation);
+% Wn = f_interval/(fs/2);
+% 
+% % Calculate Filter Coefficients
+% if strcmp(filter_type,'iir') == true;
+%     
+%     order = 6;
+%     
+%     [B_high,A_high] = butter(order,Wn(1),'high');
+%     [B_low,A_low]   = butter(order,Wn(2),'low');
+%     
+% elseif strcmp(filter_type,'fir') == true;
+%     
+%     order = 4096;
+% 
+%     B_high = fir1(order,Wn(1),'high');
+%     B_low  = fir1(order,Wn(2),'low');
+%     A_high = 1;
+%     A_low = 1;
+% end
 
 % Filter Signal 
-x = filter(B_low,A_low,x);
-x = filter(B_high,A_high,x);
+%x = filter(B_low,A_low,x);
+%x = filter(B_high,A_high,x);
 
 %% Swipe
 if param.info == true
@@ -67,7 +67,7 @@ dERBs    = 0.1;                   % swipe default: 0.1
 woverlap = .5;                    % swipe default: 0.5
 sTHR     = param.F0.minStrength;  % swipe default: -inf
 
-cent = 150;
+cent = 100;
 % every iteration for swipe cent gets multiplicated with this factor
 cent_iteration_factor = 3; 
 % Maximum Iterations for SWIPE Calcluation
@@ -80,8 +80,9 @@ maxTry = 3;
 % there is no recognized pitch with enough strength and the alorithm fails
 % then for the whole input
 for iTry = 1: maxTry
+    
     f_interval = get_f_interval(INF,cent);
-
+    
     [swipeVec,t,ps] = swipep(x,fs,f_interval,hopSec,dlog2p,dERBs,woverlap,sTHR);
     
     % Check Result:
@@ -111,27 +112,7 @@ end
  
 features.f0swipe        = swipeVec(1:nWin);
 features.pitchStrenght  = ps;
-
-%% YIN
-
-% prepare parameter struct
-% P.sr    = fs;
-% P.hop   = param.lHop;
-% P.wsize = param.lWinYIN;
-% P.minf0 = param.fMin;
-% P.maxf0 = param.fMax;
-% 
-% % call yin
-% YIN     = yin('',P);
-% f0yin   = YIN.f0;
-% 
-% % delete nans
-% f0yin(isnan(f0yin)) = 0;
-% 
-% % recalc to Hz
-% f0yin               = 440*2.^(f0yin);
-% features.f0yin      = f0yin(1:nWin)';
-
+ 
 
 %% RMS
 if param.info == true

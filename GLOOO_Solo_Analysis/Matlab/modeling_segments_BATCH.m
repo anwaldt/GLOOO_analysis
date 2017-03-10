@@ -6,7 +6,6 @@
 %   according to the Note-Rest-Transition model!
 %
 %
-%
 % Author : Henrik von Coler
 %
 % Created: 2014-02-17
@@ -33,8 +32,8 @@ do_statistical_sms   = 1;
 setToDo     = 'SingleSounds';
 %  setToDo     = 'TwoNote';
  
-filesToDo = 'SampLib_DPA_08.wav';
-% filesToDo = 'All';
+%filesToDo = 'SampLib_DPA_197.wav';
+filesToDo = 'All';
 
 
 %% Set the output path for this set
@@ -57,6 +56,7 @@ end
 
 
 %% get list of files
+
 directoryFiles = dir(paths.wavPrepared);
 % only get the wave files out of the folder into the list of audio files
 % which should be processed
@@ -75,8 +75,8 @@ end
 % resort filenames
 numVec              = regexprep(fileNames,'SampLib_DPA_','');
 numVec              = str2double(regexprep(numVec,'.wav',''));
-% TODO: SOMETHING IS WRONG, HERE
-numVec(numVec>334)  =[];
+
+
 [s,i]               = sort(numVec);
 fileNames           = fileNames(i);
 
@@ -90,9 +90,11 @@ else
      filesToDo =  find(ismember(fileNames,filesToDo));   
 end
 
+
 %% LOOP over all files
+
 if do_basic_analysis == true
-   for fileCNT = filesToDo
+   parfor fileCNT = filesToDo
         
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);
@@ -108,6 +110,7 @@ end
 
 
 %% SMS LOOP
+
 if do_partial_analysis == true
     parfor fileCNT = filesToDo
         
@@ -128,8 +131,9 @@ end
 
 
 %% MODELING LOOP
+
 if do_modeling_segments == true
-    for fileCNT = filesToDo
+    parfor fileCNT = filesToDo
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);
@@ -147,10 +151,11 @@ if do_modeling_segments == true
     end
 end
 
+
 %% Statistical SMS loop
 
 if do_statistical_sms == true
-    for fileCNT = filesToDo
+    parfor fileCNT = filesToDo
         
         if param.info == true
             disp(['starting statistical SMS for: ',fileNames{fileCNT}]);

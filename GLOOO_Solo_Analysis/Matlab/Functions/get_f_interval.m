@@ -30,7 +30,11 @@ if length(fieldnames(INF))>1
         change_f_in_cent(note_high, max_dev) ];
     
 else
-    f_interval = [ INF.note.f0-max_dev  INF.note.f0+max_dev];
+    
+    lower = INF.note.f0 * 2^(-cent/1200);
+    upper = INF.note.f0 * 2^(cent/1200);
+    
+    f_interval = [  lower upper];
 end
 
 end

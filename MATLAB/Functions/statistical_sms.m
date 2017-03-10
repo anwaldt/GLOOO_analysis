@@ -29,10 +29,10 @@ load([paths.segments  regexprep(baseName,'BuK','DPA') '.mat']);
 %
 
 bounds = [0 0];
-bounds(1) =SOLO.SEG{2}.startSEC;
-bounds(2) =SOLO.SEG{2}.stopSEC;
+bounds(1) = SOLO.SEG{2}.startSEC;
+bounds(2) = SOLO.SEG{2}.stopSEC;
 
-bSamp   =  round( bounds /(SOLO.param.lHop / SOLO.param.fs));
+bSamp   =  round( bounds /(SMS.param.lHop / SMS.param.fs));
 
 startSamp   = max(1,bSamp(1));
 stopSamp    =   bSamp(2);

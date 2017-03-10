@@ -42,8 +42,13 @@ if ...%exist(outName,'file') == 0 &&
             segBounds = load([paths.segSV regexprep(baseName,'BuK','DPA') '.txt']);
             
         case 'SingleSounds'
+
+            try
+                INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , paths);
+            catch
+                'xxx'    
+            end
             
-            INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , paths);
             f1 = fopen([paths.segSV regexprep(baseName,'BuK','DPA') '.txt']);
             segBounds = textscan(f1,'%f %s' );
             fclose(f1);
