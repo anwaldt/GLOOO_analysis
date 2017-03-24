@@ -21,19 +21,19 @@ restoredefaultpath
 
 %% Decide which parts of the script should be executed
 
-do_basic_analysis    = 0;
-do_partial_analysis  = 0;
+do_basic_analysis    = 1;
+do_partial_analysis  = 1;
 do_modeling_segments = 0;
-do_statistical_sms   = 1;
+do_statistical_sms   = 0;
 
 
 %% Decide which files should be processed
 
 setToDo     = 'SingleSounds';
 %  setToDo     = 'TwoNote';
- 
-%filesToDo = 'SampLib_DPA_197.wav';
-filesToDo = 'All';
+
+filesToDo = 'SampLib_DPA_10.wav';
+% filesToDo = 'All';
 
 
 %% Set the output path for this set
@@ -47,13 +47,22 @@ modeling_segments_STARTUP
 modeling_segments_PATHS
 modeling_segments_PARAM
 
-%% start pool
+%% start and manage pool
 
 s = matlabpool('size');
 if s == 0 && param.parallel == true
     matlabpool
 end
 
+
+if param.parallel == true
+    parMode = Inf;
+    disp('Running in PARALEL mode!')
+else
+    parMode = 0;
+    disp('Running in SERIAL mode!')
+    
+end
 
 %% get list of files
 
@@ -84,17 +93,17 @@ fileNames           = fileNames(i);
 nFiles   = length(fileNames);
 
 % create file list
-if strcmp(filesToDo,'All')==1    
-   filesToDo = 1:nFiles;
-else 
-     filesToDo =  find(ismember(fileNames,filesToDo));   
+if strcmp(filesToDo,'All')==1
+    filesToDo = 1:nFiles;
+else
+    filesToDo =  find(ismember(fileNames,filesToDo));
 end
 
 
 %% LOOP over all files
 
 if do_basic_analysis == true
-   parfor fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
         
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);
@@ -112,7 +121,7 @@ end
 %% SMS LOOP
 
 if do_partial_analysis == true
-    parfor fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
         
         if param.info == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);
@@ -130,10 +139,10 @@ if do_partial_analysis == true
 end
 
 
-%% MODELING LOOP
-
+%% Segment preparation LOOP
+    
 if do_modeling_segments == true
-    parfor fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);
@@ -142,7 +151,7 @@ if do_modeling_segments == true
         [~,baseName,~]    = fileparts(fileNames{fileCNT});
         
         % Analysis
-         modeling_segments(baseName, paths, setToDo);
+        modeling_segments(baseName, paths, setToDo);
         
         if param.info == true
             disp(['finished analysis for: ',fileNames{fileCNT}]);
@@ -152,10 +161,17 @@ if do_modeling_segments == true
 end
 
 
-%% Statistical SMS loop
+
+
+%% Transition modeling LOOP
+% MORITZ:
+
+
+
+%% note modeling
 
 if do_statistical_sms == true
-    parfor fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
         
         if param.info == true
             disp(['starting statistical SMS for: ',fileNames{fileCNT}]);
@@ -165,7 +181,8 @@ if do_statistical_sms == true
         
         % Analysis
         MOD = statistical_sms(baseName, param, paths, setToDo);
-          
+        
     end
 end
+
 

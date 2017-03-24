@@ -11,16 +11,15 @@
 %
 % author: Moritz Goetz
 
-function [ f_interval ] = get_f_interval( INF , cent)
+function [ f_interval ] = get_f_interval(cent, INF)
 
 % Threshold for Deviation from the notes
 max_dev = cent; % (Deviation per Note in cent )
 
 if length(fieldnames(INF))>1
+    
     note1 = get_frequency_for_note(INF.note1.char{1});
     note2 = get_frequency_for_note(INF.note2.char{1});
-    
-    
     
     note_low  = min(note1,note2);
     note_high = max(note1,note2);
@@ -31,10 +30,10 @@ if length(fieldnames(INF))>1
     
 else
     
-    lower = INF.note.f0 * 2^(-cent/1200);
-    upper = INF.note.f0 * 2^(cent/1200);
     
-    f_interval = [  lower upper];
+    f_interval =[change_f_in_cent(INF.note.f0, -max_dev), ...
+        change_f_in_cent(INF.note.f0, max_dev) ];
+       
 end
 
 end
