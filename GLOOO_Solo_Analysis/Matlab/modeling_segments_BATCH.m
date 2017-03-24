@@ -32,13 +32,13 @@ do_statistical_sms   = 0;
 setToDo     = 'SingleSounds';
 %  setToDo     = 'TwoNote';
 
-filesToDo = 'SampLib_DPA_10.wav';
-% filesToDo = 'All';
+%filesToDo = 'SampLib_DPA_10.wav';
+filesToDo = 'All';
 
 
 %% Set the output path for this set
 
-outPath = '../Results/SingleSounds/';
+outPath = '../Results/SingleSounds/2017-03-24/';
 
 
 %% SET
@@ -121,8 +121,10 @@ end
 %% SMS LOOP
 
 if do_partial_analysis == true
+
     parfor (fileCNT = filesToDo,parMode)
-        
+    %for fileCNT = filesToDo
+     
         if param.info == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);
         end
@@ -140,7 +142,7 @@ end
 
 
 %% Segment preparation LOOP
-    
+
 if do_modeling_segments == true
     parfor (fileCNT = filesToDo,parMode)
         
