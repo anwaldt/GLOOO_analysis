@@ -20,7 +20,7 @@ param = CTL.param;
 
 partialName = [paths.sinusoids baseName '.mat'];
 
-if exist(partialName,'file') == 0
+if 1%exist(partialName,'file') == 0
     
     
     %% READ WAV
@@ -49,8 +49,48 @@ if exist(partialName,'file') == 0
     
     save(partialName, 'SMS');
     
-    wavwrite(tonal, param.fs, [paths.tonal baseName '.wav']);
+    %% export wav
+    
+    wavwrite(tonal,    param.fs, [paths.tonal    baseName '.wav']);
     wavwrite(residual, param.fs, [paths.residual baseName '.wav']);
+    wavwrite(residual, param.fs, [paths.complete baseName '.wav']);
+    
+    
+    %% export text
+    
+    
+    
+    tmpName     =[ paths.txtDir baseName '.F0'];
+    fid         = fopen(tmpName,'w');
+    fprintf(fid, '%e ;\n', f0vec );
+    fclose(fid);
+    
+    tmpName     =[ paths.txtDir baseName '.AMPL'];
+    fid         = fopen(tmpName,'w');
+    fprintf(fid, [repmat('%e ', 1, size(SMS.AMP, 1) ), ';\n'], SMS.AMP );
+    fclose(fid);
+    
+    tmpName     =[ paths.txtDir baseName '.FREQ'];
+    fid         = fopen(tmpName,'w');
+    fprintf(fid, [repmat('%e ', 1, size(SMS.FRE, 1) ), ';\n'], SMS.FRE );
+    fclose(fid);
+    
+        tmpName     =[ paths.txtDir baseName '.PHA'];
+    fid         = fopen(tmpName,'w');
+    fprintf(fid, [repmat('%e ', 1, size(SMS.FRE, 1) ), ';\n'], SMS.FRE );
+    fclose(fid);
+
+    % noise is not exported at this state
+%     tmpName     =[ paths.txtDir baseName '.NENV'];
+%     fid         = fopen(tmpName,'w');
+%     fprintf(fid, [repmat('%e ', 1, length(SMS) ), ';\n'], meanNoise );
+%     fclose(fid);
+%     
+%     tmpName     = [ paths.txtDir baseName '.NAMP'];
+%     fid         = fopen(tmpName,'w');
+%     fprintf(fid, '%e ;\n', noiseEnergy );
+%     fclose(fid);
+    
     
 else
     

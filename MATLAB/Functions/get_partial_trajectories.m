@@ -155,10 +155,10 @@ for frameCNT = frameStart:nFrames-1
             resVec(idxs)     = resVec(idxs) + resFrame;%resDist{frameIDX};
             
         catch ME           
-            disp(['    get_partial_trajectories(): cant add:  - ' ME.message]);
-            disp(['    -> resVec frame:'  num2str(frameCNT) ...
-                ' - idxs(end): ' num2str(idxs(end)) ...
-                ' - size(resFrame): ' num2str(size(resFrame))]);
+%             disp(['    get_partial_trajectories(): cant add:  - ' ME.message]);
+%             disp(['    -> resVec frame:'  num2str(frameCNT) ...
+%                 ' - idxs(end): ' num2str(idxs(end)) ...
+%                 ' - size(resFrame): ' num2str(size(resFrame))]);
                 
         end
 
@@ -167,10 +167,10 @@ for frameCNT = frameStart:nFrames-1
             tonalVec(idxs)     = tonalVec(idxs) + sinusoidal;
             
         catch ME
-            disp(['    get_partial_trajectories(): cant add: - ' ME.message]);
-            disp(['    -> tonalVec frame:' num2str(frameCNT) ...
-                ' - idxs(end): ' num2str(idxs(end)) ...
-                ' - size(resFrame): ' num2str(size(resFrame))]);
+%             disp(['    get_partial_trajectories(): cant add: - ' ME.message]);
+%             disp(['    -> tonalVec frame:' num2str(frameCNT) ...
+%                 ' - idxs(end): ' num2str(idxs(end)) ...
+%                 ' - size(resFrame): ' num2str(size(resFrame))]);
                 
         end            
     else

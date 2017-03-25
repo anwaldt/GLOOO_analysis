@@ -32,6 +32,8 @@ end
 paths.features      = [outPath 'Features/'];
 paths.segments      = [outPath 'Segments/'];
 
+paths.txtDir        = [outPath 'SinusoidsTXT/'];
+
 paths.sinusoids     = [outPath 'Sinusoids/'];
 paths.statSMS       = [outPath 'StatisticalSMS/'];
 
@@ -39,10 +41,10 @@ paths.statSMS       = [outPath 'StatisticalSMS/'];
 
 paths.tonal         = [outPath 'Tonal/'];
 paths.residual      = [outPath 'Residual/'];
+paths.complete      = [outPath 'Complete/'];
 
 paths.plot          = [outPath 'Plots/'];
 
-paths.server        = ['\\NAS-AK\Forschungsprojekte\Klanganalyse_und_Synthese\Violin_Library_2015\Analysis\'];
 
 %% Check for existence of paths
 %  and make them, if necessary
@@ -63,3 +65,4 @@ for fieldCNT = 1:nFields
 end
 
 
+paths.server        = ['\\NAS-AK\Forschungsprojekte\Klanganalyse_und_Synthese\Violin_Library_2015\Analysis\'];
