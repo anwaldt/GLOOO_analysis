@@ -21,11 +21,11 @@ restoredefaultpath
 
 %% Decide which parts of the script should be executed
 
-do_basic_analysis    = 1;
-do_partial_analysis  = 1;
-do_modeling_segments = 0;
-do_statistical_sms   = 0;
-
+do_basic_analysis       = 0;
+do_partial_analysis     = 0;
+do_modeling_segments    = 0;
+do_statistical_sms      = 0;
+do_move_files_to_erver  = 1;
 
 %% Decide which files should be processed
 
@@ -185,3 +185,10 @@ if do_statistical_sms == true
 end
 
 
+%% Push files
+
+if do_move_files_to_erver == true
+
+    copyfile(outPath,[paths.server datestr(now,'yyyy-mm-dd')])
+
+end

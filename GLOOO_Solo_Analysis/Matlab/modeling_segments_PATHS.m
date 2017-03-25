@@ -42,7 +42,7 @@ paths.residual      = [outPath 'Residual/'];
 
 paths.plot          = [outPath 'Plots/'];
 
-
+paths.server        = ['\\NAS-AK\Forschungsprojekte\Klanganalyse_und_Synthese\Violin_Library_2015\Analysis\'];
 
 %% Check for existence of paths
 %  and make them, if necessary
