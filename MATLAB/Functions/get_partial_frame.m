@@ -52,12 +52,13 @@ freqPos = round(estimatedFreqz*( param.PART.nFFT/param.fs))+1;
 
 %% LOOP OVER ALL PARTIALS
 
-for partCnt = 1:param.PART.nPartials
+for partCNT = 1:param.PART.nPartials
     
     % define relevant range
-    boundaries = [estimatedFreqz(partCnt)*2^(-1/12) estimatedFreqz(partCnt)*2^(1/12) ];
+    boundaries = [estimatedFreqz(partCNT)*2^(-1/12) estimatedFreqz(partCNT)*2^(1/12) ];
     
     boundINDS  =  round(boundaries*( param.PART.nFFT/param.fs));
+    
     
     % define relevant range
     tmpIDX = boundINDS(1):boundINDS(2);
@@ -65,7 +66,7 @@ for partCnt = 1:param.PART.nPartials
     % find maximum in relevant range
     tmpIDX = tmpIDX(tmpIDX>0);
     
-    if ~isempty(tmpIDX)
+    if ~isempty(tmpIDX) && max(tmpIDX) < length(frame)
         
         try
             [~, partIndAbsolute] = max(FRAMEabs(tmpIDX));
@@ -99,18 +100,18 @@ for partCnt = 1:param.PART.nPartials
         
         
         % assign parameters if valid (DISABLED)
-    if truePeakHeight/max(FRAMEabs) > 0.00001
+        if truePeakHeight/max(FRAMEabs) > 0.00001
             
             % calculate partial frequency:
             % DON'T FORGET THE OFFSET '-1' CAUSED BY MATLAB INDEXING
-            partFre(partCnt) = ((truePeakPos-1)*param.fs)/param.PART.nFFT;
+            partFre(partCNT) = ((truePeakPos-1)*param.fs)/param.PART.nFFT;
             
             % get amplitude
             % MIND THE window correction
-            partAmp(partCnt) =  winCorr*truePeakHeight/(param.PART.lWin/2);
+            partAmp(partCNT) =  winCorr*truePeakHeight/(param.PART.lWin/2);
             
             % and phase
-            partPha(partCnt) = phaseEstimate;
+            partPha(partCNT) = phaseEstimate;
             
             %% find correct phase by minimum value solution
             
@@ -125,7 +126,7 @@ for partCnt = 1:param.PART.nPartials
                 % first rough
                 for searchPhase = sP
                     
-                    thisPartial     = partAmp(partCnt) * sin(2*pi*partFre(partCnt).*t + searchPhase ).*windowFunction;
+                    thisPartial     = partAmp(partCNT) * sin(2*pi*partFre(partCNT).*t + searchPhase ).*windowFunction;
                     tmpResidual     = residual   - thisPartial;
                     
                     partialPhase(searchInd) = searchPhase;
@@ -136,7 +137,7 @@ for partCnt = 1:param.PART.nPartials
                 [~, ind] = min(minValues);
                 
                 
-                partPha(partCnt) = partialPhase(ind);
+                partPha(partCNT) = partialPhase(ind);
                 
                 
                 % then fine
@@ -161,7 +162,7 @@ for partCnt = 1:param.PART.nPartials
                 
                 for searchPhase = sP
                     
-                    thisPartial     = partAmp(partCnt) * sin(2*pi*partFre(partCnt).*t + searchPhase ).*windowFunction;
+                    thisPartial     = partAmp(partCNT) * sin(2*pi*partFre(partCNT).*t + searchPhase ).*windowFunction;
                     tmpResidual     = residual   - thisPartial;
                     
                     partialPhase(searchInd) = searchPhase;
@@ -171,7 +172,7 @@ for partCnt = 1:param.PART.nPartials
                 
                 [~, ind] = min(minValues);
                 
-                partPha(partCnt) = partialPhase(ind);
+                partPha(partCNT) = partialPhase(ind);
                 
                 
             end
@@ -188,10 +189,10 @@ for partCnt = 1:param.PART.nPartials
             % generalOffset = 2*pi*partFre(partCnt)*(-(0.5975*length(frame))/param.fs);
             
             thisPartial         = ...
-                partAmp(partCnt) ...                    Amplitude
-                * sin(2*pi*partFre(partCnt).*t ...
+                partAmp(partCNT) ...                    Amplitude
+                * sin(2*pi*partFre(partCNT).*t ...
                 + generalOffset ...
-                + partPha(partCnt))...
+                + partPha(partCNT))...
                 .*windowFunction;
             
             % create residual by subtracting partials

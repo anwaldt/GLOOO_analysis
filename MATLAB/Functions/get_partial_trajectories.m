@@ -9,7 +9,7 @@
 %   2014-12-10
 %%
 
-function [f0vec, SMS, noiseSynth,  resVec, tonalVec] = get_partial_trajectories(x, param, f0vec)
+function [f0vec, SMS, noiseSynth,  resVec, tonalVec] = get_partial_trajectories(x, param, f0vec, psVec)
 
 
 
@@ -69,10 +69,10 @@ lastPartials = [];
 percent_done = 5;
 percent_interval = 10;
 
-for frameIDX = frameStart:nFrames-1
+for frameCNT = frameStart:nFrames-1
    
-     if param.PART.info == true && floor(frameIDX/nFrames*10000)/100 > percent_done        
-        disp(['    Frame: ' num2str(frameIDX) ', ' num2str(floor(frameIDX/nFrames*10000)/100) '% done']);
+     if param.PART.info == true && floor(frameCNT/nFrames*10000)/100 > percent_done        
+        disp(['    Frame: ' num2str(frameCNT) ', ' num2str(floor(frameCNT/nFrames*10000)/100) '% done']);
         percent_done = percent_done + percent_interval;
     end
  
@@ -101,26 +101,37 @@ for frameIDX = frameStart:nFrames-1
     % algo!
     if nargin<3
         f0est           = get_f0_autocorr_peakpick(frame, param.fs, param.upsampFactor,f0_min, f0_max);
-        f0vec(frameIDX) = f0est;
+        f0vec(frameCNT) = f0est;
     else
-        f0est = f0vec(frameIDX);
+        f0est = f0vec(frameCNT);
     end
     
     % get partials parameters (if f0 is valid)
     if f0est~=0 && ~isnan(f0est)
         
         % call the main analysis function for each frame
-        % and get:
-        [tmpPartials,resFrame,sinusoidal] = ...
-            get_partial_frame(frame, lastPartials, f0est, param);
+        % ONLY if the pitch strength is above threshold
         
-        SMS.FRE(:,frameIDX) = tmpPartials.FREQ;
-        SMS.AMP(:,frameIDX) = tmpPartials.AMPL;
-        SMS.PHA(:,frameIDX) = tmpPartials.PHAS;
+        if psVec(frameCNT) > param.PART.psThresh
+            
+            [tmpPartials,resFrame,sinusoidal] = ...
+                get_partial_frame(frame, lastPartials, f0est, param);
+        
+        else
+            resFrame = frame;
+            sinusoidal = zeros(size(frame));
+            tmpPartials.FREQ = zeros(param.PART.nPartials,1);
+            tmpPartials.AMPL = zeros(param.PART.nPartials,1);
+            tmpPartials.PHAS = zeros(param.PART.nPartials,1);
+        end
+        
+        SMS.FRE(:,frameCNT) = tmpPartials.FREQ;
+        SMS.AMP(:,frameCNT) = tmpPartials.AMPL;
+        SMS.PHA(:,frameCNT) = tmpPartials.PHAS;
         
         % calculate the distribution of the residual
         % noiseSynth(idxs)   = noiseSynth(idxs) + get_residual_distribution(residual);
-        noiseSynth(frameIDX,:) =  get_residual_distribution(resFrame);
+        noiseSynth(frameCNT,:) =  get_residual_distribution(resFrame);
         
         %% reassamble residual
         %         if length(idxsPEAK)<param.lWinSynthPEAK
@@ -145,7 +156,7 @@ for frameIDX = frameStart:nFrames-1
             
         catch ME           
             disp(['    get_partial_trajectories(): cant add:  - ' ME.message]);
-            disp(['    -> resVec frame:'  num2str(frameIDX) ...
+            disp(['    -> resVec frame:'  num2str(frameCNT) ...
                 ' - idxs(end): ' num2str(idxs(end)) ...
                 ' - size(resFrame): ' num2str(size(resFrame))]);
                 
@@ -157,7 +168,7 @@ for frameIDX = frameStart:nFrames-1
             
         catch ME
             disp(['    get_partial_trajectories(): cant add: - ' ME.message]);
-            disp(['    -> tonalVec frame:' num2str(frameIDX) ...
+            disp(['    -> tonalVec frame:' num2str(frameCNT) ...
                 ' - idxs(end): ' num2str(idxs(end)) ...
                 ' - size(resFrame): ' num2str(size(resFrame))]);
                 

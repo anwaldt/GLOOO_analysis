@@ -47,6 +47,10 @@ param.F0decomp.cutLowHZ     = 10;
 
 %% Partial tracking
 
+% threshold of the swipe pitch strength above which the partials are
+% tracked
+param.PART.psThresh     = 0.1;
+
 param.PART.getPhases    = true;
 param.PART.info         = true;
 param.PART.lWin         = 2^12;

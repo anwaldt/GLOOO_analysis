@@ -32,7 +32,7 @@ do_statistical_sms   = 0;
 setToDo     = 'SingleSounds';
 %  setToDo     = 'TwoNote';
 
-%filesToDo = 'SampLib_DPA_10.wav';
+%  filesToDo = 'SampLib_DPA_269.wav';
 filesToDo = 'All';
 
 
@@ -129,13 +129,10 @@ if do_partial_analysis == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);
         end
         
-        [~,baseName,~]    = fileparts(fileNames{fileCNT});
+        [~,baseName,~]      = fileparts(fileNames{fileCNT});
         
         % Get partial trajectories
-        [SMS]           = partial_analysis(baseName,  paths);
-        
-        % transform partial data
-        % ...
+        [SMS]               = partial_analysis(baseName,  paths);
         
     end
 end
