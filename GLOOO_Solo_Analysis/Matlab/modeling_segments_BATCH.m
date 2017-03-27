@@ -21,11 +21,11 @@ restoredefaultpath
 
 %% Decide which parts of the script should be executed
 
-do_basic_analysis       = 0;
+do_basic_analysis       = 1;
 do_partial_analysis     = 1;
-do_modeling_segments    = 0;
-do_statistical_sms      = 0;
-do_move_files_to_erver  = 0;
+do_modeling_segments    = 1;
+do_statistical_sms      = 1;
+do_move_files_to_erver  = 1;
 
 %% Decide which files should be processed
 
@@ -38,9 +38,9 @@ filesToDo = 'All';
 
 %% Set the output path for this set
 
-% outPath = '../Results/SingleSounds/2017-03-24/';
+outPath = '../Results/SingleSounds/2017-03-26/';
 
-outPath = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/2017-03-25/';
+% outPath = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/2017-03-25/';
 
 %% SET
 
@@ -123,8 +123,8 @@ end
 
 if do_partial_analysis == true
 
-    %parfor (fileCNT = filesToDo,parMode)
-    for fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+    %for fileCNT = filesToDo
      
         if param.info == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);
@@ -134,7 +134,6 @@ if do_partial_analysis == true
         
         % Get partial trajectories
         [SMS]               = partial_analysis(baseName,  paths);
-        
         
     end
 end
