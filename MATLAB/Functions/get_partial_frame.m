@@ -50,14 +50,17 @@ estimatedFreqz = (1:param.PART.nPartials)*f0est;
 % obtain bin numbers of relevant frequencies
 freqPos = round(estimatedFreqz*( param.PART.nFFT/param.fs))+1;
 
+% the search range (TO ONE SIDE)
+% is half an octave (half the distance between to peaks)
+searchRange = (f0est-f0est *2^(-6/12)) *( param.PART.nFFT/param.fs);
+
+
 %% LOOP OVER ALL PARTIALS
 
 for partCNT = 1:param.PART.nPartials
     
     % define relevant range
-    boundaries = [estimatedFreqz(partCNT)*2^(-1/12) estimatedFreqz(partCNT)*2^(1/12) ];
-    
-    boundINDS  =  round(boundaries*( param.PART.nFFT/param.fs));
+    boundINDS  =  round([freqPos(partCNT)-searchRange freqPos(partCNT)+searchRange]);
     
     
     % define relevant range
@@ -84,9 +87,18 @@ for partCNT = 1:param.PART.nPartials
         % check peak hight
         [truePeakHeight, truePeakPos]   = get_peak_hight(FRAMEabs,partInd);
         
+        % check for badly conditioned interpolation
+        if abs(truePeakHeight-FRAMEabs(partInd)) > 0.1
+            % and use rough value, if true
+           truePeakHeight = FRAMEabs(partInd);
+           truePeakPos    = partInd;
+        end
+        
         if truePeakHeight <0 || truePeakPos<1
             truePeakHeight=0;
         end
+        
+        
         
         if partInd-1>0 && partInd+1<length(FRAME)
             phaseEstimate               = get_peak_phase(FRAME(partInd-1:partInd+1),truePeakPos-partInd);
@@ -99,8 +111,12 @@ for partCNT = 1:param.PART.nPartials
         end
         
         
-        % assign parameters if valid (DISABLED)
-        if truePeakHeight/max(FRAMEabs) > 0.00001
+        
+        
+        % assign parameters if valid  
+        if truePeakHeight/max(FRAMEabs) > -1%0.000001
+            
+            
             
             % calculate partial frequency:
             % DON'T FORGET THE OFFSET '-1' CAUSED BY MATLAB INDEXING
@@ -113,12 +129,13 @@ for partCNT = 1:param.PART.nPartials
             % and phase
             partPha(partCNT) = phaseEstimate;
             
+            
             %% find correct phase by minimum value solution
             
             
             if param.PART.getPhases == true
                 
-                sP              =  linspace(-pi,pi,param.PART.nPhaseSteps);
+                sP              = linspace(-pi,pi,param.PART.nPhaseSteps);
                 minValues       = zeros(1,param.PART.nPhaseSteps);
                 partialPhase    = zeros(1,param.PART.nPhaseSteps);
                 searchInd = 1;
@@ -132,10 +149,10 @@ for partCNT = 1:param.PART.nPartials
                     partialPhase(searchInd) = searchPhase;
                     minValues(searchInd)    = sum( (tmpResidual).^2);
                     searchInd = searchInd+1;
+
                 end
                 
-                [~, ind] = min(minValues);
-                
+                [~, ind]         = min(minValues);
                 
                 partPha(partCNT) = partialPhase(ind);
                 
@@ -176,6 +193,41 @@ for partCNT = 1:param.PART.nPartials
                 
                 
             end
+            
+            
+            
+            %% check relation to previous peaks
+            if ~isempty(lastPartials)
+                
+                if lastPartials.AMPL(partCNT)~=0
+                    
+                    if lastPartials.FREQ(partCNT)~=0
+                        
+                        % get relative distance to last frequency
+                        lastPartFre = lastPartials.FREQ(partCNT);
+                        deltaFreqRel =   (lastPartFre-partFre(partCNT)) / f0est ;
+                        
+%                         if deltaFreqRel > 2
+%                             partFre(partCNT) = lastPartials.FREQ(partCNT);
+%                         end
+                       
+                        % get relative distance to last amplitude
+                        lastPartAmp = lastPartials.AMPL(partCNT);
+                        deltaAmpRel = abs(lastPartAmp-partAmp(partCNT))/mean([lastPartAmp,partAmp(partCNT)]);
+                        
+                          if deltaAmpRel > 10
+                             partAmp(partCNT) = lastPartials.AMPL(partCNT);
+                         end
+                        
+                    end
+                end
+                
+            end
+            
+            
+            %% check relation to harmonic spectrum
+            
+            
             
             
             

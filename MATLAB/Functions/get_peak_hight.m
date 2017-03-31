@@ -10,7 +10,7 @@ function     [truePeakVal, truePeakPos] = get_peak_hight(FRAMEabs,maxInd)
 
  
 
-%% First step: Find local max in the liekly range
+%% First step: Find local max in the likely range
 % this is done by looking for inflections
 
 peakBoundaries = [maxInd, maxInd];

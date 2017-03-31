@@ -125,6 +125,8 @@ for frameCNT = frameStart:nFrames-1
             tmpPartials.PHAS = zeros(param.PART.nPartials,1);
         end
         
+        lastPartials = tmpPartials;
+        
         SMS.FRE(:,frameCNT) = tmpPartials.FREQ;
         SMS.AMP(:,frameCNT) = tmpPartials.AMPL;
         SMS.PHA(:,frameCNT) = tmpPartials.PHAS;
