@@ -19,31 +19,34 @@ clearvars
 restoredefaultpath
 
 
-%% Decide which parts of the script should be executed
+%% RESET
 
+% Decide which parts of the script should be executeds
 do_basic_analysis       = 1;
 do_partial_analysis     = 1;
 do_modeling_segments    = 1;
 do_statistical_sms      = 1;
 do_move_files_to_erver  = 1;
 
-%% Decide which files should be processed
 
+% Decide which files should be processed
 setToDo     = 'SingleSounds';
 %  setToDo     = 'TwoNote';
 
 % filesToDo = 'All';
 filesToDo = 'SampLib_DPA_01.wav';
+filesToDo = 1:8;
 
 
-%% Set the output path for this set
+% Set the output path for this set
 
-outPath = '../Results/SingleSounds/2017-03-31/';
+outPath = '../Results/SingleSounds/2017-04-01/';
 
-% set another path to use the results from the server 
+% set another path to use the results from the server
 % outPath = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/2017-03-26/';
 
-%% SET
+
+%% PARAMETERS AND PATHS
 
 modeling_segments_STARTUP
 modeling_segments_PATHS
@@ -98,9 +101,12 @@ nFiles   = length(fileNames);
 if strcmp(filesToDo,'All')==1
     filesToDo = 1:nFiles;
 else
-    filesToDo =  find(ismember(fileNames,filesToDo));
-    if isempty(filesToDo)
-        error('The selected file does not exist!')
+    if isstr(filesToDo)
+        filesToDo =  find(ismember(fileNames,filesToDo));
+        if isempty(filesToDo)
+            error('The selected file does not exist!')
+        end
+        
     end
 end
 
@@ -109,10 +115,10 @@ end
 %% LOOP over all files
 
 if do_basic_analysis == true
-
-%    parfor (fileCNT = filesToDo,parMode)
-       for fileCNT = filesToDo
-
+    
+    %    parfor (fileCNT = filesToDo,parMode)
+    for fileCNT = filesToDo
+        
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);
         end
@@ -129,10 +135,10 @@ end
 %% SMS LOOP
 
 if do_partial_analysis == true
-
+    
     % parfor (fileCNT = filesToDo,parMode)
     for fileCNT = filesToDo
-     
+        
         if param.info == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);
         end
@@ -141,7 +147,7 @@ if do_partial_analysis == true
         
         % Get partial trajectories
         [SMS]               = partial_analysis(baseName,  paths);
-            
+        
     end
 end
 
@@ -196,7 +202,7 @@ end
 %% Push files
 
 if do_move_files_to_erver == true
-
+    
     copyfile(outPath,[paths.server datestr(now,'yyyy-mm-dd')])
-
+    
 end
