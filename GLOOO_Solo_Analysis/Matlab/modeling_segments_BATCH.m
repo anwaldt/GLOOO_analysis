@@ -33,9 +33,12 @@ do_move_files_to_erver  = 1;
 setToDo     = 'SingleSounds';
 %  setToDo     = 'TwoNote';
 
-% filesToDo = 'All';
-filesToDo = 'SampLib_DPA_01.wav';
-filesToDo = 1:8;
+
+% chose whether to process all files, 
+% a single file by name, or a subset:
+filesToDo = 'All';
+%filesToDo = 'SampLib_DPA_01.wav';
+%filesToDo = 1:8;
 
 
 % Set the output path for this set
@@ -116,8 +119,8 @@ end
 
 if do_basic_analysis == true
     
-    %    parfor (fileCNT = filesToDo,parMode)
-    for fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+    %for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);
@@ -136,8 +139,8 @@ end
 
 if do_partial_analysis == true
     
-    % parfor (fileCNT = filesToDo,parMode)
-    for fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+    % for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);
@@ -203,6 +206,6 @@ end
 
 if do_move_files_to_erver == true
     
-    copyfile(outPath,[paths.server datestr(now,'yyyy-mm-dd')])
+    copyfile(outPath,[paths.server datestr(now,'yyyy-mm-dd')],'f')
     
 end
