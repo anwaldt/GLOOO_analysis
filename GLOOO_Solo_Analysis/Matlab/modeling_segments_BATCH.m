@@ -34,7 +34,7 @@ setToDo     = 'SingleSounds';
 %  setToDo     = 'TwoNote';
 
 
-% chose whether to process all files, 
+% chose whether to process all files,
 % a single file by name, or a subset:
 filesToDo = 'All';
 %filesToDo = 'SampLib_DPA_01.wav';
@@ -43,7 +43,7 @@ filesToDo = 'All';
 
 % Set the output path for this set
 
-outPath = '../Results/SingleSounds/2017-04-01/';
+outPath = '../Results/SingleSounds/2017-04-22/';
 
 % set another path to use the results from the server
 % outPath = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/2017-03-26/';
@@ -120,7 +120,7 @@ end
 if do_basic_analysis == true
     
     parfor (fileCNT = filesToDo,parMode)
-    %for fileCNT = filesToDo
+        %for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);
@@ -140,7 +140,7 @@ end
 if do_partial_analysis == true
     
     parfor (fileCNT = filesToDo,parMode)
-    % for fileCNT = filesToDo
+        % for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);
@@ -187,7 +187,9 @@ end
 %% note modeling
 
 if do_statistical_sms == true
-    parfor (fileCNT = filesToDo,parMode)
+    %parfor (fileCNT = filesToDo,parMode)
+    for fileCNT = filesToDo
+        
         
         if param.info == true
             disp(['starting statistical SMS for: ',fileNames{fileCNT}]);
@@ -206,6 +208,6 @@ end
 
 if do_move_files_to_erver == true
     
-    copyfile(outPath,[paths.server datestr(now,'yyyy-mm-dd')],'f')
+    copyfile(outPath,[paths.server datestr(now,'yyyy-mm-dd-hh-ss')],'f')
     
 end

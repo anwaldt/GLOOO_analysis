@@ -94,7 +94,7 @@ for partCNT = 1:param.PART.nPartials
     aS      = aSteady(partCNT,:);
     
     % normalize to: contribution to overall harmonic amplitude
-    aS = aS./smooth(sum(SMS.AMP(:,startSamp:stopSamp)),10)';
+    %aS = aS./smooth(sum(SMS.AMP(:,startSamp:stopSamp)),10)';
     
     % create cmf
     [h,x]=hist(aS,50);
