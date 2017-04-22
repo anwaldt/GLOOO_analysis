@@ -59,7 +59,7 @@ for partCNT = 1:param.PART.nPartials
     fS      = fSteady(partCNT,: );
     
     % normalize to: deviation from f / (f0*N)
-    fS      = fS./ mean(CTL.f0swipe(startSamp:stopSamp))'./partCNT;
+    % fS      = fS./ mean(CTL.f0swipe(startSamp:stopSamp))'./partCNT;
     
     % decompose ?!
     

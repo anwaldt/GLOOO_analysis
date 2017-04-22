@@ -23,7 +23,7 @@ param.parallel    = true;
 %% GLOABAL analyis parameters
 
 % the hop-size is GLOBAL:
-param.lHop          = 2^11;
+param.lHop          = 2^8;
 
 param.lWinRMS       = 2^11;
 param.lWinNoise     = 2^12;
