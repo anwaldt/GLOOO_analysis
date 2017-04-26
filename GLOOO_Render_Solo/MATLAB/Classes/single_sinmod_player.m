@@ -136,13 +136,15 @@ classdef single_sinmod_player
             
             % load the  sinusoidal model and put it into the object
             
-            load([paths.SINMOD regexprep(fileName,'DPA','BuK') '.mat']);
+            %load([paths.matDir regexprep(fileName,'DPA','BuK') '.mat']);
+            load([paths.matDir regexprep(fileName,'BuK','DPA') '.mat']);
+            
             
             % obvious stuff comes first!
             obj.fileName    = fileName;
             obj.inTrans     = transition;
             obj.paramSynth  = paramSynth;
-            obj.paramAna    = param;
+            %            obj.paramAna    = param;
             obj.nPart       = paramSynth.nPartials;
             obj.kernels     = SM.kernels;
             obj.kernels_LF  = SM.kernels_LF;
@@ -195,8 +197,8 @@ classdef single_sinmod_player
             %% prepare the amplitude trajectories
             
             % @TODO: careful, this should be done in the analysis stage
-            obj.A           = partials.AMP(1:paramSynth.nPartials, 2:end-1); %#ok<*COLND>
-            obj.F           = partials.FRE(1:paramSynth.nPartials, 2:end-1);
+            obj.A           = SMS.AMP(1:paramSynth.nPartials, 2:end-1); %#ok<*COLND>
+            obj.F           = SMS.FRE(1:paramSynth.nPartials, 2:end-1);
             
             
             % read the samples infos
@@ -296,6 +298,77 @@ classdef single_sinmod_player
             
         end
         
+        
+        %% Get the next frame
+        function [obj,frame] = get_frame_TD(obj)
+            
+            % allocate output frame
+            FRAME       = zeros(obj.paramSynth.lWin,1);
+            
+            obj.f0synth =  obj.noteModel.F0.trajectory(obj.ctlPOS);
+            
+            'a';
+            
+            % loop over all partials
+            for partCnt = 1:obj.paramSynth.nPartials
+                
+                obj.s(partCnt).f0   = (obj.f0synth * partCnt);
+                
+                
+                if obj.isReleased == 0
+                    
+                    % each partial frequency (is always exactly N*f0synth)
+                    obj.s(partCnt).f0   = (obj.f0synth * partCnt)  ;
+                    
+                    
+                    % get amplitude from matrix at interpolated POSITION
+                    % (linear)
+                    
+                    try
+                        obj.s(partCnt).a   = obj.A(partCnt,obj.smsPOS);
+                    catch
+                        1;
+                    end
+                    
+                    % if released - enter this:
+                else
+                    
+                    % in release the f0 does not change (for now)
+                    obj.s(partCnt).f0  = partCnt* obj.f0synth ;
+                    
+                    % if we are within release range
+                    if obj.releasePos<=length(obj.releaseEnv)
+                        
+                        obj.releaseAmp   = obj.releaseEnv(obj.releasePos);
+                        
+                        obj.ampSynth     = obj.ampSynth * obj.releaseAmp;
+                        
+                        obj.s(partCnt).a = obj.s(partCnt).a * obj.releaseAmp;
+                        
+                        obj.s(partCnt).f0  = obj.s(partCnt).f0;
+                        
+                        % if we exceed the release trajectory
+                    else
+                        
+                        % drop dead
+                        obj.s(partCnt).a = 0;
+                        
+                        % and set note object to 'finished' state
+                        obj.isFinished = 1;
+                    end
+                    
+                    
+                    
+                end
+                
+                % get snippet
+                
+                FRAME = FRAME
+                
+                
+                
+            end
+        end
         
         %% Get the next frame
         function [obj,frame] = get_frame_IFFT(obj)

@@ -30,20 +30,22 @@ do_move_files_to_erver  = 1;
 
 
 % Decide which files should be processed
-setToDo     = 'SingleSounds';
-%  setToDo     = 'TwoNote';
+% setToDo     = 'SingleSounds';
+setToDo     = 'TwoNote';
 
 
 % chose whether to process all files,
 % a single file by name, or a subset:
-filesToDo = 'All';
+%filesToDo = 'All';
 %filesToDo = 'SampLib_DPA_01.wav';
-%filesToDo = 1:8;
+filesToDo = 'TwoNote_BuK_100.wav';
+
+%filesToDo = 24;
 
 
 % Set the output path for this set
 
-outPath = '../Results/SingleSounds/2017-04-22/';
+outPath = '../Results/SingleSounds/2017-04-23/';
 
 % set another path to use the results from the server
 % outPath = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/2017-03-26/';
@@ -91,6 +93,9 @@ end
 
 % resort filenames
 numVec              = regexprep(fileNames,'SampLib_DPA_','');
+numVec              = regexprep(fileNames,'SampLib_BuK_','');
+numVec              = regexprep(fileNames,'TwoNote_DPA_','');
+numVec              = regexprep(fileNames,'TwoNote_BuK_','');
 numVec              = str2double(regexprep(numVec,'.wav',''));
 
 
@@ -119,8 +124,8 @@ end
 
 if do_basic_analysis == true
     
-    parfor (fileCNT = filesToDo,parMode)
-        %for fileCNT = filesToDo
+% parfor (fileCNT = filesToDo,parMode)
+        for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);
@@ -128,8 +133,8 @@ if do_basic_analysis == true
         
         [~,baseName,~]    = fileparts(fileNames{fileCNT});
         
-        % Get gontrol- and   trajectories and features
-        [CTL]           = basic_analysis(baseName, paths, param, setToDo);
+        % Get control- and   trajectories and features
+        [CTL, INF]           = basic_analysis(baseName, paths, param, setToDo);
         
     end
 end
@@ -158,8 +163,8 @@ end
 %% Segment preparation LOOP
 
 if do_modeling_segments == true
-    parfor (fileCNT = filesToDo,parMode)
-        
+    %parfor (fileCNT = filesToDo,parMode)
+        for  fileCNT = filesToDo 
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);
         end

@@ -46,5 +46,6 @@ paramSynth.noiseMode    = 'off';
 %% which approach is used (only IFFT implemented, yet)
 
 paramSynth.synthMode = 'IFFT';
+paramSynth.synthMode = 'TD';
 
 

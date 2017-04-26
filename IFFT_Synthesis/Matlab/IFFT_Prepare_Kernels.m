@@ -20,7 +20,7 @@ addpath Functions/
 %% BASIC PARAMETERS
 
 % this starts the animated plot, if set to '1'
-plotit = 1;
+plotit = 0;
 
 % sampling frequency
 fs      = 44100;

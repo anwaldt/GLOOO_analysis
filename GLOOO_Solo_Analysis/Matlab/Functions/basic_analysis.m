@@ -8,7 +8,7 @@
 %
 %%
 
-function [CTL, param] = basic_analysis(baseName, paths, param, setToDo)
+function [CTL, INF, param] = basic_analysis(baseName, paths, param, setToDo)
 
 
 outName = [paths.features baseName '.mat'];
@@ -32,9 +32,9 @@ if 1%exist(outName,'file')==0
     
     switch setToDo
         case 'TwoNote'
-            INF = load_solo_properties(regexprep(baseName,'BuK','DPA') , paths);
+            INF = load_solo_properties(regexprep(baseName,'BuK','BuK') , paths);
         case 'SingleSounds'
-            INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , paths);
+            INF = load_tone_properties(regexprep(baseName,'BuK','BuK') , paths);
     end
     
     %% Controll parameter ANALYSIS

@@ -14,12 +14,13 @@ function I = load_solo_properties(baseName, paths)
 %%
 
 % load file
-f1 = fopen([paths.FILELISTS 'list_TwoNote.txt'],'r');
+f1 = fopen([paths.listDIR 'list_TwoNote.txt'],'r');
 A  = textscan(f1,'%s %s %s %s %s %s %s %s %s %s %s %s',inf);
 fclose(f1);
 
 % get index
-IDX = str2double(regexprep(baseName,'TwoNote_DPA_',''));
+%IDX = str2double(regexprep(baseName,'TwoNote_DPA_',''));
+IDX = str2double(regexprep(baseName,'TwoNote_BuK_',''));
 
 % pack into structure
 I.note1.char        = A{2}(IDX+1);

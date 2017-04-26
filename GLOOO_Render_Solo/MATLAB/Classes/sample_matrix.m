@@ -44,7 +44,7 @@ classdef sample_matrix
         function obj = sample_matrix(sD,paramSynth)
             
             % get parameters
-            obj.sampleDIR = sD.SAMPLES;
+            obj.sampleDIR = sD.wavDir;
             obj.param     = paramSynth;
             
             % Load kernel data

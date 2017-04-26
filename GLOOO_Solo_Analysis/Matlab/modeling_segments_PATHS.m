@@ -13,9 +13,9 @@
 % input for TWO NOTE
 if strcmp(setToDo,'TwoNote') ==1
 
-    paths.wavPrepared   = 'D:\Users\hvcoler_V2\Violin_Library_2015\WAV\TwoNote\DPA\';
-    paths.segSV         = 'D:\Users\hvcoler_V2\Violin_Library_2015\Segmentation\TwoNote\';
-    paths.FILELISTS     = 'D:\Users\hvcoler_V2\Violin_Library_2015\File_Lists\';
+    paths.wavPrepared   = '../../../Violin_Library_2015/WAV/TwoNote/BuK/';
+    paths.segSV         = '../../../Violin_Library_2015/Segmentation/TwoNote/';
+    paths.FILELISTS     = '../../../Violin_Library_2015/File_Lists/';
 
 elseif strcmp(setToDo,'SingleSounds') ==1
     

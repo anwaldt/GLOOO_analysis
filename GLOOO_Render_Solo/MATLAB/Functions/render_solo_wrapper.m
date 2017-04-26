@@ -8,12 +8,9 @@
 % Author:  Henrik von Coler
 % Created: 2016-08-16
 
-function [y] = render_solo_wrapper(baseName, paramSynth, paths)
+function [y] = render_solo_wrapper(baseName, paramSynth, sampMAT,    paths)
 
 
-%% Load Sample Library
-
-sampMAT = sample_matrix(paths, paramSynth);
 
 
 %% load Info on the 'solo'
@@ -21,12 +18,12 @@ sampMAT = sample_matrix(paths, paramSynth);
 % Number 	Note1 	Note2 	Semitones 	Direction 	Dynamic 	Articulation 	Vibrato 
 
 
-I = load_solo_properties(baseName, paths);
+INF = load_solo_properties(baseName, paths);
 
 
 %% load segments
-% load([paths.segments regexprep(baseName,'DPA','BuK')]);
-load([paths.segments baseName]);
+% load([paths.segDir regexprep(baseName,'DPA','BuK')]);
+load([paths.segDir baseName]);
  
 % % we get 
 % load([paths.features baseName]);

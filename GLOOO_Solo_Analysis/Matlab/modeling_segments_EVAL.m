@@ -9,7 +9,6 @@
 % Created: 2017-03-27
 
 
-
 %% RESET
 
 close all
@@ -17,23 +16,26 @@ clearvars
 restoredefaultpath
 
 
-
 %% Decide which file should be processed
 
-setToDo     = 'SingleSounds';
+setToDo     = 'TwoNote';
 
-  filesToDo = 'SampLib_DPA_01.wav';
+% filesToDo = 'SampLib_DPA_10.wav';
+filesToDo = 'TwoNote_BuK_22.wav';
+
 %filesToDo = 'All';
 
-partIDX = 22:24;
+partIDX = 1:5;
 
 %% Set the 'output' path for this set
 %  which is actually the INPUT for this script
 
-outPath = '../Results/SingleSounds/2017-03-26/';
+%outPath = '../../../Violin_Library_2015/Analysis/2017-04-22-15-50/';
+outPath = '../Results/SingleSounds/2017-04-23/';
+
 
 % set another path to use the results from the server 
-outPath = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/2017-03-26/';
+% outPath = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/2017-03-26/';
 
 %% SET
 
@@ -60,7 +62,7 @@ end
 
 
 % resort filenames
-numVec              = regexprep(fileNames,'SampLib_DPA_','');
+numVec              = regexprep(fileNames,'SampLib_BuK_','');
 numVec              = str2double(regexprep(numVec,'.wav',''));
 
 
@@ -81,7 +83,48 @@ end
 %%
 
 
-[~,baseName,~]    = fileparts(fileNames{1});
+
         
-plot_sinusoid_trajectories(baseName, partIDX, paths);
+plot_control_trajectories('TwoNote_BuK_22', paths);
+
+
+%%
+        
+plot_sinusoid_trajectories('TwoNote_BuK_22', partIDX, paths);
+
+
+%% plot mod
+
+close all
+
+figure 
+plot(MOD.SUS.P_1.AMP.xval,MOD.SUS.P_1.AMP.dist)
+hold on
+plot(MOD.SUS.P_2.AMP.xval,MOD.SUS.P_2.AMP.dist,'r')
+plot(MOD.SUS.P_3.AMP.xval,MOD.SUS.P_3.AMP.dist,'g')
+plot(MOD.SUS.P_4.AMP.xval,MOD.SUS.P_4.AMP.dist,'m')
+plot(MOD.SUS.P_5.AMP.xval,MOD.SUS.P_5.AMP.dist,'y')
+plot(MOD.SUS.P_6.AMP.xval,MOD.SUS.P_6.AMP.dist,'k')
+plot(MOD.SUS.P_7.AMP.xval,MOD.SUS.P_7.AMP.dist,'c')
+
+xlabel('a_i')
+ylabel('CDF')
+print( '-djpeg', 'stat-1')
+
+
+
+
+
+figure 
+ 
+% plot(MOD.SUS.P_6.FRE.xval,MOD.SUS.P_6.FRE.dist,'k')
+plot(MOD.SUS.P_7.FRE.xval,MOD.SUS.P_7.FRE.dist,'c')
+
+xlabel('f_i')
+ylabel('CDF')
+print( '-djpeg', 'stat-3')
+
+
+
+
 

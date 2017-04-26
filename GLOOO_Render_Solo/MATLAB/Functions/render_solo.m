@@ -262,7 +262,7 @@ for frameIDX = 1:nWin
                     
                 case 'TD'
                     
-                    [SMSP(noteIDX),tmpFrame2] = SMSP(noteIDX).get_frame_FD();
+                    [SMSP(noteIDX),tmpFrame2] = SMSP(noteIDX).get_frame_TD();
                     
             end
             y(targetInds)             = y(targetInds) + tmpFrame2;

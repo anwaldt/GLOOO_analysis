@@ -24,14 +24,14 @@ load( [paths.features regexprep(baseName,'.wav','.mat')] );
 
 switch setToDo
     case 'TwoNote'
-        INF = load_solo_properties(regexprep(baseName,'BuK','DPA') , paths);
+        INF = load_solo_properties(regexprep(baseName,'BuK','BuK') , paths);
     case 'SingleSounds'
-        INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , paths);
+        INF = load_tone_properties(regexprep(baseName,'BuK','BuK') , paths);
 end
 
 %% Read text labels
 
-load([paths.segments  regexprep(baseName,'BuK','DPA') '.mat']);
+load([paths.segments  regexprep(baseName,'BuK','BuK') '.mat']);
 % C   = textscan(fid, '%f %s');
 % fclose(fid);
 %
