@@ -111,6 +111,8 @@ classdef single_sinmod_player
         % the sinusoid struct
         s=struct();
         
+        s2 = {};
+        
         % MIDI note number
         nn;
         
@@ -269,6 +271,20 @@ classdef single_sinmod_player
                 % 'floating point bin' of this frequency
                 obj.s(partCnt).bin = obj.s(partCnt).f0 / obj.df +1;
                 
+                
+                
+                
+                
+                obj.s2    = cell(obj.nPart,1);
+                
+                for partCNT=1:obj.nPart
+                    
+                    
+                    obj.s2{partCNT} = sinusoid(100*partCNT);
+                    
+                end
+                
+                
             end
             
             % if note is played glissando with preceeding note
@@ -303,29 +319,33 @@ classdef single_sinmod_player
         function [obj,frame] = get_frame_TD(obj)
             
             % allocate output frame
-            FRAME       = zeros(obj.paramSynth.lWin,1);
+            frame       = zeros(obj.paramSynth.lWin,1);
             
             obj.f0synth =  obj.noteModel.F0.trajectory(obj.ctlPOS);
             
             'a';
             
             % loop over all partials
-            for partCnt = 1:obj.paramSynth.nPartials
+            for partCNT = 1:obj.paramSynth.nPartials
                 
-                obj.s(partCnt).f0   = (obj.f0synth * partCnt);
                 
+                % get instantaneous frequency for this partial
+                obj.s2{partCNT}.f   = (obj.F(partCNT,obj.smsPOS));
+                
+                % get instantaneous frequency for this partial
+                obj.s2{partCNT}.a    = (obj.A(partCNT,obj.smsPOS));
                 
                 if obj.isReleased == 0
                     
                     % each partial frequency (is always exactly N*f0synth)
-                    obj.s(partCnt).f0   = (obj.f0synth * partCnt)  ;
+                    obj.s2{partCNT}.f   = (obj.f0synth * partCNT)  ;
                     
                     
                     % get amplitude from matrix at interpolated POSITION
                     % (linear)
                     
                     try
-                        obj.s(partCnt).a   = obj.A(partCnt,obj.smsPOS);
+                        obj.s2{partCNT}.a   = obj.A(partCNT,obj.smsPOS);
                     catch
                         1;
                     end
@@ -334,7 +354,7 @@ classdef single_sinmod_player
                 else
                     
                     % in release the f0 does not change (for now)
-                    obj.s(partCnt).f0  = partCnt* obj.f0synth ;
+                    obj.s(partCNT).f  = partCNT* obj.f0synth ;
                     
                     % if we are within release range
                     if obj.releasePos<=length(obj.releaseEnv)
@@ -343,15 +363,15 @@ classdef single_sinmod_player
                         
                         obj.ampSynth     = obj.ampSynth * obj.releaseAmp;
                         
-                        obj.s(partCnt).a = obj.s(partCnt).a * obj.releaseAmp;
+                        obj.s2{partCNT}.a = obj.s2{partCNT}.a * obj.releaseAmp;
                         
-                        obj.s(partCnt).f0  = obj.s(partCnt).f0;
+                        obj.s2{partCNT}.f  = obj.s2{partCNT}.f;
                         
                         % if we exceed the release trajectory
                     else
                         
                         % drop dead
-                        obj.s(partCnt).a = 0;
+                        obj.s2{partCNT}.a = 0;
                         
                         % and set note object to 'finished' state
                         obj.isFinished = 1;
@@ -361,16 +381,51 @@ classdef single_sinmod_player
                     
                 end
                 
+                
+                
+                
                 % get snippet
+                tmpFrame = obj.s2{partCNT}.get_frame(obj.paramSynth.lWin,44100);
                 
-                FRAME = FRAME
                 
+                frame = frame + tmpFrame .* obj.win;
                 
                 
             end
+            
+            
+            %% increment counter(s)
+            
+            % take care that the stepsize regards the ratio of analysis and synthesis
+            % hopsize AND the respective samplerates
+            if obj.smsPOS <   size(obj.A,2)
+                obj.smsPOS     = obj.smsPOS   + 1;
+            end
+            
+            if obj.ctlPOS < length(obj.noteModel.F0.trajectory)
+                
+                % for now, we work with analysis=snthesis hop-size
+                obj.ctlPOS    = obj.ctlPOS  + 1;
+                
+                % this is for the case wher we have different hop-sizes
+                %  obj.ctlPOS    = obj.ctlPOS  +obj.noteStretchFactor *  ...
+                %  2/( (obj.noteModel.param.lHop * obj.noteModel.param.fs) / (obj.paramAna.lHop * obj.paramAna.fs)  );
+            else
+                obj.ctlPOS = obj.ctlPOS ;
+                
+            end
+            
+            % increment release counter if neccessary
+            if obj.isReleased == 1
+                obj.releasePos = obj.releasePos + 1;
+            end
+            
         end
         
-        %% Get the next frame
+        
+        
+        
+        %% Get the next frame with IFFT
         function [obj,frame] = get_frame_IFFT(obj)
             
             
