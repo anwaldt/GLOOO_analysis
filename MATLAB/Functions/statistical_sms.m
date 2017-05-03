@@ -24,14 +24,14 @@ load( [paths.features regexprep(baseName,'.wav','.mat')] );
 
 switch setToDo
     case 'TwoNote'
-        INF = load_solo_properties(regexprep(baseName,'BuK','BuK') , paths);
+        INF = load_solo_properties(regexprep(baseName,'BuK','DPA') , paths);
     case 'SingleSounds'
-        INF = load_tone_properties(regexprep(baseName,'BuK','BuK') , paths);
+        INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , paths);
 end
 
 %% Read text labels
 
-load([paths.segments  regexprep(baseName,'BuK','BuK') '.mat']);
+load([paths.segments  regexprep(baseName,'BuK','DPA') '.mat']);
 % C   = textscan(fid, '%f %s');
 % fclose(fid);
 %
@@ -132,14 +132,18 @@ ATT = struct();
 for partCNT = 1:param.PART.nPartials
     
     tmpF = SMS.FRE(partCNT,1:startSamp);
-    tmpVal = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
-    tmpVal = tmpVal./tmpVal(end);
-    eval(['ATT.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
-    
+    %tmpVal = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
+    %tmpVal = tmpVal./tmpVal(end);
+    eval(['ATT.P_' num2str(partCNT) '.FRE' '.trajectory = tmpF;']);
     
     tmpTra = SMS.AMP(partCNT,1:startSamp);
-    tmpTra = tmpTra./(tmpTra(end));
+    %tmpTra = tmpTra./(tmpTra(end));
+    
     eval(['ATT.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
+    
+    if any(isnan(tmpF)) || any(isnan(tmpTra))
+        666
+    end
     
 end
 
@@ -151,15 +155,18 @@ REL = struct();
 for partCNT = 1:param.PART.nPartials
     
     tmpF = SMS.FRE(partCNT,stopSamp:end);
-    tmpVal = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
-    tmpVal = tmpVal./tmpVal(1);
+    %tmpVal = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
+    %tmpVal = tmpVal./tmpVal(1);
     
-    eval(['REL.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
-    
+    eval(['REL.P_' num2str(partCNT) '.FRE' '.trajectory = tmpF;']);
     
     tmpTra = SMS.AMP(partCNT,stopSamp:end);
-    tmpTra = tmpTra./(tmpTra(1));
+    %tmpTra = tmpTra./(tmpTra(1));
     eval(['REL.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
+    
+    if any(isnan(tmpF)) || any(isnan(tmpTra))
+        666
+    end
     
 end
 
