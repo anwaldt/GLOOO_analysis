@@ -9,7 +9,7 @@
 % HVC
 % 2017-02-20
 
-function [MOD] = statistical_sms(baseName, param, paths, setToDo)
+function [MOD] = statistical_sms(baseName, param, paths, setToDo, micToDo)
 
 
 %% load partial data
@@ -31,7 +31,7 @@ end
 
 %% Read text labels
 
-load([paths.segments  regexprep(baseName,'BuK','DPA') '.mat']);
+load([paths.segments   baseName  '.mat']);
 % C   = textscan(fid, '%f %s');
 % fclose(fid);
 %

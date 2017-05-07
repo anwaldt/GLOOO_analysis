@@ -8,30 +8,54 @@
 %
 %%
 
+% Set the output path for this set
+ds = datestr(now,'yyyy-mm-dd');
+
+
 %% SET PATHS
 
 % input for TWO NOTE
 if strcmp(setToDo,'TwoNote') ==1
-
-    paths.wavPrepared   = '../../../Violin_Library_2015/WAV/TwoNote/BuK/';
-    paths.segSV         = '../../../Violin_Library_2015/Segmentation/TwoNote/';
-    paths.FILELISTS     = '../../../Violin_Library_2015/File_Lists/';
+    
+    switch micToDo
+        
+        case 'BuK'
+            outPath             = ['../Results/' ds '/TwoNote/BuK/'];
+            paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/TwoNote/BuK/';
+        case 'DPA'           
+            outPath             = ['../Results/' ds '/TwoNote/DPA/'];
+            paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/TwoNote/DPA/';
+            
+    end
+    
+    paths.segSV         = '../../../Violin_Library_2015/Prepared/Segments/TwoNote/';
+    paths.FILELISTS     = '../../../Violin_Library_2015/File_Lists/';    
+  
 
 elseif strcmp(setToDo,'SingleSounds') ==1
     
-    % input for single
-   paths.wavPrepared   = '../../../Violin_Library_2015/WAV/SingleSounds/DPA/';
-   paths.segSV         ='../../../Violin_Library_2015/Segmentation/SingleSounds/';
-   paths.FILELISTS     = '../../../Violin_Library_2015/File_Lists/';
+    switch micToDo
+        
+        case 'DPA'
+            outPath             = ['../Results/' ds '/SingleSounds/DPA/'];
+            paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/SingleSounds/DPA/';
+        case 'BuK'
+            outPath             = ['../Results/' ds '/SingleSounds/BuK/'];
+            paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/SingleSounds/BuK/';
+          
 
+    end
     
-
+    paths.segSV         ='../../../Violin_Library_2015/Prepared/Segments/SingleSounds/';
+    paths.FILELISTS     = '../../../Violin_Library_2015/File_Lists/';
+    
+    
 end
 
 % output paths are WITHIN the 'outPath'
 paths.features      = [outPath 'Features/'];
-paths.segments      = [outPath 'Segments/'];
-
+  paths.segments      = [outPath 'Segments/'];
+  
 paths.txtDir        = [outPath 'SinusoidsTXT/'];
 
 paths.sinusoids     = [outPath 'Sinusoids/'];
@@ -55,7 +79,6 @@ nFields = length(fn);
 for fieldCNT = 1:nFields
     
     tmpDir = eval(['paths.' fn{fieldCNT}]);
-    
     
     if isdir(tmpDir) == 0
         mkdir(tmpDir);

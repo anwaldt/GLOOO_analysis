@@ -10,7 +10,7 @@
 %
 %%
 
-function [] = modeling_segments(baseName, paths, setToDo)
+function [] = modeling_segments(baseName, paths, setToDo, micToDo)
 
 
 
@@ -38,13 +38,13 @@ if ...%exist(outName,'file') == 0 &&
         
         case 'TwoNote'
             
-            INF = load_solo_properties(regexprep(baseName,'BuK','DPA') , paths);
+            INF = load_solo_properties(regexprep(baseName,'BuK','DPA') , paths, setToDo, micToDo);
             segBounds = load([paths.segSV regexprep(baseName,'BuK','DPA') '.txt']);
             
         case 'SingleSounds'
 
             try
-                INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , paths);
+                INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , paths, setToDo, micToDo);
             catch
                 'xxx'    
             end

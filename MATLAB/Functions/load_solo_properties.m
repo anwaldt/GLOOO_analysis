@@ -5,7 +5,7 @@
 % Author : HvC
 % Created: 2016-08-11
 
-function I = load_solo_properties(baseName, paths)
+function I = load_solo_properties(baseName, paths, setToDo, micToDo)
 
 %% this is the structure
 
@@ -14,13 +14,16 @@ function I = load_solo_properties(baseName, paths)
 %%
 
 % load file
-f1 = fopen([paths.listDIR 'list_TwoNote.txt'],'r');
+f1 = fopen([paths.FILELISTS 'list_TwoNote.txt'],'r');
 A  = textscan(f1,'%s %s %s %s %s %s %s %s %s %s %s %s',inf);
 fclose(f1);
 
-% get index
-%IDX = str2double(regexprep(baseName,'TwoNote_DPA_',''));
-IDX = str2double(regexprep(baseName,'TwoNote_BuK_',''));
+% % get index
+IDX = str2double(regexprep(baseName,'TwoNote_DPA_',''));
+
+if isnan(IDX)
+    IDX = str2double(regexprep(baseName,'TwoNote_BuK_',''));
+end
 
 % pack into structure
 I.note1.char        = A{2}(IDX+1);
@@ -58,8 +61,8 @@ if strcmp(    A{4}(1), A{4}(1)) == 1 && strcmp(A{11}(IDX+1),'leagato') == 1
     I.trans.articulation= [A{11}(IDX+1) '_1'];
 else
     I.trans.articulation= A{11}(IDX+1);
-  
-% Save Neme of File
-I.fileName = baseName;
+    
+    % Save Neme of File
+    I.fileName = baseName;
     
 end

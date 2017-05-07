@@ -1,8 +1,9 @@
-%% modelling_segments_BATCH.m
+%% modelling_segments_MAIN.m
 %
-%   Does the solo analysis for a batch of files.
+%   Does the solo analysis for a complete 
+%   directory or a chosen subset.
 %
-%   This project needs the audio files to be segmented
+%   This script needs the audio files to be segmented
 %   according to the Note-Rest-Transition model!
 %
 %
@@ -19,33 +20,33 @@ clearvars
 restoredefaultpath
 
 
-%% RESET
+%%  SET
 
-% Decide which parts of the script should be executeds
-do_basic_analysis       = 1;
-do_partial_analysis     = 1;
-do_modeling_segments    = 1;
-do_statistical_sms      = 1;
-do_move_files_to_erver  = 1;
+% Decide which parts of the script should be executed:
+
+do_basic_analysis       = 0;
+do_partial_analysis     = 0;
+do_modeling_segments    = 0;
+do_statistical_sms      = 0;
+do_move_files_to_erver  = 0;
 
 
 % Decide which files should be processed
 % setToDo     = 'SingleSounds';
 setToDo     = 'TwoNote';
 
+% Decide which microphone to use
+micToDo     = 'BuK';
 
 % chose whether to process all files,
 % a single file by name, or a subset:
-%filesToDo = 'All';
-%filesToDo = 'SampLib_DPA_01.wav';
-filesToDo = 'TwoNote_BuK_100.wav';
+%filesToDo  = 'All';
+%filesToDo  = 'SampLib_DPA_01.wav';
+filesToDo   = 'TwoNote_BuK_100.wav';
+%filesToDo  = 24;
 
-%filesToDo = 24;
 
 
-% Set the output path for this set
-
-outPath = '../Results/SingleSounds/2017-04-23/';
 
 % set another path to use the results from the server
 % outPath = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/2017-03-26/';
@@ -160,7 +161,7 @@ if do_partial_analysis == true
 end
 
 
-%% Segment preparation LOOP
+%% Modeling stage 1
 
 if do_modeling_segments == true
     %parfor (fileCNT = filesToDo,parMode)
@@ -172,7 +173,7 @@ if do_modeling_segments == true
         [~,baseName,~]    = fileparts(fileNames{fileCNT});
         
         % Analysis
-        modeling_segments(baseName, paths, setToDo);
+        modeling_segments(baseName, paths, setToDo, micToDo);
         
         if param.info == true
             disp(['finished analysis for: ',fileNames{fileCNT}]);
@@ -203,7 +204,7 @@ if do_statistical_sms == true
         [~,baseName,~]   = fileparts(fileNames{fileCNT});
         
         % Analysis
-        MOD = statistical_sms(baseName, param, paths, setToDo);
+        MOD = statistical_sms(baseName, param, paths, setToDo, micToDo);
         
     end
 end
@@ -213,6 +214,6 @@ end
 
 if do_move_files_to_erver == true
     
-    copyfile(outPath,[paths.server datestr(now,'yyyy-mm-dd-hh-ss')],'f')
+    copyfile(outPath,[paths.server ds],'f')
     
 end
