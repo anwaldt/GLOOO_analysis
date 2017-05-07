@@ -1,6 +1,6 @@
 %% modelling_segments_MAIN.m
 %
-%   Does the solo analysis for a complete 
+%   Does the solo analysis for a complete
 %   directory or a chosen subset.
 %
 %   This script needs the audio files to be segmented
@@ -24,25 +24,25 @@ restoredefaultpath
 
 % Decide which parts of the script should be executed:
 
-do_basic_analysis       = 0;
-do_partial_analysis     = 0;
-do_modeling_segments    = 0;
-do_statistical_sms      = 0;
+do_basic_analysis       = 1;
+do_partial_analysis     = 1;
+do_modeling_segments    = 1;
+do_statistical_sms      = 1;
 do_move_files_to_erver  = 0;
 
 
 % Decide which files should be processed
-% setToDo     = 'SingleSounds';
-setToDo     = 'TwoNote';
+setToDo     = 'SingleSounds';
+% setToDo     = 'TwoNote';
 
 % Decide which microphone to use
 micToDo     = 'BuK';
 
 % chose whether to process all files,
 % a single file by name, or a subset:
-%filesToDo  = 'All';
+filesToDo  = 'All';
 %filesToDo  = 'SampLib_DPA_01.wav';
-filesToDo   = 'TwoNote_BuK_100.wav';
+%filesToDo   = 'TwoNote_BuK_100.wav';
 %filesToDo  = 24;
 
 
@@ -125,8 +125,8 @@ end
 
 if do_basic_analysis == true
     
-% parfor (fileCNT = filesToDo,parMode)
-        for fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+        %for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);
@@ -164,8 +164,10 @@ end
 %% Modeling stage 1
 
 if do_modeling_segments == true
-    %parfor (fileCNT = filesToDo,parMode)
-        for  fileCNT = filesToDo 
+    
+    parfor (fileCNT = filesToDo,parMode)
+        %     for  fileCNT = filesToDo
+        
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);
         end
@@ -180,9 +182,8 @@ if do_modeling_segments == true
         end
         
     end
+    
 end
-
-
 
 
 %% Transition modeling LOOP
@@ -192,8 +193,8 @@ end
 
 %% note modeling
 
-if do_statistical_sms == true
-    %parfor (fileCNT = filesToDo,parMode)
+% if do_statistical_sms == true
+parfor (fileCNT = filesToDo,parMode)
     for fileCNT = filesToDo
         
         
@@ -207,6 +208,7 @@ if do_statistical_sms == true
         MOD = statistical_sms(baseName, param, paths, setToDo, micToDo);
         
     end
+    
 end
 
 
