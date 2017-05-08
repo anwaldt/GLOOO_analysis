@@ -32,8 +32,8 @@ do_move_files_to_server  = 1;
 
 
 % Decide which files should be processed
-% setToDo     = 'SingleSounds';
-setToDo     = 'TwoNote';
+setToDo     = 'SingleSounds';
+% setToDo     = 'TwoNote';
 
 % Decide which microphone to use
 micToDo     = 'BuK';
@@ -215,6 +215,6 @@ end
 
 if do_move_files_to_server == true
     
-    copyfile(outPath,[paths.server ds],'f')
+    copyfile(outPath,[paths.server],'f')
     
 end
