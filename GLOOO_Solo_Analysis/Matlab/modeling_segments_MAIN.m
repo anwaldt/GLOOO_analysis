@@ -28,7 +28,7 @@ do_basic_analysis       = 1;
 do_partial_analysis     = 1;
 do_modeling_segments    = 1;
 do_statistical_sms      = 1;
-do_move_files_to_erver  = 0;
+do_move_files_to_server  = 0;
 
 
 % Decide which files should be processed
@@ -40,7 +40,7 @@ micToDo     = 'BuK';
 
 % chose whether to process all files,
 % a single file by name, or a subset:
-filesToDo  = 'All';
+filesToDo  = 'All';     
 %filesToDo  = 'SampLib_DPA_01.wav';
 %filesToDo   = 'TwoNote_BuK_100.wav';
 %filesToDo  = 24;
@@ -165,8 +165,8 @@ end
 
 if do_modeling_segments == true
     
-    parfor (fileCNT = filesToDo,parMode)
-        %     for  fileCNT = filesToDo
+    %parfor (fileCNT = filesToDo,parMode)
+             for  fileCNT = filesToDo
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);
@@ -194,8 +194,9 @@ end
 %% note modeling
 
 % if do_statistical_sms == true
-parfor (fileCNT = filesToDo,parMode)
-    for fileCNT = filesToDo
+% parfor (fileCNT = filesToDo,parMode)
+% YAML stuff does not like parallel  
+for fileCNT = filesToDo
         
         
         if param.info == true
@@ -206,15 +207,13 @@ parfor (fileCNT = filesToDo,parMode)
         
         % Analysis
         MOD = statistical_sms(baseName, param, paths, setToDo, micToDo);
-        
-    end
-    
+     
 end
 
 
 %% Push files
 
-if do_move_files_to_erver == true
+if do_move_files_to_server == true
     
     copyfile(outPath,[paths.server ds],'f')
     

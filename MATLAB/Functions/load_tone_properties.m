@@ -5,7 +5,7 @@
 % Author : HvC
 % Created: 2017-02-14
 
-function I = load_tone_properties(baseName, paths)
+function I = load_tone_properties(baseName, paths, setToDo, micToDo);
 
 % tuning frequency should NOT be hard-coded:
 tuningFreq = 443;
