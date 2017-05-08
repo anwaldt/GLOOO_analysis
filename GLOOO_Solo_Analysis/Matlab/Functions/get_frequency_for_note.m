@@ -35,7 +35,7 @@ function [ f ] = get_frequency_for_note( note )
         case ['b' char(39) char(39)] % b''
             f = 932.33;
         otherwise
-            f = 0;
+            f = ;
             error(['    get_frequency_for_note() failed for ' note])
     end
 

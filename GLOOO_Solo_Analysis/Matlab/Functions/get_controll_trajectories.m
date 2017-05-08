@@ -81,8 +81,8 @@ maxTry = 3;
 % then for the whole input
 for iTry = 1: maxTry
     
-    f_interval = get_f_interval(cent, INF);
-    
+    %f_interval = get_f_interval(cent, INF);
+    f_interval = [30 3000];
     [swipeVec,t,ps] = swipep(x,fs,f_interval,hopSec,dlog2p,dERBs,woverlap,sTHR);
     
     % Check Result:
