@@ -63,21 +63,21 @@ elseif strcmp(setToDo,'SingleSounds') ==1
 end
 
 % output paths are WITHIN the 'outPath'
-paths.features      = [outPath 'Features/'];
-paths.segments      = [outPath 'Segments/'];
+paths.features      = [paths.server 'Features\'];
+paths.segments      = [paths.server 'Segments\'];
 
-paths.txtDir        = [outPath 'SinusoidsTXT/'];
+paths.txtDir        = [paths.server 'SinusoidsTXT\'];
 
-paths.sinusoids     = [outPath 'Sinusoids/'];
-paths.statSMS       = [outPath 'StatisticalSMS/'];
+paths.sinusoids     = [paths.server 'Sinusoids\'];
+paths.statSMS       = [paths.server 'StatisticalSMS\'];
 
 
 
-paths.tonal         = [outPath 'Tonal/'];
-paths.residual      = [outPath 'Residual/'];
-paths.complete      = [outPath 'Complete/'];
+paths.tonal         = [paths.server 'Tonal\'];
+paths.residual      = [paths.server 'Residual\'];
+paths.complete      = [paths.server 'Complete\'];
 
-paths.plot          = [outPath 'Plots/'];
+paths.plot          = [paths.server 'Plots\'];
 
 
 %% Check for existence of paths

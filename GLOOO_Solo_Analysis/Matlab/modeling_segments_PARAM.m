@@ -17,7 +17,7 @@
 param.plotit      = false;
 param.saveit      = true;
 param.info        = true;
-param.parallel    = true;
+
  
 
 %% GLOABAL analyis parameters

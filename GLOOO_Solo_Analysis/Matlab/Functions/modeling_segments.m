@@ -91,7 +91,7 @@ if ...%exist(outName,'file') == 0 &&
     
     if param.saveit == true
         
-        save(outName,'SOLO')
+        save(outName,'SEG')
         
     end
     

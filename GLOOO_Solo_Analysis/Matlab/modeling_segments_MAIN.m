@@ -24,16 +24,18 @@ restoredefaultpath
 
 % Decide which parts of the script should be executed:
 
-do_basic_analysis        = 1;
-do_partial_analysis      = 1;
+run_parallel                = false;
+ 
+do_basic_analysis        = 0;
+do_partial_analysis      = 0;
 do_modeling_segments     = 1;
 do_statistical_sms       = 1;
 do_move_files_to_server  = 1;
 
 
 % Decide which files should be processed
-setToDo     = 'SingleSounds';
-% setToDo     = 'TwoNote';
+%setToDo     = 'SingleSounds';
+setToDo     = 'TwoNote';
 
 % Decide which microphone to use
 micToDo     = 'BuK';
@@ -61,12 +63,12 @@ modeling_segments_PARAM
 %% start and manage pool
 
 s = matlabpool('size');
-if s == 0 && param.parallel == true
+if s == 0 && run_parallel == true
     matlabpool
 end
 
 
-if param.parallel == true
+if run_parallel == true
     parMode = Inf;
     disp('Running in PARALEL mode!')
 else
@@ -165,8 +167,8 @@ end
 
 if do_modeling_segments == true
     
-    %parfor (fileCNT = filesToDo,parMode)
-             for  fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+%              for  fileCNT = filesToDo
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);
