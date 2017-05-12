@@ -38,8 +38,8 @@ load([paths.segments   baseName  '.mat']);
 %
 
 bounds = [0 0];
-bounds(1) =  SEG{2}.startSEC;
-bounds(2) =  SEG{2}.stopSEC;
+bounds(1) =  SOLO.SEG{2}.startSEC;
+bounds(2) =  SOLO.SEG{2}.stopSEC;
 
 bSamp   =  round( bounds /(SMS.param.lHop / SMS.param.fs));
 

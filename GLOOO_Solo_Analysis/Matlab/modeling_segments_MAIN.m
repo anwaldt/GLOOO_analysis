@@ -221,6 +221,6 @@ end
 
 if do_move_files_to_server == true
     
-    copyfile(outPath,[paths.server],'f')
+    copyfile(paths.local,paths.server,'f')
     
 end
