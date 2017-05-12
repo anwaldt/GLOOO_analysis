@@ -22,19 +22,21 @@ restoredefaultpath
 
 %%  SET
 
-% Decide which parts of the script should be executed:
 
-run_parallel                = false;
- 
-do_basic_analysis        = 0;
-do_partial_analysis      = 0;
+run_parallel             = 1;
+remote_results           = 0;
+
+% Decide which parts of the script should be executed:
+do_basic_analysis        = 1;
+do_partial_analysis      = 1;
 do_modeling_segments     = 1;
-do_statistical_sms       = 1;
+% only for single sounds:
+do_statistical_sms       = 1;   
 do_move_files_to_server  = 1;
 
 
 % Decide which files should be processed
-%setToDo     = 'SingleSounds';
+% setToDo     = 'SingleSounds';
 setToDo     = 'TwoNote';
 
 % Decide which microphone to use
@@ -43,8 +45,8 @@ micToDo     = 'BuK';
 % chose whether to process all files,
 % a single file by name, or a subset:
 filesToDo  = 'All';     
-%filesToDo  = 'SampLib_DPA_01.wav';
-%filesToDo   = 'TwoNote_BuK_100.wav';
+%filesToDo  = 'SampLib_BuK_01.wav';
+% filesToDo   = 'TwoNote_BuK_100.wav';
 %filesToDo  = 24;
 
 
@@ -112,7 +114,7 @@ nFiles   = length(fileNames);
 if strcmp(filesToDo,'All')==1
     filesToDo = 1:nFiles;
 else
-    if isstr(filesToDo)
+    if ischar(filesToDo)
         filesToDo =  find(ismember(fileNames,filesToDo));
         if isempty(filesToDo)
             error('The selected file does not exist!')
@@ -193,11 +195,13 @@ end
 
 
 
-%% note modeling
+%% Single Sound Modeling
 
-% if do_statistical_sms == true
+if do_statistical_sms == true
+
 % parfor (fileCNT = filesToDo,parMode)
 % YAML stuff does not like parallel  
+
 for fileCNT = filesToDo
         
         
@@ -212,7 +216,7 @@ for fileCNT = filesToDo
      
 end
 
-
+end
 %% Push files
 
 if do_move_files_to_server == true

@@ -9,8 +9,8 @@
 %%
 
 % Set the output path for this set
-% ds = datestr(now,'yyyy-mm-dd');
-ds = '2017-05-07';
+ds = datestr(now,'yyyy-mm-dd');
+% ds = '2017-05-07';
 
 
 %% SET PATHS
@@ -26,11 +26,14 @@ if strcmp(setToDo,'TwoNote') ==1
             outPath             = ['../Results/TwoNote/BuK/' ds '/'];
             paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/TwoNote/BuK/';
             paths.server        = ['\\NAS-AK\Forschungsprojekte\Klanganalyse_und_Synthese\Violin_Library_2015\Analysis\TwoNote\BuK\' ds '\'];
+            paths.local         = ['..\..\..\Violin_Library_2015\Analysis\TwoNote\BuK\' ds '\'];
+            
             
         case 'DPA'
             outPath             = ['../Results/TwoNote/DPA/' ds '/'];
             paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/TwoNote/DPA/';
             paths.server        = ['\\NAS-AK\Forschungsprojekte\Klanganalyse_und_Synthese\Violin_Library_2015\Analysis\TwoNote\DPA\' ds '\'];
+            paths.local         = ['..\..\..\Violin_Library_2015\Analysis\TwoNote\DPA\' ds '\'];
             
     end
     
@@ -38,6 +41,7 @@ if strcmp(setToDo,'TwoNote') ==1
     paths.FILELISTS     = '../../../Violin_Library_2015/File_Lists/';
     
     
+    % input for SingleSounds
 elseif strcmp(setToDo,'SingleSounds') ==1
     
     switch micToDo
@@ -46,11 +50,13 @@ elseif strcmp(setToDo,'SingleSounds') ==1
             outPath             = ['../Results/SingleSounds/DPA/' ds '/'];
             paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/SingleSounds/DPA/';
             paths.server        = ['\\NAS-AK\Forschungsprojekte\Klanganalyse_und_Synthese\Violin_Library_2015\Analysis\SingleSounds\DPA\' ds '\'];
+            paths.local         = ['..\..\..\Violin_Library_2015\Analysis\SingleSounds\DPA\' ds '\'];
             
         case 'BuK'
             outPath             = ['../Results/SingleSounds/BuK/' ds '/'];
             paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/SingleSounds/BuK/';
             paths.server        = ['\\NAS-AK\Forschungsprojekte\Klanganalyse_und_Synthese\Violin_Library_2015\Analysis\SingleSounds\BuK\' ds '\'];
+            paths.local         = ['..\..\..\Violin_Library_2015\Analysis\SingleSounds\BuK\' ds '\'];
             
             
             
@@ -59,25 +65,33 @@ elseif strcmp(setToDo,'SingleSounds') ==1
     paths.segSV         ='../../../Violin_Library_2015/Prepared/Segments/SingleSounds/';
     paths.FILELISTS     = '../../../Violin_Library_2015/File_Lists/';
     
-    
 end
 
 % output paths are WITHIN the 'outPath'
-paths.features      = [paths.server 'Features\'];
-paths.segments      = [paths.server 'Segments\'];
 
-paths.txtDir        = [paths.server 'SinusoidsTXT\'];
+switch remote_results
+    
+    case 1
+        tmpPath = paths.server;
+    case 0
+        tmpPath = paths.local;
+end
 
-paths.sinusoids     = [paths.server 'Sinusoids\'];
-paths.statSMS       = [paths.server 'StatisticalSMS\'];
+paths.features      = [tmpPath 'Features\'];
+paths.segments      = [tmpPath 'Segments\'];
+
+paths.txtDir        = [tmpPath 'SinusoidsTXT\'];
+
+paths.sinusoids     = [tmpPath 'Sinusoids\'];
+paths.statSMS       = [tmpPath 'StatisticalSMS\'];
 
 
 
-paths.tonal         = [paths.server 'Tonal\'];
-paths.residual      = [paths.server 'Residual\'];
-paths.complete      = [paths.server 'Complete\'];
+paths.tonal         = [tmpPath 'Tonal\'];
+paths.residual      = [tmpPath 'Residual\'];
+paths.complete      = [tmpPath 'Complete\'];
 
-paths.plot          = [paths.server 'Plots\'];
+paths.plot          = [tmpPath 'Plots\'];
 
 
 %% Check for existence of paths

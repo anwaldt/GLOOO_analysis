@@ -85,13 +85,13 @@ if ...%exist(outName,'file') == 0 &&
     
     %% SAVE STUFF
     
-    SOLO.SEG = SEG;
-    SOLO.param = param;
-    
-    
+    SOLO        = struct;    
+    SOLO.SEG    = SEG;
+    SOLO.param  = param;
+        
     if param.saveit == true
         
-        save(outName,'SEG')
+        save(outName,'SOLO')
         
     end
     
