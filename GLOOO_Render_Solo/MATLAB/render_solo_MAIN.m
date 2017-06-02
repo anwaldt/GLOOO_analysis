@@ -21,8 +21,7 @@ restoredefaultpath
 
 
 libDIR  = '../../../Violin_Library_2015/Analysis/2017-04-22-15-50/';
-soloDIR = '../../GLOOO_Solo_Analysis/Results/SingleSounds/2017-04-23/';
-
+soloDIR = '../../GLOOO_Solo_Analysis/Results/2017-05-07/TwoNote/BuK/';
 
 %% STARTUP
 
@@ -35,7 +34,7 @@ render_solo_PARAM;
 % a single file by name, or a subset:
 %filesToDo = 'All';
 %filesToDo = 'SampLib_DPA_01.wav';
-filesToDo = 'TwoNote_BuK_01.mat';
+filesToDo = 'TwoNote_BuK_100.mat';
 
 %% get file list
 

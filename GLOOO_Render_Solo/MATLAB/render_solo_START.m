@@ -12,6 +12,11 @@ p = genpath('../../MATLAB/');
 addpath(p);
 clear p;
 
+p = genpath('../../IFFT_synthesis/');
+addpath(p);
+clear p;
+
 addpath('Functions/')
 addpath('Classes/'  )
+
 
