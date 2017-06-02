@@ -14,7 +14,7 @@ function I = load_solo_properties(baseName, paths, setToDo, micToDo)
 %%
 
 % load file
-f1 = fopen([paths.FILELISTS 'list_TwoNote.txt'],'r');
+f1 = fopen([paths.listDIR 'list_TwoNote.txt'],'r');
 A  = textscan(f1,'%s %s %s %s %s %s %s %s %s %s %s %s',inf);
 fclose(f1);
 

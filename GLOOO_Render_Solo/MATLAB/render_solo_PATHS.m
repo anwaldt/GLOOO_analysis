@@ -23,8 +23,8 @@ paths.KERNELS   = '../../IFFT_Synthesis/Data/';
 
 
 %% SET PATHS
-
-paths.wavDir         = ['../../../Violin_Library_2015/WAV/SingleSounds/DPA/'];
+ 
+paths.wavDir         = ['../../../Violin_Library_2015/Prepared/WAV/SingleSounds/BuK/'];
 paths.matDir        = [ libDIR 'Sinusoids/'];
 paths.txtDir        = [ libDIR 'Sinusoidal_Data_TXT/Violin_2015/BuK/'];
 paths.resDir        = [ libDIR 'Residual/Violin_2015/BuK/'];

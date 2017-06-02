@@ -20,7 +20,7 @@ restoredefaultpath
 %%
 
 
-libDIR  = '../../../Violin_Library_2015/Analysis/2017-04-22-15-50/';
+libDIR  = '/home/anwaldt/Work/GLOOO/GLOOO_Solo_Analysis/Results/SingleSounds/BuK/2017-05-07/';
 soloDIR = '../../GLOOO_Solo_Analysis/Results/2017-05-07/TwoNote/BuK/';
 
 %% STARTUP

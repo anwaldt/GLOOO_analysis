@@ -25,15 +25,15 @@ if strcmp(setToDo,'TwoNote') ==1
         case 'BuK'
             outPath             = ['../Results/TwoNote/BuK/' ds '/'];
             paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/TwoNote/BuK/';
-            paths.server        = ['\\NAS-AK\Forschungsprojekte\Klanganalyse_und_Synthese\Violin_Library_2015\Analysis\TwoNote\BuK\' ds '\'];
-            paths.local         = ['..\..\..\Violin_Library_2015\Analysis\TwoNote\BuK\' ds '\'];
+            paths.server        = ['//NAS-AK/Forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/TwoNote/BuK/' ds '/'];
+            paths.local         = ['../../../Violin_Library_2015/Analysis/TwoNote/BuK/' ds '/'];
             
             
         case 'DPA'
             outPath             = ['../Results/TwoNote/DPA/' ds '/'];
             paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/TwoNote/DPA/';
-            paths.server        = ['\\NAS-AK\Forschungsprojekte\Klanganalyse_und_Synthese\Violin_Library_2015\Analysis\TwoNote\DPA\' ds '\'];
-            paths.local         = ['..\..\..\Violin_Library_2015\Analysis\TwoNote\DPA\' ds '\'];
+            paths.server        = ['//NAS-AK/Forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/TwoNote/DPA/' ds '/'];
+            paths.local         = ['../../../Violin_Library_2015/Analysis/TwoNote/DPA/' ds '/'];
             
     end
     
@@ -49,14 +49,14 @@ elseif strcmp(setToDo,'SingleSounds') ==1
         case 'DPA'
             outPath             = ['../Results/SingleSounds/DPA/' ds '/'];
             paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/SingleSounds/DPA/';
-            paths.server        = ['\\NAS-AK\Forschungsprojekte\Klanganalyse_und_Synthese\Violin_Library_2015\Analysis\SingleSounds\DPA\' ds '\'];
-            paths.local         = ['..\..\..\Violin_Library_2015\Analysis\SingleSounds\DPA\' ds '\'];
+            paths.server        = ['//NAS-AK/Forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/SingleSounds/DPA/' ds '/'];
+            paths.local         = ['../../../Violin_Library_2015/Analysis/SingleSounds/DPA/' ds '/'];
             
         case 'BuK'
             outPath             = ['../Results/SingleSounds/BuK/' ds '/'];
             paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/SingleSounds/BuK/';
-            paths.server        = ['\\NAS-AK\Forschungsprojekte\Klanganalyse_und_Synthese\Violin_Library_2015\Analysis\SingleSounds\BuK\' ds '\'];
-            paths.local         = ['..\..\..\Violin_Library_2015\Analysis\SingleSounds\BuK\' ds '\'];
+            paths.server        = ['//NAS-AK/Forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/SingleSounds/BuK/' ds '/'];
+            paths.local         = ['../../../Violin_Library_2015/Analysis/SingleSounds/BuK/' ds '/'];
             
             
             
@@ -77,21 +77,21 @@ switch remote_results
         tmpPath = paths.local;
 end
 
-paths.features      = [tmpPath 'Features\'];
-paths.segments      = [tmpPath 'Segments\'];
+paths.features      = [tmpPath 'Features/'];
+paths.segments      = [tmpPath 'Segments/'];
 
-paths.txtDir        = [tmpPath 'SinusoidsTXT\'];
+paths.txtDir        = [tmpPath 'SinusoidsTXT/'];
 
-paths.sinusoids     = [tmpPath 'Sinusoids\'];
-paths.statSMS       = [tmpPath 'StatisticalSMS\'];
+paths.sinusoids     = [tmpPath 'Sinusoids/'];
+paths.statSMS       = [tmpPath 'StatisticalSMS/'];
 
 
 
-paths.tonal         = [tmpPath 'Tonal\'];
-paths.residual      = [tmpPath 'Residual\'];
-paths.complete      = [tmpPath 'Complete\'];
+paths.tonal         = [tmpPath 'Tonal/'];
+paths.residual      = [tmpPath 'Residual/'];
+paths.complete      = [tmpPath 'Complete/'];
 
-paths.plot          = [tmpPath 'Plots\'];
+paths.plot          = [tmpPath 'Plots/'];
 
 
 %% Check for existence of paths
@@ -105,10 +105,14 @@ for fieldCNT = 1:nFields
     tmpDir = eval(['paths.' fn{fieldCNT}]);
     
     if isdir(tmpDir) == 0
-        mkdir(tmpDir);
+        
+        try
+            mkdir(tmpDir);
+        catch
+            warning(['Could not create ''' tmpDir '''!'])
+        end
+        
+        
     end
     
-    
 end
-
-

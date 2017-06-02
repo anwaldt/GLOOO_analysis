@@ -2,7 +2,11 @@
 
 %% SET PATHS
 
-paths.inDir         = ['D:\Users\hvcoler_V2\Violin_Library_2015\WAV\SingleSounds\DPA\'];
+% paths.inDir         = ['D:\Users\hvcoler_V2\Violin_Library_2015\WAV\SingleSounds\DPA\'];
+
+paths.inDir         = ['/home/anwaldt/Work/Violin_Library_2015/Prepared/WAV/SingleSounds/BuK/'];
+
+
 paths.matDir        = [ rootDIR 'Sinusoidal_Data_MAT/Violin_2015/BuK/'];
 paths.txtDir        = [ rootDIR 'Sinusoidal_Data_TXT/Violin_2015/BuK/'];
 paths.resDir        = [ rootDIR 'Residual/Violin_2015/BuK/'];
@@ -17,15 +21,19 @@ paths.segDIR = '\\NAS-AK\Forschungsprojekte\Klanganalyse_und_Synthese\Violin_Lib
 %  and make them, if necessary
 
 fn      = fieldnames(paths);
-nFields = length(fn); 
+nFields = length(fn);
 
 for fieldCNT = 1:nFields
     
-     tmpDir = eval(['paths.' fn{fieldCNT}]);
-     
-     if isdir(tmpDir) == 0
-        mkdir(tmpDir);
-     end
+    tmpDir = eval(['paths.' fn{fieldCNT}]);
+    
+    if isdir(tmpDir) == 0
+        try
+            mkdir(tmpDir);
+        catch
+            warning(['Could not create ' tmpDir '!'])
+        end
+    end
     
 end
 

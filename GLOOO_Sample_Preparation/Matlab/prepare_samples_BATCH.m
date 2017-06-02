@@ -67,7 +67,7 @@ nFiles = length(wavNames);% length(unproc);
 %% Process all files
  
 
- parfor fileCnt = 1:nFiles
+ for fileCnt = 1:nFiles
  
     
     % get file name

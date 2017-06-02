@@ -31,20 +31,20 @@ do_basic_analysis        = 1;
 do_partial_analysis      = 1;
 do_modeling_segments     = 1;
 % only for single sounds:
-do_statistical_sms       = 1;   
+do_statistical_sms       = 1;
 do_move_files_to_server  = 1;
 
 
 % Decide which files should be processed
-% setToDo     = 'SingleSounds';
-setToDo     = 'TwoNote';
+setToDo     = 'SingleSounds';
+% setToDo     = 'TwoNote';
 
 % Decide which microphone to use
 micToDo     = 'BuK';
 
 % chose whether to process all files,
 % a single file by name, or a subset:
-filesToDo  = 'All';     
+filesToDo  = 'All';
 %filesToDo  = 'SampLib_BuK_01.wav';
 % filesToDo   = 'TwoNote_BuK_100.wav';
 %filesToDo  = 24;
@@ -170,7 +170,7 @@ end
 if do_modeling_segments == true
     
     parfor (fileCNT = filesToDo,parMode)
-%              for  fileCNT = filesToDo
+        %              for  fileCNT = filesToDo
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);
@@ -198,11 +198,11 @@ end
 %% Single Sound Modeling
 
 if do_statistical_sms == true
-
-% parfor (fileCNT = filesToDo,parMode)
-% YAML stuff does not like parallel  
-
-for fileCNT = filesToDo
+    
+    % parfor (fileCNT = filesToDo,parMode)
+    % YAML stuff does not like parallel
+    
+    for fileCNT = filesToDo
         
         
         if param.info == true
@@ -213,9 +213,9 @@ for fileCNT = filesToDo
         
         % Analysis
         MOD = statistical_sms(baseName, param, paths, setToDo, micToDo);
-     
-end
-
+        
+    end
+    
 end
 %% Push files
 
