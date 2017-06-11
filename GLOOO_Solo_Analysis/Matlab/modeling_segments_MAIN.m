@@ -36,8 +36,8 @@ do_move_files_to_server  = 1;
 
 
 % Decide which files should be processed
-setToDo     = 'SingleSounds';
-% setToDo     = 'TwoNote';
+% setToDo     = 'SingleSounds';
+setToDo     = 'TwoNote';
 
 % Decide which microphone to use
 micToDo     = 'BuK';
@@ -45,8 +45,8 @@ micToDo     = 'BuK';
 % chose whether to process all files,
 % a single file by name, or a subset:
 filesToDo  = 'All';
-%filesToDo  = 'SampLib_BuK_01.wav';
-% filesToDo   = 'TwoNote_BuK_100.wav';
+%filesToDo  = 'SampLib_BuK_19.wav';
+filesToDo   = 'TwoNote_BuK_19.wav';
 %filesToDo  = 24;
 
 

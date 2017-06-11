@@ -138,9 +138,12 @@ classdef single_sinmod_player
             
             % load the  sinusoidal model and put it into the object
             
-            %load([paths.matDir regexprep(fileName,'DPA','BuK') '.mat']);
-            load([paths.matDir regexprep(fileName,'BuK','DPA') '.mat']);
             
+            try
+                load([paths.matDir regexprep(fileName,'BuK','DPA') '.mat']);
+            catch
+                load([paths.matDir regexprep(fileName,'DPA','BuK') '.mat']);
+            end
             
             % obvious stuff comes first!
             obj.fileName    = fileName;

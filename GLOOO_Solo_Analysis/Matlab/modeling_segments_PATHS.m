@@ -38,7 +38,7 @@ if strcmp(setToDo,'TwoNote') ==1
     end
     
     paths.segSV         = '../../../Violin_Library_2015/Prepared/Segments/TwoNote/';
-    paths.FILELISTS     = '../../../Violin_Library_2015/File_Lists/';
+    paths.listDIR     = '../../../Violin_Library_2015/File_Lists/';
     
     
     % input for SingleSounds

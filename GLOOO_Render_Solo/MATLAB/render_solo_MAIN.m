@@ -17,11 +17,13 @@ clearvars
 close all
 restoredefaultpath
 
-%%
+ 
+%% These have to be set before starting
 
+singlesoundDIR  = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/SingleSounds/BuK/2017-06-02/';
+soloDIR         = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/TwoNote/BuK/2017-05-12/';
+libDIR          = '/home/anwaldt/Work/Violin_Library_2015/';
 
-libDIR  = '/home/anwaldt/Work/GLOOO/GLOOO_Solo_Analysis/Results/SingleSounds/BuK/2017-05-07/';
-soloDIR = '../../GLOOO_Solo_Analysis/Results/2017-05-07/TwoNote/BuK/';
 
 %% STARTUP
 
@@ -95,7 +97,7 @@ sampMAT = sample_matrix(paths, paramSynth);
 
 %%
 
-for fileCNT = 1:nFiles
+for fileCNT = filesToDo
     
     % FILE
     [~,baseName,~]   = fileparts( fileNames{fileCNT});
