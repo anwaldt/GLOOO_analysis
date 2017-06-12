@@ -13,11 +13,9 @@ function [ y ] = render_solo(~, SOLO, SM, expMod, paths, paramSynth)
 
 
 %% unpack the solo
+
 SEG     = SOLO.SEG;
 param   = SOLO.param;
-
-
-
 
 
 %%
@@ -239,19 +237,10 @@ for frameIDX = 1:nWin
         % (the one NOT released)
         if SMSP(noteIDX).isReleased == 0
             
-            % somehow this function won't work
-            %             SMSP(noteIDX).process_controls(pitchBend(cntrlsInFrame,:));
-            
-            % so we do it the dirty way
-            %             if ~isempty(cntrlsInFrame)
-            %                 SMSP(noteIDX).vibCent = mean( pitchBend(cntrlsInFrame,2) );
-            %             else
-            %                 %                 SMSP(noteIDX).vibCent = 0;
-            %             end
-            %             usedCntrls(cntrlsInFrame,:) = 1;
+         
         end
         
-        % [SP(noteIDX),tmpFrame]    = SP(noteIDX).get_frame();
+        
         if SMSP(noteIDX).isFinished == 0
             
             switch paramSynth.synthMode
@@ -264,8 +253,11 @@ for frameIDX = 1:nWin
                     
                     [SMSP(noteIDX),tmpFrame2] = SMSP(noteIDX).get_frame_TD();
                     
+%                     plot(abs(fft(tmpFrame2))), xlim([0 200]), drawnow, shg
+                    
             end
-            y(targetInds)             = y(targetInds) + tmpFrame2;
+            
+            y(targetInds) = y(targetInds) + tmpFrame2;
             
         end
     end

@@ -107,9 +107,7 @@ classdef single_sinmod_player
         A;
         % the frequency trajectories
         F;
-        
-        % the sinusoid struct
-        s=struct();
+         
         
         s2 = {};
         
@@ -212,19 +210,7 @@ classdef single_sinmod_player
             
             obj.loop.points(1) = 50;
             obj.loop.points(2) = length(obj.A)-50;
-            
-            
-            % this smoothing is 'just for fun'
-            %             for i=1:obj.nPart
-            %                                   obj.A(i,:) = smooth(obj.A(i,:),10);
-            %                                   obj.A(i,:) = smooth(obj.A(i,:),10);
-            %             end
-            
-            % normalize using the mean partial amplitude of the sample
-            %             obj.A  = (obj.A ./ max(sum(obj.A)));
-            
-            % the initial synthesis volume:
-            %             obj.ampSynth =  obj.vel/127;
+          
             
             
             %% initialize note
@@ -248,42 +234,11 @@ classdef single_sinmod_player
             % initialize partials
             for partCnt=1:obj.paramSynth.nPartials
                 
-                
-                if isempty(lastNoteModel)
-                    obj.s(partCnt).thisPhas    = rand*pi;
-                    obj.s(partCnt).lastPhas    = rand*pi;
-                else
-                    % if we come from a glissando: get phase
-                    obj.s(partCnt).thisPhas    = lastNoteModel.s(partCnt).thisPhas;
-                    obj.s(partCnt).lastPhas    = lastNoteModel.s(partCnt).lastPhas;
-                    
-                end
-                
-                obj.s(partCnt).compSine =    1;
-                % 'floating point position' of this partial
-                obj.s(partCnt).fracBin =1;
-                
-                
-                % we use an harmonic model, for the start
-                obj.s(partCnt).f0  = obj.f0synth * partCnt; %10.87/hop_ms;
-                
-                % random phase
-                % obj.s(partCnt).phi =  rand*pi;
-                
-                
-                % 'floating point bin' of this frequency
-                obj.s(partCnt).bin = obj.s(partCnt).f0 / obj.df +1;
-                
-                
-                
-                
-                
                 obj.s2    = cell(obj.nPart,1);
                 
                 for partCNT=1:obj.nPart
                     
-                    
-                    obj.s2{partCNT} = sinusoid(100*partCNT);
+                    obj.s2{partCNT} = sinusoid(partCNT *  obj.f0synth);
                     
                 end
                 
@@ -313,62 +268,51 @@ classdef single_sinmod_player
             
             obj.vibCent = mean(cntrlIn(:,2));
             
-            
-            
         end
         
         
         %% Get the next frame
+        
         function [obj,frame] = get_frame_TD(obj)
             
             % allocate output frame
             frame       = zeros(obj.paramSynth.lWin,1);
             
             obj.f0synth =  obj.noteModel.F0.trajectory(obj.ctlPOS);
-            
-            'a';
-            
+             
             % loop over all partials
             for partCNT = 1:obj.paramSynth.nPartials
-                
-                
-                % get instantaneous frequency for this partial
-                obj.s2{partCNT}.f   = (obj.F(partCNT,obj.smsPOS));
-                
-                % get instantaneous frequency for this partial
-                obj.s2{partCNT}.a    = (obj.A(partCNT,obj.smsPOS));
+ 
                 
                 if obj.isReleased == 0
                     
                     % each partial frequency (is always exactly N*f0synth)
                     obj.s2{partCNT}.f   = (obj.f0synth * partCNT)  ;
                     
+                     
                     
                     % get amplitude from matrix at interpolated POSITION
                     % (linear)
-                    
-                    try
+                     
                         obj.s2{partCNT}.a   = obj.A(partCNT,obj.smsPOS);
-                    catch
-                        1;
-                    end
                     
-                    % if released - enter this:
+                    
+                    %% if released - enter this:
                 else
                     
-                    % in release the f0 does not change (for now)
-                    obj.s(partCNT).f  = partCNT* obj.f0synth ;
+ 
+                    
                     
                     % if we are within release range
                     if obj.releasePos<=length(obj.releaseEnv)
                         
-                        obj.releaseAmp   = obj.releaseEnv(obj.releasePos);
+                        obj.releaseAmp      = obj.releaseEnv(obj.releasePos);
                         
-                        obj.ampSynth     = obj.ampSynth * obj.releaseAmp;
+                        obj.ampSynth        = obj.ampSynth * obj.releaseAmp;
                         
-                        obj.s2{partCNT}.a = obj.s2{partCNT}.a * obj.releaseAmp;
+                        obj.s2{partCNT}.a   = obj.s2{partCNT}.a * obj.releaseAmp;
                         
-                        obj.s2{partCNT}.f  = obj.s2{partCNT}.f;
+                        obj.s2{partCNT}.f   = obj.s2{partCNT}.f;
                         
                         % if we exceed the release trajectory
                     else
@@ -387,14 +331,21 @@ classdef single_sinmod_player
                 
                 
                 
-                % get snippet
-                tmpFrame = obj.s2{partCNT}.get_frame(obj.paramSynth.lWin,44100);
+                %% get snippet
+                
+                [obj.s2{partCNT}, tmpFrame]  = obj.s2{partCNT}.get_frame(obj.paramSynth.lWin,44100);
                 
                 
-                frame = frame + tmpFrame .* obj.win;
+                frame                       = frame + tmpFrame;
                 
-                
+               
             end
+            
+            
+            frame = frame .* triang(length(frame));
+        
+                
+            
             
             
             %% increment counter(s)
@@ -422,214 +373,6 @@ classdef single_sinmod_player
             if obj.isReleased == 1
                 obj.releasePos = obj.releasePos + 1;
             end
-            
-        end
-        
-        
-        
-        
-        %% Get the next frame with IFFT
-        function [obj,frame] = get_frame_IFFT(obj)
-            
-            
-            % allocate output frame
-            FRAME       = zeros(obj.paramSynth.lWin,1);
-            
-            
-            %% fo management
-            
-            % get the f0-value for this frame, based on the different
-            % methods:
-            switch obj.paramSynth.f0mode
-                
-                % use the trajectory from the two note sequence
-                case 'original'
-                    
-                    try
-                        obj.f0synth =  obj.noteModel.F0.trajectory(obj.ctlPOS);
-                    catch
-                        'xxx'
-                    end
-                    % this is needed in non-integer positions
-                    %obj.f0synth =  obj.interp_value(obj.noteModel.F0.trajectory, obj.ctlPOS);
-                    
-                    % use only the original vibrato
-                case 'vib_orig'
-                    obj.f0synth =  2^(tmpVal/1200) * (2^((obj.nn-69)/12)*440 );
-                    
-                    % use a plain f0-trajectory
-                case 'plain'
-                    obj.f0synth = (2^((obj.nn-69)/12)*440 );
-                    
-                otherwise
-                    error('Unknown FO-Mode!');
-                    
-            end
-            
-            
-            %% loop over all partials
-            for partCnt = 1:obj.paramSynth.nPartials
-                
-                % if note is not released - do the standard things
-                if obj.isReleased == 0
-                    
-                    % each partial frequency (is always exactly N*f0synth)
-                    obj.s(partCnt).f0   = (obj.f0synth * partCnt)  ;
-                    
-                    
-                    %                         % but use the trajectory if played glissando
-                    %                     else
-                    %
-                    %                         % clear transition stuff when done
-                    %                         if obj.gliss_IDX>length(obj.f0_trans)
-                    %                             obj.f0_trans =[];
-                    %                         else
-                    %                             obj.s(partCnt).f0   = obj.f0_trans(obj.gliss_IDX) * partCnt;
-                    %                         end
-                    %
-                    %                     end
-                    
-                    % get amplitude from matrix at interpolated POSITION
-                    % (linear)
-                    
-                    try
-                        obj.s(partCnt).a   = obj.A(partCnt,obj.smsPOS);
-                    catch
-                        1;
-                    end
-                    
-                    % if released - enter this:
-                else
-                    
-                    % in release the f0 does not change (for now)
-                    obj.s(partCnt).f0  = partCnt* obj.f0synth ;
-                    
-                    % if we are within release range
-                    if obj.releasePos<=length(obj.releaseEnv)
-                        
-                        obj.releaseAmp   = obj.releaseEnv(obj.releasePos);
-                        
-                        obj.ampSynth     = obj.ampSynth * obj.releaseAmp;
-                        
-                        obj.s(partCnt).a = obj.s(partCnt).a * obj.releaseAmp;
-                        
-                        obj.s(partCnt).f0  = obj.s(partCnt).f0;
-                        
-                        % if we exceed the release trajectory
-                    else
-                        
-                        % drop dead
-                        obj.s(partCnt).a = 0;
-                        
-                        % and set note object to 'finished' state
-                        obj.isFinished = 1;
-                    end
-                    
-                    
-                    
-                end
-                
-                
-                % calculate this partial
-                [tmpFrame, obj.s(partCnt)]  = place_mainlobe( obj.s(partCnt),obj.paramSynth.lWin,obj.paramSynth.fs,obj.kernels,obj.kernels_LF,obj.fracVec, obj.fracVec_LF);
-                
-                % and add this partial to the spectrum
-                FRAME = FRAME + tmpFrame / 2;
-                
-            end
-            
-            
-            % DO IFFT:
-            frame  = (ifft(FRAME,'symmetric'));
-            
-            
-            % Apply TimeDomain window:
-            frame  = frame.*obj.winTD;
-            
-            
-            %%
-            
-            switch obj.paramSynth.noiseMode
-                
-                case 'off'
-                    % do nothing
-                    
-                case 'on'
-                    % @TODO: we need to add the NOISE BEFORE the transform - but this is the
-                    % easier way :::
-                    
-                    % create noise spectrum with random phase
-                    NOISE = ( exp(2*pi*(rand(size(obj.meanNoise)))*1j) .* obj.meanNoise );
-                    
-                    % transform
-                    noise  = (ifft(NOISE,'symmetric'));
-                    
-                    % apply windows
-                    noise = obj.noiseEnergy(obj.smsPOS) * noise ...
-                        .* obj.win3 * obj.ampSynth ;
-                    
-                    % add the noise with the energy level at this frame
-                    frame = frame + noise;
-                    
-                case 'only'
-                    
-                    % @TODO: we need to add the NOISE BEFORE the transform - but this is the
-                    % easier way :::
-                    
-                    % create noise spectrum with random phase
-                    NOISE = ( exp(2*pi*(rand(size(obj.meanNoise)))*1j) .* obj.meanNoise );
-                    
-                    % transform
-                    noise  = (ifft(NOISE,'symmetric'));
-                    
-                    % apply windows
-                    noise = obj.noiseEnergy(obj.smsPOS) * noise ...
-                        .* obj.win3 * obj.ampSynth ;
-                    
-                    % add the noise with the energy level at this frame
-                    frame =     noise ;
-                    
-            end
-            
-            % global volume
-            %             frame = frame * obj.ampSynth;
-            
-            %% increment counter(s)
-            
-            % take care that the stepsize regards the ratio of analysis and synthesis
-            % hopsize AND the respective samplerates
-            if obj.smsPOS <   size(obj.A,2)
-                obj.smsPOS     = obj.smsPOS   + 1;
-            end
-            
-            if obj.ctlPOS < length(obj.noteModel.F0.trajectory)
-                
-                % for now, we work with analysis=snthesis hop-size
-                obj.ctlPOS    = obj.ctlPOS  + 1;
-                
-                % this is for the case wher we have different hop-sizes
-                %  obj.ctlPOS    = obj.ctlPOS  +obj.noteStretchFactor *  ...
-                %  2/( (obj.noteModel.param.lHop * obj.noteModel.param.fs) / (obj.paramAna.lHop * obj.paramAna.fs)  );
-            else
-                obj.ctlPOS = obj.ctlPOS ;
-                
-            end
-            
-            % increment release counter if neccessary
-            if obj.isReleased == 1
-                obj.releasePos = obj.releasePos + 1;
-            end
-            
-        end
-        
-        function val =  interp_value(~,vector, index)
-            
-            lB      = floor(index);
-            uB      = ceil(index);
-            
-            frac    = rem(index,1);
-            
-            val = (vector(lB) * 1-frac) + (vector(uB) * frac);
             
         end
         

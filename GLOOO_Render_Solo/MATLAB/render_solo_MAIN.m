@@ -1,4 +1,4 @@
-%% render_solo_BATCH.m
+i%% render_solo_BATCH.m
 %
 %
 %   This script renders the audio streams
@@ -37,9 +37,7 @@ render_solo_PARAM;
 %filesToDo = 'All';
 %filesToDo = 'SampLib_DPA_01.wav';
 filesToDo = 'TwoNote_BuK_100.mat';
-
-%% get file list
-
+ 
 
 %% get list of files
 
@@ -85,14 +83,10 @@ else
     end
 end
 
-%%
-
-
 
 %% Load Sample Library
 
 sampMAT = sample_matrix(paths, paramSynth);
-
 
 
 %%
