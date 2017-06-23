@@ -1,4 +1,4 @@
-i%% render_solo_BATCH.m
+%% render_solo_BATCH.m
 %
 %
 %   This script renders the audio streams
