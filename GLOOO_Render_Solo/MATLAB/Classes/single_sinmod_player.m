@@ -354,6 +354,7 @@ classdef single_sinmod_player
                                 
                             end
                             
+                            
                     end
                     
                     %% if released - enter this:
@@ -365,25 +366,33 @@ classdef single_sinmod_player
                     % if we are within release range
                     if obj.releasePos<=length(obj.releaseEnv)
                         
-                        %                         obj.releaseAmp      = obj.releaseEnv(obj.releasePos);
-                        %
-                        %                         obj.ampSynth        = obj.ampSynth * obj.releaseAmp;
-                        
-                        %obj.s2{partCNT}.a   = obj.s2{partCNT}.a * obj.releaseAmp;
-                        
-                        %obj.s2{partCNT}.f   = obj.s2{partCNT}.f;
-                        
-                        try
-                            obj.s2{partCNT}.f = obj.TRA_release(partCNT).FRE.trajectory(obj.releasePos);
+                        switch obj.paramSynth.smsMode
                             
-                            obj.s2{partCNT}.a = obj.TRA_release(partCNT).AMP.trajectory(obj.releasePos);
-                        catch
-                            disp('Problems creating the release');
+                            case 'fixed'
+                                
+                                obj.releaseAmp      = obj.releaseEnv(obj.releasePos);
+                                obj.ampSynth        = obj.ampSynth * obj.releaseAmp;
+                                
+                                obj.s2{partCNT}.a   = obj.s2{partCNT}.a * obj.releaseAmp;
+                                obj.s2{partCNT}.f   = obj.s2{partCNT}.f;
+                                
+                                
+                            case 'stochastic'
+                                
+                                try
+                                    
+                                    obj.s2{partCNT}.f = obj.TRA_release(partCNT).FRE.trajectory(obj.releasePos);
+                                    obj.s2{partCNT}.a = obj.TRA_release(partCNT).AMP.trajectory(obj.releasePos);
+                                    
+                                catch
+                                    
+                                    disp('Minor problems creating the release ...');
+                                    
+                                end
+                                
+                                % if we exceed the release trajectory
+                                
                         end
-                        
-                        % if we exceed the release trajectory
-                        
-                        
                     else
                         
                         % drop dead
@@ -441,7 +450,7 @@ classdef single_sinmod_player
                 
             else
                 
-                obj.ctlPOS = obj.ctlPOS ;                
+                obj.ctlPOS = obj.ctlPOS ;
             end
             
             % increment release counter if neccessary
