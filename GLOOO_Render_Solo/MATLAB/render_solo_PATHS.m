@@ -35,6 +35,8 @@ paths.resDir        = [ singlesoundDIR 'Residual/Violin_2015/BuK/'];
 paths.tonDir        = [ singlesoundDIR 'Tonal/Violin_2015/BuK/'];
 paths.comDir        = [ singlesoundDIR 'Complete/Violin_2015/BuK/'];
 
+paths.staDir        = [singlesoundDIR 'StatisticalSMS/'];
+
 paths.listDIR       = [ '../../../Violin_Library_2015/File_Lists/'];
 paths.segDir        = [ soloDIR 'Segments/'];
 

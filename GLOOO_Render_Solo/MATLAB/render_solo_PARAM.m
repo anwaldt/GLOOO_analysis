@@ -13,7 +13,11 @@
 
 paramSynth.plotit   = false;
 paramSynth.saveit   = true;
-paramSynth.verbose = false;
+paramSynth.verbose  = false;
+
+paramSynth.smsMode  = 'stochastic';
+% paramSynth.smsMode  = 'fixed';
+
 
 %%  BASIC synthesis  parameters
  

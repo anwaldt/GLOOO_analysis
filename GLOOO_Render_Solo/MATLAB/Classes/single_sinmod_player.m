@@ -45,7 +45,6 @@ classdef single_sinmod_player
         %         gliss_IDX;
         
         
-        
         % the fluctuations of the lowest partial around the fundamental
         % frequency
         f0Dev;
@@ -105,9 +104,22 @@ classdef single_sinmod_player
         
         % the amplitude trajectories
         A;
+        
         % the frequency trajectories
         F;
-         
+        
+        % only attack
+        TRA_attack;
+        
+        % only release
+        TRA_release;
+        
+        
+        l_attack;
+        l_release;
+        
+        % for the stochastic mode:
+        MOD;
         
         s2 = {};
         
@@ -124,8 +136,11 @@ classdef single_sinmod_player
         
         
         currPos     = 1;
-        releasePos  = 1;
+        releasePos  = 0;
         releaseEnv;
+        
+        attackPos   = 0;
+        
     end
     
     %%
@@ -139,9 +154,17 @@ classdef single_sinmod_player
             
             try
                 load([paths.matDir regexprep(fileName,'BuK','DPA') '.mat']);
+                
+                load([paths.staDir regexprep(fileName,'BuK','DPA') '.mat']);
+                
             catch
                 load([paths.matDir regexprep(fileName,'DPA','BuK') '.mat']);
+                load([paths.staDir regexprep(fileName,'DPA','BuK') '.mat']);
             end
+            
+            
+            % the statistical model
+            obj.MOD         = MOD;
             
             % obvious stuff comes first!
             obj.fileName    = fileName;
@@ -203,16 +226,22 @@ classdef single_sinmod_player
             obj.A           = SMS.AMP(1:paramSynth.nPartials, 2:end-1); %#ok<*COLND>
             obj.F           = SMS.FRE(1:paramSynth.nPartials, 2:end-1);
             
+            % get length
+            obj.l_attack  = length(obj.MOD.ATT.P_1.AMP.trajectory);
+            obj.l_release = length(obj.MOD.REL.P_1.AMP.trajectory);
             
+            
+            obj.TRA_attack =  struct2array(obj.MOD.ATT);
+            obj.TRA_release =  struct2array(obj.MOD.REL);
             % read the samples infos
             obj.loop        = SM.samples(ismember({SM.samples.name},fileName));
             
             
             obj.loop.points(1) = 50;
             obj.loop.points(2) = length(obj.A)-50;
-          
             
             
+            obj.releasePos = 1;
             %% initialize note
             
             % al notes need this
@@ -226,7 +255,12 @@ classdef single_sinmod_player
                 % PREpend the glissando stuff
                 [obj]  =  expMod.calculate_glissando_trajectories(obj, lastNoteModel, obj.inTrans );
             else
+                
                 % PREpend the attack segment
+                
+                
+                obj.attackPos = 1;
+                
                 
             end
             
@@ -279,42 +313,77 @@ classdef single_sinmod_player
             frame       = zeros(obj.paramSynth.lWin,1);
             
             obj.f0synth =  obj.noteModel.F0.trajectory(obj.ctlPOS);
-             
+            
+            tmpParts = struct2cell(obj.MOD.SUS);
+            
+            
             % loop over all partials
             for partCNT = 1:obj.paramSynth.nPartials
- 
+                
                 
                 if obj.isReleased == 0
                     
-                    % each partial frequency (is always exactly N*f0synth)
-                    obj.s2{partCNT}.f   = (obj.f0synth * partCNT)  ;
-                    
-                     
-                    
-                    % get amplitude from matrix at interpolated POSITION
-                    % (linear)
-                     
-                        obj.s2{partCNT}.a   = obj.A(partCNT,obj.smsPOS);
-                    
+                    % do either the fixed method (partial trajectories from matrix)
+                    % or the stochastic mode
+                    switch obj.paramSynth.smsMode
+                        
+                        case 'fixed'
+                            % each partial frequency (is always exactly N*f0synth)
+                            obj.s2{partCNT}.f   = (obj.f0synth * partCNT)  ;
+                            
+                            % get amplitude from matrix at interpolated POSITION
+                            % (linear)
+                            
+                            obj.s2{partCNT}.a   = obj.A(partCNT,obj.smsPOS);
+                            
+                        case 'stochastic'
+                            
+                            % if we are within the attack segment
+                            if obj.attackPos>0 && obj.attackPos<= obj.l_attack
+                                
+                                obj.s2{partCNT}.f = obj.TRA_attack(partCNT).FRE.trajectory(obj.attackPos);
+                                
+                                obj.s2{partCNT}.a = obj.TRA_attack(partCNT).AMP.trajectory(obj.attackPos);
+                                
+                                % otherwise
+                            else
+                                
+                                obj.s2{partCNT}.f = pick_inverse(tmpParts{partCNT}.FRE.dist', tmpParts{partCNT}.FRE.xval', 'closest');
+                                
+                                obj.s2{partCNT}.a = pick_inverse(tmpParts{partCNT}.AMP.dist', tmpParts{partCNT}.AMP.xval', 'closest');
+                                
+                            end
+                            
+                    end
                     
                     %% if released - enter this:
                 else
                     
- 
+                    
                     
                     
                     % if we are within release range
                     if obj.releasePos<=length(obj.releaseEnv)
                         
-                        obj.releaseAmp      = obj.releaseEnv(obj.releasePos);
+                        %                         obj.releaseAmp      = obj.releaseEnv(obj.releasePos);
+                        %
+                        %                         obj.ampSynth        = obj.ampSynth * obj.releaseAmp;
                         
-                        obj.ampSynth        = obj.ampSynth * obj.releaseAmp;
+                        %obj.s2{partCNT}.a   = obj.s2{partCNT}.a * obj.releaseAmp;
                         
-                        obj.s2{partCNT}.a   = obj.s2{partCNT}.a * obj.releaseAmp;
+                        %obj.s2{partCNT}.f   = obj.s2{partCNT}.f;
                         
-                        obj.s2{partCNT}.f   = obj.s2{partCNT}.f;
+                        try
+                            obj.s2{partCNT}.f = obj.TRA_release(partCNT).FRE.trajectory(obj.releasePos);
+                            
+                            obj.s2{partCNT}.a = obj.TRA_release(partCNT).AMP.trajectory(obj.releasePos);
+                        catch
+                            disp('Problems creating the release');
+                        end
                         
                         % if we exceed the release trajectory
+                        
+                        
                     else
                         
                         % drop dead
@@ -336,15 +405,20 @@ classdef single_sinmod_player
                 [obj.s2{partCNT}, tmpFrame]  = obj.s2{partCNT}.get_frame(obj.paramSynth.lWin,44100);
                 
                 
-                frame                       = frame + tmpFrame;
+                if isempty(find(isnan(tmpFrame)))
+                    
+                    frame                       = frame + tmpFrame;
+                    
+                else
+                    %disp('NaNs in the partials!!!')
+                end
                 
-               
             end
             
             
             frame = frame .* triang(length(frame));
-        
-                
+            
+            
             
             
             
@@ -364,14 +438,20 @@ classdef single_sinmod_player
                 % this is for the case wher we have different hop-sizes
                 %  obj.ctlPOS    = obj.ctlPOS  +obj.noteStretchFactor *  ...
                 %  2/( (obj.noteModel.param.lHop * obj.noteModel.param.fs) / (obj.paramAna.lHop * obj.paramAna.fs)  );
-            else
-                obj.ctlPOS = obj.ctlPOS ;
                 
+            else
+                
+                obj.ctlPOS = obj.ctlPOS ;                
             end
             
             % increment release counter if neccessary
             if obj.isReleased == 1
                 obj.releasePos = obj.releasePos + 1;
+            end
+            
+            % increment attack counter if needed
+            if obj.attackPos ~= 0 &&  obj.attackPos<obj.l_attack
+                obj.attackPos = obj.attackPos + 1;
             end
             
         end
