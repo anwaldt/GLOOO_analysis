@@ -9,8 +9,8 @@
 %%
 
 % Set the output path for this set
-ds = datestr(now,'yyyy-mm-dd');
-% ds = '2017-05-07';
+%ds = datestr(now,'yyyy-mm-dd');
+ds = '2017-06-02';
 
 
 %% SET PATHS

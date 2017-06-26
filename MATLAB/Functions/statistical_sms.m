@@ -60,7 +60,7 @@ for partCNT = 1:param.PART.nPartials
     fS      = fSteady(partCNT,: );
     
     % normalize to: deviation from f / (f0*N)
-    % fS      = fS./ mean(CTL.f0swipe(startSamp:stopSamp))'./partCNT;
+    fS      = fS./ mean(CTL.f0swipe(startSamp:stopSamp))'./partCNT;
     
     % decompose ?!
     
@@ -95,7 +95,7 @@ for partCNT = 1:param.PART.nPartials
     aS      = aSteady(partCNT,:);
     
     % normalize to: contribution to overall harmonic amplitude
-    %aS = aS./smooth(sum(SMS.AMP(:,startSamp:stopSamp)),10)';
+    aS = aS./smooth(sum(SMS.AMP(:,startSamp:stopSamp)),10)';
     
     % create cmf
     [h,x]=hist(aS,50);
@@ -132,18 +132,32 @@ ATT = struct();
 
 for partCNT = 1:param.PART.nPartials
     
+    % partial frequencies
     tmpF = SMS.FRE(partCNT,1:startSamp);
-    %tmpVal = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
-    %tmpVal = tmpVal./tmpVal(end);
-    eval(['ATT.P_' num2str(partCNT) '.FRE' '.trajectory = tmpF;']);
+    tmpVal = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
+    tmpVal = tmpVal./tmpVal(end);
+    eval(['ATT.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
     
     tmpTra = SMS.AMP(partCNT,1:startSamp);
-    %tmpTra = tmpTra./(tmpTra(end));
+    
+    if length(find(tmpTra==0)) ~= length(tmpTra)
+        
+        if tmpTra(end) == 0
+            
+            lastVal = find(tmpTra>0,1,'last') ;
+            
+            tmpTra(lastVal+1:end)=tmpTra(lastVal);
+            
+        end
+        
+        tmpTra = tmpTra./(tmpTra(end));
+        
+    end
     
     eval(['ATT.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
     
     if any(isnan(tmpF)) || any(isnan(tmpTra))
-        666
+        error(['NaN in: ' baseName])
     end
     
 end
@@ -156,17 +170,33 @@ REL = struct();
 for partCNT = 1:param.PART.nPartials
     
     tmpF = SMS.FRE(partCNT,stopSamp:end);
-    %tmpVal = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
-    %tmpVal = tmpVal./tmpVal(1);
+    tmpVal = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
+    tmpVal = tmpVal./tmpVal(1);
     
-    eval(['REL.P_' num2str(partCNT) '.FRE' '.trajectory = tmpF;']);
+    eval(['REL.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
     
     tmpTra = SMS.AMP(partCNT,stopSamp:end);
-    %tmpTra = tmpTra./(tmpTra(1));
+    
+        if length(find(tmpTra==0)) ~= length(tmpTra)
+
+            
+    if tmpTra(1) == 0
+        
+        firstVal = find(tmpTra>0,1);
+        
+        tmpTra(1:firstVal-1)=tmpTra(firstVal);
+        
+    end
+    
+    tmpTra = tmpTra./(tmpTra(1));
+    
+        end
+        
+        
     eval(['REL.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
     
     if any(isnan(tmpF)) || any(isnan(tmpTra))
-        666
+        error(['NaN in: ' baseName])
     end
     
 end

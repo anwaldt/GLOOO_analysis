@@ -27,17 +27,17 @@ run_parallel             = 1;
 remote_results           = 0;
 
 % Decide which parts of the script should be executed:
-do_basic_analysis        = 1;
-do_partial_analysis      = 1;
-do_modeling_segments     = 1;
+do_basic_analysis        = 0;
+do_partial_analysis      = 0;
+do_modeling_segments     = 0;
 % only for single sounds:
 do_statistical_sms       = 1;
-do_move_files_to_server  = 1;
+do_move_files_to_server  = 0;
 
 
 % Decide which files should be processed
-% setToDo     = 'SingleSounds';
-setToDo     = 'TwoNote';
+setToDo     = 'SingleSounds';
+% setToDo     = 'TwoNote';
 
 % Decide which microphone to use
 micToDo     = 'BuK';
@@ -45,8 +45,8 @@ micToDo     = 'BuK';
 % chose whether to process all files,
 % a single file by name, or a subset:
 filesToDo  = 'All';
-%filesToDo  = 'SampLib_BuK_19.wav';
-filesToDo   = 'TwoNote_BuK_19.wav';
+%  filesToDo  = 'SampLib_BuK_136.wav';
+% filesToDo   = 'TwoNote_BuK_19.wav';
 %filesToDo  = 24;
 
 
@@ -199,10 +199,10 @@ end
 
 if do_statistical_sms == true
     
-    % parfor (fileCNT = filesToDo,parMode)
     % YAML stuff does not like parallel
-    
-    for fileCNT = filesToDo
+     parfor (fileCNT = filesToDo,parMode)
+   
+     %for fileCNT = filesToDo
         
         
         if param.info == true
@@ -217,6 +217,8 @@ if do_statistical_sms == true
     end
     
 end
+
+
 %% Push files
 
 if do_move_files_to_server == true
