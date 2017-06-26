@@ -200,9 +200,9 @@ end
 if do_statistical_sms == true
     
     % YAML stuff does not like parallel
-     parfor (fileCNT = filesToDo,parMode)
+%      parfor (fileCNT = filesToDo,parMode)
    
-     %for fileCNT = filesToDo
+     for fileCNT = filesToDo
         
         
         if param.info == true

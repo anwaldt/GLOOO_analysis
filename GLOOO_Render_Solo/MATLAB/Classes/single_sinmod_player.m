@@ -111,6 +111,13 @@ classdef single_sinmod_player
         % only attack
         TRA_attack;
         
+        
+        % the first amplitude values for all partials
+        % are needed for the attack scaling
+        targetAmplitudes;
+        
+        releaseAmplitudes;
+        
         % only release
         TRA_release;
         
@@ -140,6 +147,10 @@ classdef single_sinmod_player
         releaseEnv;
         
         attackPos   = 0;
+        
+        
+        % file to write matrices to:
+        trajectoryFile;
         
     end
     
@@ -252,14 +263,28 @@ classdef single_sinmod_player
             
             % if note is detached from preceeding event
             if ~isempty(lastNoteModel)
+                
                 % PREpend the glissando stuff
                 [obj]  =  expMod.calculate_glissando_trajectories(obj, lastNoteModel, obj.inTrans );
+                
             else
                 
                 % PREpend the attack segment
                 
                 
                 obj.attackPos = 1;
+                
+                obj.targetAmplitudes = zeros((obj.paramSynth.nPartials),1);
+                
+                
+                
+                tmpParts = struct2cell(obj.MOD.SUS);
+                
+                for i=1:obj.paramSynth.nPartials
+                    
+                    obj.targetAmplitudes(i) = tmpParts{i}.AMP.med;
+                    
+                end
                 
                 
             end
@@ -287,12 +312,12 @@ classdef single_sinmod_player
             %% release stuff and co. HAS TO GO TO THE EXPRESSION MODEL
             
             % release duration in seconds
-            Lrelease = 3;
+            %Lrelease = 3;
             % responding number of samples
-            Nrelease = ceil(Lrelease / (obj.paramSynth.lHop/obj.paramSynth.fs));
+            %Nrelease = ceil(Lrelease / (obj.paramSynth.lHop/obj.paramSynth.fs));
             
             % for now, it is just one global envelope: @TODO: one for each partial
-            obj.releaseEnv  = (((((0.6 * Nrelease:-1:0)/(Nrelease * 0.6)))).^2)';
+            %obj.releaseEnv  = (((((0.6 * Nrelease:-1:0)/(Nrelease * 0.6)))).^2)';
             
         end
         
@@ -339,32 +364,44 @@ classdef single_sinmod_player
                         case 'stochastic'
                             
                             % if we are within the attack segment
-                            if obj.attackPos>0 && obj.attackPos<= obj.l_attack
+                            if obj.attackPos>0 && obj.attackPos< obj.l_attack
                                 
-                                obj.s2{partCNT}.f = obj.TRA_attack(partCNT).FRE.trajectory(obj.attackPos);
+                                obj.s2{partCNT}.f =  obj.f0synth * partCNT *  obj.TRA_attack(partCNT).FRE.trajectory(obj.attackPos);
                                 
-                                obj.s2{partCNT}.a = obj.TRA_attack(partCNT).AMP.trajectory(obj.attackPos);
+                                
+                                % scale here:
+                                obj.s2{partCNT}.a = obj.targetAmplitudes(partCNT) * obj.TRA_attack(partCNT).AMP.trajectory(obj.attackPos);
                                 
                                 % otherwise
                             else
                                 
-                                obj.s2{partCNT}.f = pick_inverse(tmpParts{partCNT}.FRE.dist', tmpParts{partCNT}.FRE.xval', 'closest');
+                                % this is done with a 2 sample averaging to
+                                % avoid quick jumps
+                                obj.s2{partCNT}.f = 0.5* (obj.s2{partCNT}.f + obj.f0synth * partCNT * pick_inverse(tmpParts{partCNT}.FRE.dist', tmpParts{partCNT}.FRE.xval', 'closest'));
                                 
-                                obj.s2{partCNT}.a = pick_inverse(tmpParts{partCNT}.AMP.dist', tmpParts{partCNT}.AMP.xval', 'closest');
+                                % directly from the distributions:
+                                %obj.s2{partCNT}.a = 0.5* (obj.s2{partCNT}.a + pick_inverse(tmpParts{partCNT}.AMP.dist', tmpParts{partCNT}.AMP.xval', 'closest'));
+                                
+                                
+                                obj.s2{partCNT}.a  = tmpParts{partCNT}.AMP.med;
                                 
                             end
                             
                             
                     end
                     
-                    %% if released - enter this:
+                    % if released - enter this:
                 else
                     
-                    
-                    
-                    
                     % if we are within release range
-                    if obj.releasePos<=length(obj.releaseEnv)
+                    if obj.releasePos <= obj.l_release
+                        
+                        
+                        % initialize for scaling
+                        if obj.releasePos == 1
+                            obj.releaseAmplitudes(partCNT) = obj.s2{partCNT}.a;
+                        end
+                        
                         
                         switch obj.paramSynth.smsMode
                             
@@ -381,8 +418,10 @@ classdef single_sinmod_player
                                 
                                 try
                                     
-                                    obj.s2{partCNT}.f = obj.TRA_release(partCNT).FRE.trajectory(obj.releasePos);
-                                    obj.s2{partCNT}.a = obj.TRA_release(partCNT).AMP.trajectory(obj.releasePos);
+                                    obj.s2{partCNT}.f = obj.f0synth * partCNT * obj.TRA_release(partCNT).FRE.trajectory(obj.releasePos);
+                                    
+                                    % scale the release prtion here:
+                                    obj.s2{partCNT}.a = obj.releaseAmplitudes(partCNT) * obj.TRA_release(partCNT).AMP.trajectory(obj.releasePos);
                                     
                                 catch
                                     
@@ -402,11 +441,7 @@ classdef single_sinmod_player
                         obj.isFinished = 1;
                     end
                     
-                    
-                    
                 end
-                
-                
                 
                 
                 %% get snippet
@@ -414,20 +449,19 @@ classdef single_sinmod_player
                 [obj.s2{partCNT}, tmpFrame]  = obj.s2{partCNT}.get_frame(obj.paramSynth.lWin,44100);
                 
                 
-                if isempty(find(isnan(tmpFrame)))
+                if isempty(find(isnan(tmpFrame), 1))
                     
                     frame                       = frame + tmpFrame;
                     
                 else
-                    %disp('NaNs in the partials!!!')
+                    disp('NaNs in the partials!!!')
                 end
                 
             end
             
             
+            % add complete frame to output signal:
             frame = frame .* triang(length(frame));
-            
-            
             
             
             
@@ -444,7 +478,7 @@ classdef single_sinmod_player
                 % for now, we work with analysis=snthesis hop-size
                 obj.ctlPOS    = obj.ctlPOS  + 1;
                 
-                % this is for the case wher we have different hop-sizes
+                % this is for the case where we have different hop-sizes
                 %  obj.ctlPOS    = obj.ctlPOS  +obj.noteStretchFactor *  ...
                 %  2/( (obj.noteModel.param.lHop * obj.noteModel.param.fs) / (obj.paramAna.lHop * obj.paramAna.fs)  );
                 
@@ -454,13 +488,13 @@ classdef single_sinmod_player
             end
             
             % increment release counter if neccessary
-            if obj.isReleased == 1
+            if obj.isReleased == 1 && obj.releasePos < obj.l_release
                 obj.releasePos = obj.releasePos + 1;
             end
             
             % increment attack counter if needed
             if obj.attackPos ~= 0 &&  obj.attackPos<obj.l_attack
-                obj.attackPos = obj.attackPos + 1;
+                obj.attackPos  = obj.attackPos  + 1;
             end
             
         end

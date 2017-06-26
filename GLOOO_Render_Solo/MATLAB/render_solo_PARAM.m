@@ -13,11 +13,12 @@
 
 paramSynth.plotit   = false;
 paramSynth.saveit   = true;
-paramSynth.verbose  = false;
+paramSynth.verbose  = true;
 
 paramSynth.smsMode  = 'stochastic';
 % paramSynth.smsMode  = 'fixed';
 
+paramSynth.toText   = true;
 
 %%  BASIC synthesis  parameters
  
@@ -32,7 +33,7 @@ paramSynth.lHop     = paramSynth.lWin/2;
 
 paramSynth.nPartials =  30;
 
- 
+
  %% how to synthesize the control trajectories 
  
 % paramSynth.f0mode = 'plain';        % this mode uses only the DC component

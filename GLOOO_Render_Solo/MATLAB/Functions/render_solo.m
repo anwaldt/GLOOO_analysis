@@ -143,8 +143,7 @@ for frameIDX = 1:nWin
                         
                         % set the old note released
                         SMSP.isReleased = 1;
-                        
-                        
+                                                
                         
                         % in transition is not left blank in this case
                         inTrans = SEG{segCNT};
@@ -210,7 +209,8 @@ for frameIDX = 1:nWin
                         if paramSynth.verbose == true
                             disp('Got a release!')
                         end
-                        SMSP.isReleased = 1;
+                        
+                        SMSP(end).isReleased = 1;
                         
                 end
                 

@@ -20,8 +20,12 @@ restoredefaultpath
  
 %% These have to be set before starting
 
-singlesoundDIR  = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/SingleSounds/BuK/2017-06-02/';
+%singlesoundDIR  = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/SingleSounds/BuK/2017-06-02/';
+singlesoundDIR  = '/home/anwaldt/Work/Violin_Library_2015/Analysis/SingleSounds/BuK/2017-06-02/';
+
 soloDIR         = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/TwoNote/BuK/2017-05-12/';
+%soloDIR         ='/home/anwaldt/Work/Violin_Library_2015/Analysis/TwoNote/BuK/2017-06-02/';
+
 libDIR          = '/home/anwaldt/Work/Violin_Library_2015/';
 
 
@@ -37,7 +41,8 @@ render_solo_PARAM;
 %filesToDo = 'All';
 %filesToDo = 'SampLib_DPA_01.wav';
 filesToDo = 'TwoNote_BuK_23.mat';
- 
+% filesToDo = 'TwoNote_BuK_100.mat';
+
 
 %% get list of files
 

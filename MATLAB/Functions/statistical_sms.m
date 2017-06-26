@@ -18,6 +18,7 @@ function [MOD] = statistical_sms(baseName, param, paths, setToDo, micToDo)
 inName     = [paths.sinusoids baseName '.mat'];
 load(inName);
 
+
 %% load control features
 
 load( [paths.features regexprep(baseName,'.wav','.mat')] );
@@ -29,6 +30,7 @@ switch setToDo
     case 'SingleSounds'
         INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , paths);
 end
+
 
 %% Read text labels
 
@@ -45,6 +47,7 @@ bSamp   =  round( bounds /(SMS.param.lHop / SMS.param.fs));
 
 startSamp   = max(1,bSamp(1));
 stopSamp    =   bSamp(2);
+
 
 %% Sustain part
 
@@ -65,6 +68,11 @@ for partCNT = 1:param.PART.nPartials
     % decompose ?!
     
     
+     tmpMed  = median(fS);
+    tmpMean = mean(fS);
+    tmpStd  = std(fS);
+    
+    
     % create cmf
     [h,x]=hist(fS,50);
     
@@ -83,11 +91,15 @@ for partCNT = 1:param.PART.nPartials
     %            pause(1)
     
     % write to struct
-    %SUS(partCNT).FRE.dist = cdf;
-    %SUS(partCNT).FRE.vals = x;
+    
+    % the direct distribution
     eval(['SUS.P_' num2str(partCNT) '.FRE' '.dist = cdf;']);
     eval(['SUS.P_' num2str(partCNT) '.FRE' '.xval = x;']);
     
+    % basic parameters
+    eval(['SUS.P_' num2str(partCNT) '.FRE' '.med  = tmpMed;']);
+    eval(['SUS.P_' num2str(partCNT) '.FRE' '.std  = tmpStd;']);
+    eval(['SUS.P_' num2str(partCNT) '.FRE' '.mean  = tmpMean;']);
     
     
     % get AMP partial trajectory for sustain part
@@ -95,7 +107,7 @@ for partCNT = 1:param.PART.nPartials
     aS      = aSteady(partCNT,:);
     
     % normalize to: contribution to overall harmonic amplitude
-    aS = aS./smooth(sum(SMS.AMP(:,startSamp:stopSamp)),10)';
+    %aS = aS./smooth(sum(SMS.AMP(:,startSamp:stopSamp)),10)';
     
     % create cmf
     [h,x]=hist(aS,50);
@@ -119,9 +131,21 @@ for partCNT = 1:param.PART.nPartials
     %    SUS(partCNT).AMP.cdf  = cdf;
     %    SUS(partCNT).AMP.xVal = x;
     
+    tmpMed  = median(aS);
+    tmpMean = mean(aS);
+    tmpStd  = std(aS);
+    
+    % write to struct
+    
+    % the direct distribution
     eval(['SUS.P_' num2str(partCNT) '.AMP' '.dist = cdf;']);
     eval(['SUS.P_' num2str(partCNT) '.AMP' '.xval = x;']);
     
+    % basic parameters
+    eval(['SUS.P_' num2str(partCNT) '.AMP' '.med  = tmpMed;']);
+    eval(['SUS.P_' num2str(partCNT) '.AMP' '.std  = tmpStd;']);
+    eval(['SUS.P_' num2str(partCNT) '.AMP' '.mean  = tmpMean;']);
+
     
 end
 
@@ -133,26 +157,25 @@ ATT = struct();
 for partCNT = 1:param.PART.nPartials
     
     % partial frequencies
-    tmpF = SMS.FRE(partCNT,1:startSamp);
-    tmpVal = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
-    tmpVal = tmpVal./tmpVal(end);
+    tmpF    = SMS.FRE(partCNT,1:startSamp);
+    tmpVal  = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
+    tmpVal  = tmpVal./tmpVal(end);
+    
     eval(['ATT.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
     
+    % partial amplitudes
     tmpTra = SMS.AMP(partCNT,1:startSamp);
     
-    if length(find(tmpTra==0)) ~= length(tmpTra)
-        
-        if tmpTra(end) == 0
-            
-            lastVal = find(tmpTra>0,1,'last') ;
-            
-            tmpTra(lastVal+1:end)=tmpTra(lastVal);
-            
+        if length(find(tmpTra==0)) ~= length(tmpTra)
+            if tmpTra(end) == 0
+    
+                lastVal = find(tmpTra>0,1,'last') ;
+                tmpTra(lastVal+1:end)=tmpTra(lastVal);
+    
+            end
+            tmpTra = tmpTra./(tmpTra(end));
+    
         end
-        
-        tmpTra = tmpTra./(tmpTra(end));
-        
-    end
     
     eval(['ATT.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
     
@@ -169,30 +192,30 @@ REL = struct();
 
 for partCNT = 1:param.PART.nPartials
     
-    tmpF = SMS.FRE(partCNT,stopSamp:end);
-    tmpVal = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
-    tmpVal = tmpVal./tmpVal(1);
+    % partial frequencies
+    tmpF    = SMS.FRE(partCNT,stopSamp:end);
+    tmpVal  = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
+    tmpVal  = tmpVal./tmpVal(1);
     
     eval(['REL.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
     
+    % partial amplitudes
     tmpTra = SMS.AMP(partCNT,stopSamp:end);
     
-        if length(find(tmpTra==0)) ~= length(tmpTra)
-
+    if length(find(tmpTra==0)) ~= length(tmpTra)
+                
+        if tmpTra(1) == 0
             
-    if tmpTra(1) == 0
+            firstVal = find(tmpTra>0,1);           
+            tmpTra(1:firstVal-1)=tmpTra(firstVal);
+            
+        end
         
-        firstVal = find(tmpTra>0,1);
-        
-        tmpTra(1:firstVal-1)=tmpTra(firstVal);
+        tmpTra = tmpTra./(tmpTra(1));
         
     end
     
-    tmpTra = tmpTra./(tmpTra(1));
     
-        end
-        
-        
     eval(['REL.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
     
     if any(isnan(tmpF)) || any(isnan(tmpTra))
