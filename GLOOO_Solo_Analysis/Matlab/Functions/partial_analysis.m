@@ -77,7 +77,7 @@ if 1%exist(partialName,'file') == 0
     
         tmpName     =[ paths.txtDir baseName '.PHA'];
     fid         = fopen(tmpName,'w');
-    fprintf(fid, [repmat('%e ', 1, size(SMS.FRE, 1) ), ';\n'], SMS.FRE );
+    fprintf(fid, [repmat('%e ', 1, size(SMS.FRE, 1) ), ';\n'], SMS.PHA );
     fclose(fid);
 
     % noise is not exported at this state

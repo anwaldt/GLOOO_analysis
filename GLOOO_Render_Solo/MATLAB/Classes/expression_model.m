@@ -61,7 +61,7 @@ classdef expression_model
         % including amplitude and frequency trajectories for the partials
         % during the transition
         
-        function [smsPlayer] = calculate_glissando_trajectories(obj, smsPlayer, lastSMSplayer, inTrans)
+        function [F0_trans, A_trans] = calculate_glissando_trajectories(obj, smsPlayer, lastSMSplayer, inTrans)
             
             
             
@@ -112,9 +112,9 @@ classdef expression_model
            
             %% PRE-pend
             
-            smsPlayer.A = [A_trans smsPlayer.A ];
+            % smsPlayer.A = [A_trans smsPlayer.A ];
             
-            smsPlayer.noteModel.F0.trajectory = [F0_trans'; smsPlayer.noteModel.F0.trajectory ]; 
+            % smsPlayer.noteModel.F0.trajectory = [F0_trans'; smsPlayer.noteModel.F0.trajectory ]; 
  
         end
         

@@ -264,22 +264,49 @@ classdef single_sinmod_player
             % if note is detached from preceeding event
             if ~isempty(lastNoteModel)
                 
-                % PREpend the glissando stuff
-                [obj]  =  expMod.calculate_glissando_trajectories(obj, lastNoteModel, obj.inTrans );
+                switch obj.paramSynth.f0mode
+                    
+                    case 'original'
+                        
+                        1;
+                        
+                        % start from the very beginning and
+                        % initialize partials
+                        for partCnt=1:obj.paramSynth.nPartials
+                            
+                            obj.s2    = cell(obj.nPart,1);
+                            
+                            for partCNT=1:obj.nPart
+                                
+                                obj.s2{partCNT} = sinusoid(partCNT *  obj.f0synth);
+                                
+                            end
+                            
+                            
+                        end
+                        
+                    case 'other'
+                        
+                            % PREpend the glissando stuff
+                            [obj]  =  expMod.calculate_glissando_trajectories(obj, lastNoteModel, obj.inTrans );
+                            
+                end
+                
+                % if there is no attached previous note -
+                % we have an attack
                 
             else
-                
-                % PREpend the attack segment
-                
-                
+                 
+                % set the attack pointer to the beginning
                 obj.attackPos = 1;
                 
+                % allocate target amplitude array
                 obj.targetAmplitudes = zeros((obj.paramSynth.nPartials),1);
                 
-                
-                
+                 
                 tmpParts = struct2cell(obj.MOD.SUS);
                 
+                % initialize target amplitudes
                 for i=1:obj.paramSynth.nPartials
                     
                     obj.targetAmplitudes(i) = tmpParts{i}.AMP.med;
@@ -304,20 +331,6 @@ classdef single_sinmod_player
                 
             end
             
-            % if note is played glissando with preceeding note
-            
-            
-            
-            
-            %% release stuff and co. HAS TO GO TO THE EXPRESSION MODEL
-            
-            % release duration in seconds
-            %Lrelease = 3;
-            % responding number of samples
-            %Nrelease = ceil(Lrelease / (obj.paramSynth.lHop/obj.paramSynth.fs));
-            
-            % for now, it is just one global envelope: @TODO: one for each partial
-            %obj.releaseEnv  = (((((0.6 * Nrelease:-1:0)/(Nrelease * 0.6)))).^2)';
             
         end
         
