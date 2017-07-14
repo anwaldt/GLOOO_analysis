@@ -61,61 +61,70 @@ classdef expression_model
         % including amplitude and frequency trajectories for the partials
         % during the transition
         
-        function [F0_trans, A_trans] = calculate_glissando_trajectories(obj, smsPlayer, lastSMSplayer, inTrans)
+        function [F0_trans, A_trans] = calculate_glissando_trajectories(obj, smsPlayer, lastSMSplayer, inTrans, mode)
             
             
-            % delete attack segment
-            smsPlayer.A(:,1:smsPlayer.loop.points(1))   = [];
-
-            smsPlayer.noteModel.F0.trajectory(1:smsPlayer.loop.points(1)) = [];
-
-            
-            nPart       = smsPlayer.nPart;
-            
-            % get the last f0-value of the preceeding note:
-            f0_start    = lastSMSplayer.noteModel.F0.trajectory(lastSMSplayer.smsPOS);
-            f0_end      = smsPlayer.noteModel.F0.trajectory(1);
-            
-            % get the transition length
-            % this needs to be corrected by the ration of the sampling
-            % rates (sinusoids/soloanalyspis)
-            obj.lTrans      =  round( (inTrans.stopIND - inTrans.startIND)*0.5);
-            
-            if  f0_start <= f0_end
+            switch 'mode'
                 
-                inTrans.startIND
-                % f0-trajectory - transition
-                F0_trans = f0_start + abs(f0_start-f0_end) * 1./(1+exp(-1*(linspace(-5,5,obj.lTrans) )));
+                 case original
+                     
+                     smsPlayer.A(:,1:smsPlayer.loop.points(1))   = [];
                 
-            else
-                 
-                F0_trans = f0_start - abs(f0_start-f0_end) * 1./(1+exp(-1*(linspace(-5,5,obj.lTrans) )));
-                
+                case synth
+                    
+                    % delete attack segment
+                    smsPlayer.A(:,1:smsPlayer.loop.points(1))   = [];
+                    
+                    smsPlayer.noteModel.F0.trajectory(1:smsPlayer.loop.points(1)) = [];
+                    
+                    
+                    nPart       = smsPlayer.nPart;
+                    
+                    % get the last f0-value of the preceeding note:
+                    f0_start    = lastSMSplayer.noteModel.F0.trajectory(lastSMSplayer.smsPOS);
+                    f0_end      = smsPlayer.noteModel.F0.trajectory(1);
+                    
+                    % get the transition length
+                    % this needs to be corrected by the ration of the sampling
+                    % rates (sinusoids/soloanalyspis)
+                    obj.lTrans      =  round( (inTrans.stopIND - inTrans.startIND)*0.5);
+                    
+                    if  f0_start <= f0_end
+                        
+                        inTrans.startIND
+                        % f0-trajectory - transition
+                        F0_trans = f0_start + abs(f0_start-f0_end) * 1./(1+exp(-1*(linspace(-5,5,obj.lTrans) )));
+                        
+                    else
+                        
+                        F0_trans = f0_start - abs(f0_start-f0_end) * 1./(1+exp(-1*(linspace(-5,5,obj.lTrans) )));
+                        
+                    end
+                    
+                    % create a sigmoidal amplitude glissando
+                    A_trans = zeros(nPart,obj.lTrans);
+                    
+                    for i=1:nPart
+                        
+                        if   lastSMSplayer.s2{i}.a <= smsPlayer.A(i,1)
+                            A_trans(i,:) =  lastSMSplayer.s2{i}.a + abs( lastSMSplayer.s2{i}.a-smsPlayer.A(i,1)) * 1./(1+exp(-1*(linspace(-5,5,obj.lTrans) )));
+                        else
+                            A_trans(i,:) =  lastSMSplayer.s2{i}.a - abs( lastSMSplayer.s2{i}.a-smsPlayer.A(i,1)) * 1./(1+exp(-1*(linspace(-5,5,obj.lTrans) )));
+                        end
+                        % additional damping of (higher!?) partials during the transition:
+                        % Atrans(i,:) =   Atrans(i,:).* (1- (4*i/nPart)* sin(linspace(0,pi,obj.lTrans)));
+                        
+                    end
+                    
+                    %% PRE-pend
+                    
+                    % smsPlayer.A = [A_trans smsPlayer.A ];
+                    
+                    % smsPlayer.noteModel.F0.trajectory = [F0_trans'; smsPlayer.noteModel.F0.trajectory ];
+                     
             end
             
-            % create a sigmoidal amplitude glissando
-            A_trans = zeros(nPart,obj.lTrans);
-            
-            for i=1:nPart
-                
-                if   lastSMSplayer.s2{i}.a <= smsPlayer.A(i,1)
-                    A_trans(i,:) =  lastSMSplayer.s2{i}.a + abs( lastSMSplayer.s2{i}.a-smsPlayer.A(i,1)) * 1./(1+exp(-1*(linspace(-5,5,obj.lTrans) )));
-                else
-                    A_trans(i,:) =  lastSMSplayer.s2{i}.a - abs( lastSMSplayer.s2{i}.a-smsPlayer.A(i,1)) * 1./(1+exp(-1*(linspace(-5,5,obj.lTrans) )));
-                end
-                % additional damping of (higher!?) partials during the transition:
-                % Atrans(i,:) =   Atrans(i,:).* (1- (4*i/nPart)* sin(linspace(0,pi,obj.lTrans)));
-                
-            end
-           
-            %% PRE-pend
-            
-            % smsPlayer.A = [A_trans smsPlayer.A ];
-            
-            % smsPlayer.noteModel.F0.trajectory = [F0_trans'; smsPlayer.noteModel.F0.trajectory ]; 
- 
         end
-        
         
         
         function [obj, vibTraj] = get_vibrato_trajectory(obj)

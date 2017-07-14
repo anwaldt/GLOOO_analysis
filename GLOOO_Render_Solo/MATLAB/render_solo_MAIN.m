@@ -19,7 +19,7 @@ restoredefaultpath
 
  
 %% These have to be set before starting
-
+i
 %singlesoundDIR  = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/SingleSounds/BuK/2017-06-02/';
 singlesoundDIR  = '/home/anwaldt/Work/Violin_Library_2015/Analysis/SingleSounds/BuK/2017-06-02/';
 
@@ -40,11 +40,11 @@ render_solo_PARAM;
 % a single file by name, or a subset:
 %filesToDo = 'All';
 %filesToDo = 'SampLib_DPA_01.wav';
-filesToDo = 'TwoNote_BuK_123.mat';
+filesToDo = 'TwoNote_BuK_24.mat';
 % filesToDo = 'TwoNote_BuK_100.mat';
 
 
-%% get list of files
+%% get list of filesi
 
 directoryFiles = dir(paths.segDir);
 % only get the wave files out of the folder into the list of audio files

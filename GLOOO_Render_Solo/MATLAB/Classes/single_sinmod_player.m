@@ -109,7 +109,7 @@ classdef single_sinmod_player
         F;
         
         % only attack
-        TRA_attack;
+        inTransTrajectories;
         
         
         % the first amplitude values for all partials
@@ -122,7 +122,7 @@ classdef single_sinmod_player
         TRA_release;
         
         
-        l_attack;
+        l_inTrans;
         l_release;
         
         % for the stochastic mode:
@@ -146,7 +146,7 @@ classdef single_sinmod_player
         releasePos  = 0;
         releaseEnv;
         
-        attackPos   = 0;
+        inTransPos   = 0;
         
         
         % file to write matrices to:
@@ -234,15 +234,15 @@ classdef single_sinmod_player
             %% prepare the amplitude trajectories
             
             % @TODO: careful, this should be done in the analysis stage
-            obj.A           = SMS.AMP(1:paramSynth.nPartials, 2:end-1); %#ok<*COLND>
+            obj.A           = SMS.AMP(1:paramSynth.nPartials, 2:end-1);
             obj.F           = SMS.FRE(1:paramSynth.nPartials, 2:end-1);
             
             % get length
-            obj.l_attack  = length(obj.MOD.ATT.P_1.AMP.trajectory);
+            obj.l_inTrans  = length(obj.MOD.ATT.P_1.AMP.trajectory);
             obj.l_release = length(obj.MOD.REL.P_1.AMP.trajectory);
             
             
-            obj.TRA_attack =  struct2array(obj.MOD.ATT);
+            obj.inTransTrajectories =  struct2array(obj.MOD.ATT);
             obj.TRA_release =  struct2array(obj.MOD.REL);
             % read the samples infos
             obj.loop        = SM.samples(ismember({SM.samples.name},fileName));
@@ -269,31 +269,45 @@ classdef single_sinmod_player
                     
                     case 'original'
                         
-                        1;
-                        
-                        % start from the very beginning and
-                        % initialize partials
-                        for partCnt=1:obj.paramSynth.nPartials
+                        switch transition.type
                             
-                            obj.s2    = cell(obj.nPart,1);
-                            
-                            for partCNT=1:obj.nPart
+                            case 'glissando'
                                 
-                                obj.s2{partCNT} = sinusoid(partCNT *  obj.f0synth);
+                                obj.inTransPos = 1;
                                 
-                            end
-                            
-                            
+                                for i=1:obj.nPart
+                                    
+                                    obj.inTransTrajectories(i).AMP.trajectory   =  transition.AMP.trajectory;
+                                    obj.inTransTrajectories(i).FRE.trajectory              =  transition.F0.trajectory;
+                                end
+                                
+                                % allocate target amplitude array
+                                obj.targetAmplitudes = zeros((obj.paramSynth.nPartials),1);
+                                
+                                
+                                tmpParts = struct2cell(obj.MOD.SUS);
+                                
+                                % initialize target amplitudes
+                                for i=1:obj.paramSynth.nPartials
+                                    
+                                    obj.targetAmplitudes(i) = tmpParts{i}.AMP.med;
+                                    
+                                end
+                                
+                                
+                                
+                            case 'legato'
+                                
+                                
                         end
                         
                     case 'other'
                         
-                        
-                        switch transition-type
+                        switch transition.type
                             
                             case 'gliassando'
                                 
-                                % PREpend the glissando stuff
+                                % Prepend the glissando stuff
                                 [obj]  =  expMod.calculate_glissando_trajectories(obj, lastNoteModel, obj.inTrans );
                                 
                         end
@@ -306,7 +320,7 @@ classdef single_sinmod_player
             else
                 
                 % set the attack pointer to the beginning
-                obj.attackPos = 1;
+                obj.inTransPos = 1;
                 
                 % allocate target amplitude array
                 obj.targetAmplitudes = zeros((obj.paramSynth.nPartials),1);
@@ -358,15 +372,21 @@ classdef single_sinmod_player
             % allocate output frame
             frame   = zeros(obj.paramSynth.lWin,1);
             
-            % interpolate original F0
-            lB      = floor(obj.ctlPOS);
-            uB      = ceil(obj.ctlPOS);
-            frac    = rem(obj.ctlPOS,1);
-            
-            try
-            obj.f0synth =  (1-frac)*obj.noteModel.F0.trajectory(lB) + frac*obj.noteModel.F0.trajectory(uB);
-            catch
-            'xxx'
+            % get the f0 only if not in release or attack
+            if obj.isReleased == 0 
+                
+                % interpolate original F0
+                lB      = floor(obj.ctlPOS);
+                uB      = ceil(obj.ctlPOS);
+                frac    = rem(obj.ctlPOS,1);
+                
+                try
+                    obj.f0synth =  (1-frac)*obj.noteModel.F0.trajectory(lB) + frac*obj.noteModel.F0.trajectory(uB);
+                catch
+                    disp('Problems interpolating the original F0 trajectory!')
+                end
+                
+                
             end
             
             tmpParts = struct2cell(obj.MOD.SUS);
@@ -393,14 +413,17 @@ classdef single_sinmod_player
                             
                         case 'stochastic'
                             
-                            % if we are within the attack segment
-                            if obj.attackPos>0 && obj.attackPos< obj.l_attack
+                            % if we are within the in-transition segment
+                            if obj.inTransPos>0 && obj.inTransPos< obj.l_inTrans
                                 
-                                obj.s2{partCNT}.f =  obj.f0synth * partCNT *  obj.TRA_attack(partCNT).FRE.trajectory(obj.attackPos);
+                                obj.s2{partCNT}.f =  obj.f0synth * partCNT *  obj.inTransTrajectories(partCNT).FRE.trajectory(obj.inTransPos);
                                 
-                                
-                                % scale here:
-                                obj.s2{partCNT}.a = obj.targetAmplitudes(partCNT) * obj.TRA_attack(partCNT).AMP.trajectory(obj.attackPos);
+                                try
+                                    % scale here:
+                                    obj.s2{partCNT}.a = obj.targetAmplitudes(partCNT) * obj.inTransTrajectories(partCNT).AMP.trajectory(obj.inTransPos);
+                                catch
+                                    'xxx'
+                                end
                                 
                                 % otherwise
                             else
@@ -450,7 +473,7 @@ classdef single_sinmod_player
                                     
                                     obj.s2{partCNT}.f = obj.f0synth * partCNT * obj.TRA_release(partCNT).FRE.trajectory(obj.releasePos);
                                     
-                                    % scale the release prtion here:
+                                    % scale the release trajectories here:
                                     obj.s2{partCNT}.a = obj.releaseAmplitudes(partCNT) * obj.TRA_release(partCNT).AMP.trajectory(obj.releasePos);
                                     
                                 catch
@@ -523,8 +546,8 @@ classdef single_sinmod_player
             end
             
             % increment attack counter if needed
-            if obj.attackPos ~= 0 &&  obj.attackPos<obj.l_attack
-                obj.attackPos  = obj.attackPos  + 1;
+            if obj.inTransPos ~= 0 &&  obj.inTransPos<obj.l_inTrans
+                obj.inTransPos  = obj.inTransPos  + 1;
             end
             
         end

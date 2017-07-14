@@ -18,7 +18,6 @@ param.plotit      = false;
 param.saveit      = true;
 param.info        = true;
 
- 
 
 %% GLOABAL analyis parameters
 
@@ -66,5 +65,5 @@ param.PART.fMax          = 4000;
 
 % this is for the precision of the phase estimation
 % keep in mind: it takes 'param.nPhaseSteps' coarse
-%               and 'param.nPhaseSteps' fine steps
+% and 'param.nPhaseSteps' fine steps
 param.PART.nPhaseSteps   = 5;

@@ -75,7 +75,7 @@ for frameIDX = 1:nWin
             tmpSeg = SEG{segCNT};
             
             % if it is a transition
-            if strcmp(class(tmpSeg),'trans') == 1
+            %if strcmp(class(tmpSeg),'trans') == 1
                 
                 % what kind of transition do we have?
                 switch tmpSeg.type
@@ -199,7 +199,7 @@ for frameIDX = 1:nWin
                         
                         % create new player
                         
-                        % find (indexes of) playere which are not released or finished
+                        % find (indexes of) players which are not released or finished
                         % (can only be one in the monophonic case
                         actIND = ~([SMSP.isReleased] | [SMSP.isFinished]);
                         
@@ -222,12 +222,12 @@ for frameIDX = 1:nWin
                 
                 
                 % if it is a note
-            elseif strcmp(class(tmpSeg),'note') == 1
-                
-                if paramSynth.verbose == true
-                    disp('Got a note!')
-                end
-            end
+%             elseif strcmp(class(tmpSeg),'note') == 1
+%                 
+%                 if paramSynth.verbose == true
+%                     disp('Got a note!')
+%                 end
+%             end
             
             segCNT = segCNT+1;
         end
