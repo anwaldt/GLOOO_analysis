@@ -277,8 +277,9 @@ classdef single_sinmod_player
                                 
                                 for i=1:obj.nPart
                                     
-                                    obj.inTransTrajectories(i).AMP.trajectory   =  transition.AMP.trajectory;
-                                    obj.inTransTrajectories(i).FRE.trajectory              =  transition.F0.trajectory;
+                                    % get the last note's ampltudes
+                                    obj.inTransTrajectories(i).AMP.trajectory   =  (transition.AMP.trajectory / transition.AMP.trajectory(1))* lastNoteModel.s2{i}.a;
+                                    obj.inTransTrajectories(i).FRE.trajectory   =  transition.F0.trajectory  * i;
                                 end
                                 
                                 % allocate target amplitude array
@@ -373,7 +374,7 @@ classdef single_sinmod_player
             frame   = zeros(obj.paramSynth.lWin,1);
             
             % get the f0 only if not in release or attack
-            if obj.isReleased == 0 
+            if obj.isReleased == 0
                 
                 % interpolate original F0
                 lB      = floor(obj.ctlPOS);
@@ -416,15 +417,28 @@ classdef single_sinmod_player
                             % if we are within the in-transition segment
                             if obj.inTransPos>0 && obj.inTransPos< obj.l_inTrans
                                 
-                                obj.s2{partCNT}.f =  obj.f0synth * partCNT *  obj.inTransTrajectories(partCNT).FRE.trajectory(obj.inTransPos);
                                 
-                                try
-                                    % scale here:
-                                    obj.s2{partCNT}.a = obj.targetAmplitudes(partCNT) * obj.inTransTrajectories(partCNT).AMP.trajectory(obj.inTransPos);
-                                catch
-                                    'xxx'
+                                switch obj.inTrans.type
+                                    
+                                    case 'attack'
+                                        
+                                        obj.s2{partCNT}.f =  obj.f0synth * partCNT *  obj.inTransTrajectories(partCNT).FRE.trajectory(obj.inTransPos);
+                                        
+                                        try
+                                            % scale here:
+                                            obj.s2{partCNT}.a = obj.targetAmplitudes(partCNT) * obj.inTransTrajectories(partCNT).AMP.trajectory(obj.inTransPos);
+                                        catch
+                                            'xxx'
+                                        end
+                                        
+                                    case 'glissando'
+                                        
+                                        obj.s2{partCNT}.f =   obj.inTransTrajectories(partCNT).FRE.trajectory(obj.inTransPos);
+                                        
+                                        % scale here:
+                                        obj.s2{partCNT}.a =  obj.inTransTrajectories(partCNT).AMP.trajectory(obj.inTransPos);
+                                        
                                 end
-                                
                                 % otherwise
                             else
                                 
@@ -433,10 +447,10 @@ classdef single_sinmod_player
                                 obj.s2{partCNT}.f = 0.5* (obj.s2{partCNT}.f + obj.f0synth * partCNT * pick_inverse(tmpParts{partCNT}.FRE.dist', tmpParts{partCNT}.FRE.xval', 'closest'));
                                 
                                 % directly from the distributions:
-                                %obj.s2{partCNT}.a = 0.5* (obj.s2{partCNT}.a + pick_inverse(tmpParts{partCNT}.AMP.dist', tmpParts{partCNT}.AMP.xval', 'closest'));
+                                obj.s2{partCNT}.a = 0.5* (obj.s2{partCNT}.a + pick_inverse(tmpParts{partCNT}.AMP.dist', tmpParts{partCNT}.AMP.xval', 'closest'));
                                 
                                 
-                                obj.s2{partCNT}.a  = tmpParts{partCNT}.AMP.med;
+                                %obj.s2{partCNT}.a  = tmpParts{partCNT}.AMP.med;
                                 
                             end
                             

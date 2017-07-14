@@ -19,7 +19,7 @@ restoredefaultpath
 
  
 %% These have to be set before starting
-i
+
 %singlesoundDIR  = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/SingleSounds/BuK/2017-06-02/';
 singlesoundDIR  = '/home/anwaldt/Work/Violin_Library_2015/Analysis/SingleSounds/BuK/2017-06-02/';
 
@@ -40,7 +40,7 @@ render_solo_PARAM;
 % a single file by name, or a subset:
 %filesToDo = 'All';
 %filesToDo = 'SampLib_DPA_01.wav';
-filesToDo = 'TwoNote_BuK_24.mat';
+filesToDo = 'TwoNote_BuK_22.mat';
 % filesToDo = 'TwoNote_BuK_100.mat';
 
 
@@ -52,7 +52,7 @@ directoryFiles = dir(paths.segDir);
 validFileidx    = 1;
 fileNames       = cell(1);
 
-for n = 1:length(directoryFiles);
+for n = 1:length(directoryFiles)
     [pathstr,name,ext] = fileparts(directoryFiles(n).name);
     if strcmp(ext,'.mat')
         fileNames{validFileidx} = directoryFiles(n).name;
