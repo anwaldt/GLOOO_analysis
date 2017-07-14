@@ -6,11 +6,17 @@
 % HvC
 % Created:  2016-02-18
 % Modified: 2016-08-04
-%
-%
+
 
 function [ y ] = render_solo(~, SOLO, SM, expMod, paths, paramSynth)
 
+
+% calulate ratio between analysis and synthesis stepsize:
+
+stepAnalys = (SOLO.param.lHop / SOLO.param.fs);
+stepSyn    = (paramSynth.lHop / paramSynth.fs);
+
+paramSynth.stepRatioA = stepSyn/stepAnalys;
 
 %% unpack the solo
 
@@ -20,10 +26,10 @@ param   = SOLO.param;
 
 %%
 
-t = (0:(SEG{end}.stopSEC)*paramSynth.fs-1)/paramSynth.fs;
+t           = (0:(SEG{end}.stopSEC)*paramSynth.fs-1)/paramSynth.fs;
 
 % a zero padded output stream
-y = [zeros(size(t))'; zeros(paramSynth.fs,1)];
+y           = [zeros(size(t))'; zeros(paramSynth.fs,1)];
 
 
 L           = length(y);

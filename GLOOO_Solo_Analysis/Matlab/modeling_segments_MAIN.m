@@ -28,10 +28,10 @@ remote_results           = 0;
 
 % Decide which parts of the script should be executed:
 do_basic_analysis        = 1;
-do_partial_analysis      = 1;
+do_partial_analysis      = 0;
 do_modeling_segments     = 1;
 % only for single sounds:
-do_statistical_sms       = 1;
+do_statistical_sms       = 0;
 do_move_files_to_server  = 0;
 
 
@@ -44,10 +44,10 @@ micToDo     = 'BuK';
 
 % chose whether to process all files,
 % a single file by name, or a subset:
-% filesToDo  = 'All';
+filesToDo  = 'All';
 %  filesToDo  = 'SampLib_BuK_136.wav';
 % filesToDo   = 'TwoNote_BuK_04.wav';
-filesToDo   = 'TwoNote_BuK_23.wav';
+% filesToDo   = 'TwoNote_BuK_66.wav';
 %filesToDo  = 24;
 
 
@@ -65,11 +65,12 @@ modeling_segments_PARAM
 
 %% start and manage pool
 
-s = matlabpool('size');
-if s == 0 && run_parallel == true
-    matlabpool
+p = gcp('nocreate'); % If no pool, do not create new one.
+if isempty(p)
+    parpool
+else
+    disp(['Pool with '   num2str(p.NumWorkers) ' already active!']);
 end
-
 
 if run_parallel == true
     parMode = Inf;

@@ -97,22 +97,5 @@ paths.plot          = [tmpPath 'Plots/'];
 %% Check for existence of paths
 %  and make them, if necessary
 
-fn      = fieldnames(paths);
-nFields = length(fn);
+check_paths(paths)
 
-for fieldCNT = 1:nFields
-    
-    tmpDir = eval(['paths.' fn{fieldCNT}]);
-    
-    if isdir(tmpDir) == 0
-        
-        try
-            mkdir(tmpDir);
-        catch
-            warning(['Could not create ''' tmpDir '''!'])
-        end
-        
-        
-    end
-    
-end

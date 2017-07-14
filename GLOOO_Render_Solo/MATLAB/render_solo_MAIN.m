@@ -40,7 +40,7 @@ render_solo_PARAM;
 % a single file by name, or a subset:
 %filesToDo = 'All';
 %filesToDo = 'SampLib_DPA_01.wav';
-filesToDo = 'TwoNote_BuK_23.mat';
+filesToDo = 'TwoNote_BuK_123.mat';
 % filesToDo = 'TwoNote_BuK_100.mat';
 
 

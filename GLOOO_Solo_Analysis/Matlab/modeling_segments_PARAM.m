@@ -67,4 +67,4 @@ param.PART.fMax          = 4000;
 % this is for the precision of the phase estimation
 % keep in mind: it takes 'param.nPhaseSteps' coarse
 %               and 'param.nPhaseSteps' fine steps
-param.PART.nPhaseSteps   = 10;
+param.PART.nPhaseSteps   = 5;

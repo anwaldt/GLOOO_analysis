@@ -64,7 +64,6 @@ classdef expression_model
         function [F0_trans, A_trans] = calculate_glissando_trajectories(obj, smsPlayer, lastSMSplayer, inTrans)
             
             
-            
             % delete attack segment
             smsPlayer.A(:,1:smsPlayer.loop.points(1))   = [];
 
@@ -89,8 +88,7 @@ classdef expression_model
                 F0_trans = f0_start + abs(f0_start-f0_end) * 1./(1+exp(-1*(linspace(-5,5,obj.lTrans) )));
                 
             else
-                
-                
+                 
                 F0_trans = f0_start - abs(f0_start-f0_end) * 1./(1+exp(-1*(linspace(-5,5,obj.lTrans) )));
                 
             end

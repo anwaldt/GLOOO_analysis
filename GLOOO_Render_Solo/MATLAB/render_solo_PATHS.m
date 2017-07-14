@@ -49,18 +49,5 @@ paths.OUTPUT    = '../WAV/';
 %% Check for existence of paths
 %  and make them, if necessary
 
-fn      = fieldnames(paths);
-nFields = length(fn); 
-
-for fieldCNT = 1:nFields
-    
-     tmpDir = eval(['paths.' fn{fieldCNT}]);
-     
-     
-     if isdir(tmpDir) == 0
-        mkdir(tmpDir);
-     end
-    
-    
-end
+check_paths(paths)
 

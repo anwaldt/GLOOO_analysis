@@ -264,6 +264,7 @@ classdef single_sinmod_player
             % if note is detached from preceeding event
             if ~isempty(lastNoteModel)
                 
+                
                 switch obj.paramSynth.f0mode
                     
                     case 'original'
@@ -287,23 +288,30 @@ classdef single_sinmod_player
                         
                     case 'other'
                         
-                            % PREpend the glissando stuff
-                            [obj]  =  expMod.calculate_glissando_trajectories(obj, lastNoteModel, obj.inTrans );
+                        
+                        switch transition-type
                             
+                            case 'gliassando'
+                                
+                                % PREpend the glissando stuff
+                                [obj]  =  expMod.calculate_glissando_trajectories(obj, lastNoteModel, obj.inTrans );
+                                
+                        end
+                        
                 end
                 
                 % if there is no attached previous note -
                 % we have an attack
                 
             else
-                 
+                
                 % set the attack pointer to the beginning
                 obj.attackPos = 1;
                 
                 % allocate target amplitude array
                 obj.targetAmplitudes = zeros((obj.paramSynth.nPartials),1);
                 
-                 
+                
                 tmpParts = struct2cell(obj.MOD.SUS);
                 
                 % initialize target amplitudes
@@ -348,9 +356,18 @@ classdef single_sinmod_player
         function [obj,frame] = get_frame_TD(obj)
             
             % allocate output frame
-            frame       = zeros(obj.paramSynth.lWin,1);
+            frame   = zeros(obj.paramSynth.lWin,1);
             
-            obj.f0synth =  obj.noteModel.F0.trajectory(obj.ctlPOS);
+            % interpolate original F0
+            lB      = floor(obj.ctlPOS);
+            uB      = ceil(obj.ctlPOS);
+            frac    = rem(obj.ctlPOS,1);
+            
+            try
+            obj.f0synth =  (1-frac)*obj.noteModel.F0.trajectory(lB) + frac*obj.noteModel.F0.trajectory(uB);
+            catch
+            'xxx'
+            end
             
             tmpParts = struct2cell(obj.MOD.SUS);
             
@@ -489,11 +506,11 @@ classdef single_sinmod_player
             if obj.ctlPOS < length(obj.noteModel.F0.trajectory)
                 
                 % for now, we work with analysis=snthesis hop-size
-                obj.ctlPOS    = obj.ctlPOS  + 1;
+                obj.ctlPOS    = obj.ctlPOS  + obj.paramSynth.stepRatioA;
                 
                 % this is for the case where we have different hop-sizes
-                %  obj.ctlPOS    = obj.ctlPOS  +obj.noteStretchFactor *  ...
-                %  2/( (obj.noteModel.param.lHop * obj.noteModel.param.fs) / (obj.paramAna.lHop * obj.paramAna.fs)  );
+                % obj.ctlPOS    = obj.ctlPOS  +obj.noteStretchFactor *  ...
+                % 2/( (obj.noteModel.param.lHop * obj.noteModel.param.fs) / (obj.paramAna.lHop * obj.paramAna.fs)  );
                 
             else
                 

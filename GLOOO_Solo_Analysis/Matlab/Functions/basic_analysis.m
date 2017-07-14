@@ -19,11 +19,19 @@ if 1%exist(outName,'file')==0
     
     audioPath = [paths.wavPrepared baseName '.wav'];
     
-    try
-        [x,fs]      = audioread(audioPath);
-    catch
-        [x,fs]      = wavread(audioPath);
+    
+       % get matlab version
+    v = version;
+    % as cell array
+    V = strsplit(v,'.');
+    
+    % use wavread or audioread, depending on version
+    if str2double(V{1}) < 9        
+       [x,fs] =  wavread(audioPath);
+    else           
+       [x,fs] = audioread(audioPath);
     end
+    
     
     % add sample rate to parameters
     param.fs    = fs;

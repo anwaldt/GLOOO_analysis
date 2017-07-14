@@ -31,6 +31,7 @@ load([paths.segDir baseName]);
 
 % paramSynth.nPartials    = param.PART.nPartials;
 
+
 %% here comes the expression model
 
 expMod  = expression_model('original');
@@ -66,7 +67,23 @@ expMod  = expression_model('original');
 %% and EXPORT
 
 if paramSynth.saveit == true
-    wavwrite( y, paramSynth.fs,[paths.OUTPUT baseName '_Synth-' paramSynth.f0mode '.wav']);
+  
+    % get matlab version
+    v = version;
+    % as cell array
+    V = strsplit(v,'.');
+    
+    % use wavread or audioread, depending on version
+    if str2double(V{1}) < 9
+        
+        wavwrite( y, paramSynth.fs,[paths.OUTPUT baseName '_Synth-' paramSynth.f0mode '.wav']);
+
+    else
+           
+        audiowrite([paths.OUTPUT baseName '_Synth-' paramSynth.f0mode '.wav'], y, paramSynth.fs);
+    end
+        
+        
 end
 
 %% PLOT
