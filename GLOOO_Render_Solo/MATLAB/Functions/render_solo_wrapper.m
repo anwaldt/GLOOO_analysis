@@ -80,7 +80,7 @@ if paramSynth.saveit == true
 
     else
            
-        audiowrite([paths.OUTPUT baseName '_Synth-' paramSynth.f0mode '.wav'], y, paramSynth.fs);
+        audiowrite([paths.OUTPUT baseName '_Synth-' paramSynth.sustainMode '.wav'], y, paramSynth.fs);
     end
         
         

@@ -74,8 +74,7 @@ for frameIDX = 1:nWin
             % get next segment
             tmpSeg = SEG{segCNT};
             
-            % if it is a transition
-            %if strcmp(class(tmpSeg),'trans') == 1
+         
                 
                 % what kind of transition do we have?
                 switch tmpSeg.type
@@ -83,13 +82,13 @@ for frameIDX = 1:nWin
                     % ATTACK AND legato and release do not create
                     % independent transitions.
                     % They just trigger a note with specific properties.
+                    
                     case 'attack'
                         
                         if paramSynth.verbose == true
                             disp('Got an attack!')
                         end
-                        
-                        
+                         
                         % in transition is not left blank in this case
                         inTrans = SEG{segCNT};
                         
@@ -219,16 +218,7 @@ for frameIDX = 1:nWin
                         SMSP(end).isReleased = 1;
                         
                 end
-                
-                
-                % if it is a note
-%             elseif strcmp(class(tmpSeg),'note') == 1
-%                 
-%                 if paramSynth.verbose == true
-%                     disp('Got a note!')
-%                 end
-%             end
-            
+         
             segCNT = segCNT+1;
         end
         

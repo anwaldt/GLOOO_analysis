@@ -38,13 +38,6 @@ classdef single_sinmod_player
         % number of total frames in the matrices
         nFrames
         
-        % the f0synth-trajectory for the transitional segment (if needed)
-        %         f0_trans;
-        
-        % when a glissando is played, the index is counted
-        %         gliss_IDX;
-        
-        
         % the fluctuations of the lowest partial around the fundamental
         % frequency
         f0Dev;
@@ -108,7 +101,8 @@ classdef single_sinmod_player
         % the frequency trajectories
         F;
         
-        % only attack
+        % this is put in FRONT of the
+        % stochastic part (attack, glissando, etc)
         inTransTrajectories;
         
         
@@ -126,7 +120,7 @@ classdef single_sinmod_player
         l_release;
         
         % for the stochastic mode:
-        MOD;
+        statMod;
         
         s2 = {};
         
@@ -175,7 +169,7 @@ classdef single_sinmod_player
             
             
             % the statistical model
-            obj.MOD         = MOD;
+            obj.statMod     = MOD;
             
             % obvious stuff comes first!
             obj.fileName    = fileName;
@@ -234,16 +228,15 @@ classdef single_sinmod_player
             %% prepare the amplitude trajectories
             
             % @TODO: careful, this should be done in the analysis stage
-            obj.A           = SMS.AMP(1:paramSynth.nPartials, 2:end-1);
-            obj.F           = SMS.FRE(1:paramSynth.nPartials, 2:end-1);
+            %obj.A           = SMS.AMP(1:paramSynth.nPartials, 2:end-1);
+            %obj.F           = SMS.FRE(1:paramSynth.nPartials, 2:end-1);
             
-            % get length
-            obj.l_inTrans  = length(obj.MOD.ATT.P_1.AMP.trajectory);
-            obj.l_release = length(obj.MOD.REL.P_1.AMP.trajectory);
+            % get lengths of attack and release
+            obj.l_inTrans  = length(obj.statMod.ATT.P_1.AMP.trajectory);
+            obj.l_release = length(obj.statMod.REL.P_1.AMP.trajectory);
             
             
-            obj.inTransTrajectories =  struct2array(obj.MOD.ATT);
-            obj.TRA_release =  struct2array(obj.MOD.REL);
+            obj.TRA_release =  struct2array(obj.statMod.REL);
             % read the samples infos
             obj.loop        = SM.samples(ismember({SM.samples.name},fileName));
             
@@ -253,94 +246,11 @@ classdef single_sinmod_player
             
             
             obj.releasePos = 1;
-            %% initialize note
-            
-            % al notes need this
-            obj.smsPOS              = 1;
-            obj.ctlPOS              = 1;
-            obj.noteStretchFactor   = 1;
             
             
-            % if note is detached from preceeding event
-            if ~isempty(lastNoteModel)
-                
-                
-                switch obj.paramSynth.f0mode
-                    
-                    case 'original'
-                        
-                        switch transition.type
-                            
-                            case 'glissando'
-                                
-                                obj.inTransPos = 1;
-                                
-                                for i=1:obj.nPart
-                                    
-                                    % get the last note's ampltudes
-                                    obj.inTransTrajectories(i).AMP.trajectory   =  (transition.AMP.trajectory / transition.AMP.trajectory(1))* lastNoteModel.s2{i}.a;
-                                    obj.inTransTrajectories(i).FRE.trajectory   =  transition.F0.trajectory  * i;
-                                end
-                                
-                                % allocate target amplitude array
-                                obj.targetAmplitudes = zeros((obj.paramSynth.nPartials),1);
-                                
-                                
-                                tmpParts = struct2cell(obj.MOD.SUS);
-                                
-                                % initialize target amplitudes
-                                for i=1:obj.paramSynth.nPartials
-                                    
-                                    obj.targetAmplitudes(i) = tmpParts{i}.AMP.med;
-                                    
-                                end
-                                
-                                
-                                
-                            case 'legato'
-                                
-                                
-                        end
-                        
-                    case 'other'
-                        
-                        switch transition.type
-                            
-                            case 'gliassando'
-                                
-                                % Prepend the glissando stuff
-                                [obj]  =  expMod.calculate_glissando_trajectories(obj, lastNoteModel, obj.inTrans );
-                                
-                        end
-                        
-                end
-                
-                % if there is no attached previous note -
-                % we have an attack
-                
-            else
-                
-                % set the attack pointer to the beginning
-                obj.inTransPos = 1;
-                
-                % allocate target amplitude array
-                obj.targetAmplitudes = zeros((obj.paramSynth.nPartials),1);
-                
-                
-                tmpParts = struct2cell(obj.MOD.SUS);
-                
-                % initialize target amplitudes
-                for i=1:obj.paramSynth.nPartials
-                    
-                    obj.targetAmplitudes(i) = tmpParts{i}.AMP.med;
-                    
-                end
-                
-                
-            end
             
-            % start from the very beginning and
-            % initialize partials
+            %% initialize partials
+            
             for partCnt=1:obj.paramSynth.nPartials
                 
                 obj.s2    = cell(obj.nPart,1);
@@ -352,6 +262,105 @@ classdef single_sinmod_player
                 end
                 
                 
+            end
+            
+            %% initialize note
+            
+            % al notes need this
+            obj.smsPOS              = 1;
+            obj.ctlPOS              = 1;
+            obj.noteStretchFactor   = 1;
+            
+            %
+            
+            tmpParts = struct2cell(obj.statMod.SUS);
+            
+            switch transition.type
+                
+                
+                
+                case 'glissando'
+                    
+                    obj.inTransPos = 1;
+                    
+                    
+                    switch obj.paramSynth.glissandoMode
+                        
+                        case 'original'
+                            
+                            for i=1:obj.nPart
+                                
+                                % get the last note's ampltudes
+                                obj.inTransTrajectories(i).AMP.trajectory   =  (transition.AMP.trajectory / transition.AMP.trajectory(1))* lastNoteModel.s2{i}.a;
+                                obj.inTransTrajectories(i).FRE.trajectory   =  transition.F0.trajectory  * i;
+                            end
+                            
+                            % allocate target amplitude array
+                            obj.targetAmplitudes = zeros((obj.paramSynth.nPartials),1);
+                            
+                            tmpParts = struct2cell(obj.statMod.SUS);
+                            
+                            % initialize target amplitudes
+                            for i=1:obj.paramSynth.nPartials
+                                
+                                obj.targetAmplitudes(i) = tmpParts{i}.AMP.med;
+                                
+                            end
+                            
+                        case 'other'
+                            
+                            
+                            
+                    end
+                    
+                case 'legato'
+                    
+                    % if there is no attached previous note -
+                    % we have an attack
+                    
+                    % set the attack pointer to the beginning
+                    obj.inTransPos = 1;
+                    
+                    % allocate target amplitude array
+                    obj.targetAmplitudes = zeros((obj.paramSynth.nPartials),1);
+                    
+                    
+                    
+                    
+                    % initialize target amplitudes
+                    for i=1:obj.paramSynth.nPartials
+                        
+                        obj.targetAmplitudes(i) = tmpParts{i}.AMP.med;
+                        
+                    end
+                    
+                  % If no note is connected to it:
+                    % simply start from the very beginning and
+                    % initialize partials  
+                case 'attack'
+                    
+                    
+                    switch obj.paramSynth.attackMode
+                        
+                        % this case uses the original trajectories
+                        % for each partial
+                        case 'original'
+                            
+                            % get target amplitudes:
+                            % initialize target amplitudes
+                            for i=1:obj.paramSynth.nPartials
+                                
+                                obj.targetAmplitudes(i) = tmpParts{i}.AMP.med;
+                                
+                            end
+                            
+                            % set the attack pointer to the beginning
+                            obj.inTransPos          = 1;
+                            obj.inTransTrajectories =  struct2array(obj.statMod.ATT);
+                            
+                            
+                            
+                    end
             end
             
             
@@ -373,24 +382,11 @@ classdef single_sinmod_player
             % allocate output frame
             frame   = zeros(obj.paramSynth.lWin,1);
             
-            % get the f0 only if not in release or attack
-            if obj.isReleased == 0
+             
+               
                 
-                % interpolate original F0
-                lB      = floor(obj.ctlPOS);
-                uB      = ceil(obj.ctlPOS);
-                frac    = rem(obj.ctlPOS,1);
-                
-                try
-                    obj.f0synth =  (1-frac)*obj.noteModel.F0.trajectory(lB) + frac*obj.noteModel.F0.trajectory(uB);
-                catch
-                    disp('Problems interpolating the original F0 trajectory!')
-                end
-                
-                
-            end
             
-            tmpParts = struct2cell(obj.MOD.SUS);
+            tmpParts = struct2cell(obj.statMod.SUS);
             
             
             % loop over all partials
@@ -422,35 +418,57 @@ classdef single_sinmod_player
                                     
                                     case 'attack'
                                         
-                                        obj.s2{partCNT}.f =  obj.f0synth * partCNT *  obj.inTransTrajectories(partCNT).FRE.trajectory(obj.inTransPos);
+                                        obj.s2{partCNT}.f =  obj.noteModel.F0.median * partCNT ;%*  obj.inTransTrajectories(partCNT).FRE.trajectory(obj.inTransPos);
                                         
-                                        try
-                                            % scale here:
-                                            obj.s2{partCNT}.a = obj.targetAmplitudes(partCNT) * obj.inTransTrajectories(partCNT).AMP.trajectory(obj.inTransPos);
-                                        catch
-                                            'xxx'
-                                        end
+                                        
+                                        % scale here:
+                                        obj.s2{partCNT}.a = obj.targetAmplitudes(partCNT) * obj.inTransTrajectories(partCNT).AMP.trajectory(obj.inTransPos);
+                                        
                                         
                                     case 'glissando'
                                         
-                                        obj.s2{partCNT}.f =   obj.inTransTrajectories(partCNT).FRE.trajectory(obj.inTransPos);
+                                        obj.s2{partCNT}.f = obj.inTransTrajectories(partCNT).FRE.trajectory(obj.inTransPos);
                                         
                                         % scale here:
-                                        obj.s2{partCNT}.a =  obj.inTransTrajectories(partCNT).AMP.trajectory(obj.inTransPos);
+                                        obj.s2{partCNT}.a = obj.inTransTrajectories(partCNT).AMP.trajectory(obj.inTransPos);
                                         
                                 end
+                                
+                                
                                 % otherwise
                             else
                                 
-                                % this is done with a 2 sample averaging to
-                                % avoid quick jumps
-                                obj.s2{partCNT}.f = 0.5* (obj.s2{partCNT}.f + obj.f0synth * partCNT * pick_inverse(tmpParts{partCNT}.FRE.dist', tmpParts{partCNT}.FRE.xval', 'closest'));
+                                switch obj.paramSynth.sustainMode
+                                    
+                                    case 'original'
+                                        
+                                        % interpolate original F0
+                                        lB      = floor(obj.ctlPOS);
+                                        uB      = ceil(obj.ctlPOS);
+                                        frac    = rem(obj.ctlPOS,1);
+                                        
+                                        try
+                                            obj.f0synth =  (1-frac)*obj.noteModel.F0.trajectory(lB) + frac*obj.noteModel.F0.trajectory(uB);
+                                        catch
+                                            disp('Problems interpolating the original F0 trajectory!')
+                                        end
+                                        
+                                        
+                                        % this is done with a 2 sample averaging to
+                                        % avoid quick jumps
+                                        obj.s2{partCNT}.f = 0.5* (obj.s2{partCNT}.f + obj.f0synth * partCNT * pick_inverse(tmpParts{partCNT}.FRE.dist', tmpParts{partCNT}.FRE.xval', 'closest'));
+                                        
+                                        % directly from the distributions:
+                                        obj.s2{partCNT}.a = 0.5* (obj.s2{partCNT}.a + pick_inverse(tmpParts{partCNT}.AMP.dist', tmpParts{partCNT}.AMP.xval', 'closest'));
+                                        
+                                    case 'plain'
+                                        
+                                        
+                                        obj.s2{partCNT}.f = tmpParts{partCNT}.FRE.med * obj.noteModel.F0.median * partCNT;                                        
+                                        obj.s2{partCNT}.a = tmpParts{partCNT}.AMP.med;
+                                        
+                                end
                                 
-                                % directly from the distributions:
-                                obj.s2{partCNT}.a = 0.5* (obj.s2{partCNT}.a + pick_inverse(tmpParts{partCNT}.AMP.dist', tmpParts{partCNT}.AMP.xval', 'closest'));
-                                
-                                
-                                %obj.s2{partCNT}.a  = tmpParts{partCNT}.AMP.med;
                                 
                             end
                             

@@ -40,14 +40,14 @@ render_solo_PARAM;
 % a single file by name, or a subset:
 %filesToDo = 'All';
 %filesToDo = 'SampLib_DPA_01.wav';
-filesToDo = 'TwoNote_BuK_22.mat';
+filesToDo = 'TwoNote_BuK_23.mat';
 % filesToDo = 'TwoNote_BuK_100.mat';
 
 
-%% get list of filesi
+%% get list of files
 
 directoryFiles = dir(paths.segDir);
-% only get the wave files out of the folder into the list of audio files
+% only get the wave file    s out of the folder into the list of audio files
 % which should be processed
 validFileidx    = 1;
 fileNames       = cell(1);
