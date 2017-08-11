@@ -22,8 +22,8 @@ restoredefaultpath
 %singlesoundDIR  = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/SingleSounds/BuK/2017-06-02/';
 singlesoundDIR  = '/home/anwaldt/Work/Violin_Library_2015/Analysis/SingleSounds/BuK/2017-06-02/';
 
-soloDIR         = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/TwoNote/BuK/2017-05-12/';
-%soloDIR         ='/home/anwaldt/Work/Violin_Library_2015/Analysis/TwoNote/BuK/2017-06-02/';
+%soloDIR         = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/TwoNote/BuK/2017-05-12/';
+soloDIR         ='/home/anwaldt/Work/Violin_Library_2015/Analysis/TwoNote/BuK/2017-08-11/';
 
 libDIR          = '/home/anwaldt/Work/Violin_Library_2015/';
 

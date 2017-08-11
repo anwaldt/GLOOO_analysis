@@ -42,7 +42,7 @@ paramSynth.synthMode = 'TD';
 %% how to synthesize the tonal/deterministic part
 
 % number of partials to synthesize
-paramSynth.nPartials =  30;
+paramSynth.nPartials =  1;
 
 
 %% how to synthesize the control trajectories during sustain
@@ -59,9 +59,9 @@ paramSynth.sustainMode = 'plain';
 
 %% how to synthesize the glissandi
 
-% paramSynth.glissandoMode    = 'original';
+paramSynth.glissandoMode    = 'original-partials';
 
-paramSynth.glissandoMode    = 'linear';
+%paramSynth.glissandoMode    = 'linear';
 
 
 %% how to synthesize the attacks

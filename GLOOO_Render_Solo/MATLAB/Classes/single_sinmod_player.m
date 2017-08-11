@@ -301,23 +301,30 @@ classdef single_sinmod_player
                         obj.initialAmplitudes(i)    = lastNoteModel.s2{i}.a;
                         obj.initialFrequencies(i)   = lastNoteModel.s2{i}.f;
                         obj.targetAmplitudes(i)     = tmpParts{i}.AMP.med;
-                        obj.targetFrequencies(i)    = obj.noteModel.F0.median;
+                        obj.targetFrequencies(i)    = obj.noteModel.F0.median * i;
                         
                     end
                     
                     switch obj.paramSynth.glissandoMode
                         
-                        case 'original'
+                        case 'original-partials'
                             
                             for i=1:obj.nPart
                                 
-                                deltaA = obj.targetAmplitudes(i)  - obj.initialAmplitudes(i);
+                                % scale this partial's amplitude trajectory
+                                deltaA = obj.targetAmplitudes(i)  - obj.initialAmplitudes(i);                                
+                                tmpTraj = (transition.partials.AMP(i,:)-transition.partials.AMP(i,1));                                
+                                tmpTraj = (tmpTraj./tmpTraj(end))*deltaA;                                
+                                obj.inTransTrajectories(i).AMP.trajectory   =  tmpTraj+ obj.initialAmplitudes(i);
+
+                                
+                                % scale this partials frequency trajectory
                                 deltaF = obj.targetFrequencies(i) - obj.initialFrequencies(i);
-                                
-                                obj.inTransTrajectories(i).AMP.trajectory   =  (transition.AMP.trajectory / transition.AMP.trajectory(1)) * obj.initialAmplitudes(i);
-                                
-                                obj.inTransTrajectories(i).FRE.trajectory   =  transition.F0.trajectory  * i;
-                                
+                                tmpTraj = (transition.partials.FRE(i,:)-transition.parxtials.FRE(i,1));                                
+                                tmpTraj = (tmpTraj./tmpTraj(end))*deltaF;                                
+                                obj.inTransTrajectories(i).FRE.trajectory   =  tmpTraj + obj.initialFrequencies(i);
+
+
                             end
                             
                             obj.l_inTrans  =  obj.inTrans.stopIND - obj.inTrans.startIND;
