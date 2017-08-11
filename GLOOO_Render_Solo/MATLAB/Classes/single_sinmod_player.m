@@ -12,6 +12,8 @@ classdef single_sinmod_player
     
     properties
         
+        vibratoModel;
+        
         % the note to be played
         noteModel;
         
@@ -223,6 +225,7 @@ classdef single_sinmod_player
             %% f0 stuff
             
             
+            obj.vibratoModel = vibrato_model(obj.nPart,'linear');
             %obj.f0samp      = median(f0vec);
             
             %obj.f0Dev       = obj.f0vec / obj.f0samp;
@@ -312,28 +315,27 @@ classdef single_sinmod_player
                             for i=1:obj.nPart
                                 
                                 % scale this partial's amplitude trajectory
-                                deltaA = obj.targetAmplitudes(i)  - obj.initialAmplitudes(i);                                
-                                tmpTraj = (transition.partials.AMP(i,:)-transition.partials.AMP(i,1));                                
-                                tmpTraj = (tmpTraj./tmpTraj(end))*deltaA;                                
+                                deltaA = obj.targetAmplitudes(i)  - obj.initialAmplitudes(i);
+                                tmpTraj = (transition.partials.AMP(i,:)-transition.partials.AMP(i,1));
+                                tmpTraj = (tmpTraj./tmpTraj(end))*deltaA;
                                 obj.inTransTrajectories(i).AMP.trajectory   =  tmpTraj+ obj.initialAmplitudes(i);
-
+                                
                                 
                                 % scale this partials frequency trajectory
                                 deltaF = obj.targetFrequencies(i) - obj.initialFrequencies(i);
-                                tmpTraj = (transition.partials.FRE(i,:)-transition.parxtials.FRE(i,1));                                
-                                tmpTraj = (tmpTraj./tmpTraj(end))*deltaF;                                
+                                tmpTraj = (transition.partials.FRE(i,:)-transition.partials.FRE(i,1));
+                                tmpTraj = (tmpTraj./tmpTraj(end))*deltaF;
                                 obj.inTransTrajectories(i).FRE.trajectory   =  tmpTraj + obj.initialFrequencies(i);
-
-
+                                
                             end
                             
                             obj.l_inTrans  =  obj.inTrans.stopIND - obj.inTrans.startIND;
                             
                         case 'linear'
                             
-                                                        obj.l_inTrans  =  obj.inTrans.stopIND - obj.inTrans.startIND;
-
-                                                        
+                            obj.l_inTrans  =  obj.inTrans.stopIND - obj.inTrans.startIND;
+                            
+                            
                             for i=1:obj.paramSynth.nPartials
                                 
                                 obj.initialAmplitudes(i)    = lastNoteModel.s2{i}.a;
@@ -443,6 +445,7 @@ classdef single_sinmod_player
                             
                             obj.s2{partCNT}.a   = obj.A(partCNT,obj.smsPOS);
                             
+                            
                         case 'original'
                             
                             % if we are within the in-transition segment
@@ -469,7 +472,7 @@ classdef single_sinmod_player
                                 end
                                 
                                 
-                                % otherwise
+                                % for the sustain
                             else
                                 
                                 switch obj.paramSynth.sustainMode
@@ -493,12 +496,23 @@ classdef single_sinmod_player
                                         obj.s2{partCNT}.f = 0.5* (obj.s2{partCNT}.f + obj.f0synth * partCNT * pick_inverse(tmpParts{partCNT}.FRE.dist', tmpParts{partCNT}.FRE.xval', 'closest'));
                                         
                                         % directly from the distributions:
-                                        obj.s2{partCNT}.a = 0.5* (obj.s2{partCNT}.a + pick_inverse(tmpParts{partCNT}.AMP.dist', tmpParts{partCNT}.AMP.xval', 'closest'));
+                                        
+                                        switch obj.paramSynth.vibratoMode
+                                            
+                                            case 'linear'
+                                                
+                                                obj.s2{partCNT}.a = 0.5 * ...
+                                                    (obj.s2{partCNT}.a + ...
+                                                    pick_inverse(tmpParts{partCNT}.AMP.dist', tmpParts{partCNT}.AMP.xval', 'closest') * ...
+                                                    (1+obj.vibratoModel.get_am_for_partial(obj.s2{partCNT}.f, obj.noteModel.F0.median, partCNT)));
+                                                
+                                        end
                                         
                                     case 'plain'
                                         
-                                        
-                                        obj.s2{partCNT}.f = tmpParts{partCNT}.FRE.med * obj.noteModel.F0.median * partCNT;
+                                        % this is done with a 2 sample averaging to
+                                        % avoid quick jumps
+                                        obj.s2{partCNT}.f = 0.5*(obj.s2{partCNT}.f + tmpParts{partCNT}.FRE.med * obj.noteModel.F0.median * partCNT);
                                         obj.s2{partCNT}.a = tmpParts{partCNT}.AMP.med;
                                         
                                 end
@@ -545,10 +559,9 @@ classdef single_sinmod_player
                                     obj.s2{partCNT}.a = obj.releaseAmplitudes(partCNT)* obj.interpolate(obj.releasePos, obj.TRA_release(partCNT).AMP.trajectory);
                                     
                                     
-                                    
                                 catch
                                     
-                                    disp('Minor problems creating the release ...');
+                                    error('Minor problems creating the release ...');
                                     
                                 end
                                 
@@ -574,14 +587,18 @@ classdef single_sinmod_player
                 
                 if isempty(find(isnan(tmpFrame), 1))
                     
-                    frame                       = frame + tmpFrame;
+                    % only add partial if selected in synthesis parameters
+                    if find(obj.paramSynth.partialsTODO==partCNT)
+                        
+                        frame                       = frame + tmpFrame;
+                        
+                    end
                     
                 else
                     disp('NaNs in the partials!!!')
                 end
                 
             end
-            
             
             % add complete frame to output signal:
             frame = frame .* triang(length(frame));

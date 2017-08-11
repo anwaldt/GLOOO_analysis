@@ -42,17 +42,20 @@ paramSynth.synthMode = 'TD';
 %% how to synthesize the tonal/deterministic part
 
 % number of partials to synthesize
-paramSynth.nPartials =  1;
+paramSynth.nPartials =  30;
+
+paramSynth.partialsTODO = 1:paramSynth.nPartials;
+% paramSynth.partialsTODO = [1 10 20 30];
 
 
 %% how to synthesize the control trajectories during sustain
 % both AMPLITUDE and FREQUENCY
 
 % this mode uses only the DC component
-paramSynth.sustainMode = 'plain';
+% paramSynth.sustainMode = 'plain';
 
 % this mode uses the exact AC of the analyzed solo:
-% paramSynth.f0mode = 'original';
+paramSynth.sustainMode = 'original';
 
 % this mode uses the DC component + the original vibrato:
 % paramSynth.f0mode = 'vib_orig';
@@ -62,6 +65,10 @@ paramSynth.sustainMode = 'plain';
 paramSynth.glissandoMode    = 'original-partials';
 
 %paramSynth.glissandoMode    = 'linear';
+
+%% how to synthesize the glissandi
+
+paramSynth.vibratoMode    = 'linear';
 
 
 %% how to synthesize the attacks
