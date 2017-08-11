@@ -6,7 +6,7 @@
 % Henrik von Coler
 % 2014-02-17
 
-function [transModel] = analyze_transition(transModel, features,param )
+function [transModel] = analyze_transition(transModel, CTL, SMS, param )
 
 if param.info == true
     disp('    analyze_transition(): Starting...');
@@ -16,10 +16,10 @@ end
 switch param.F0.f0Mode
 
     case 'swipe'
-        f0vec = features.f0swipe;
+        f0vec = CTL.f0swipe;
     
     case 'yin'
-        f0vec = features.f0yin;
+        f0vec = CTL.f0yin;
 
 end
 
@@ -35,7 +35,7 @@ featStopInd  = min(length(f0vec),     round(stop  /(param.lHop/param.fs)));
 f0seg                       = f0vec(featStartInd:featStopInd);
 
 transModel.F0.trajectory    = f0seg;
-transModel.F0.strength      = features.pitchStrenght(featStartInd:featStopInd);
+transModel.F0.strength      = CTL.pitchStrenght(featStartInd:featStopInd);
 % xVal = linspace(min(f0seg),max(f0seg),round(length(f0seg)/5));
 % [h,x] = hist(f0seg,xVal);
 
@@ -50,7 +50,7 @@ f0segSmooth  = smooth(f0seg,10);
 
 %% extract RMS properties
 
-AmpSeg = features.rmsVec(featStartInd:featStopInd);
+AmpSeg = CTL.rmsVec(featStartInd:featStopInd);
 
 transModel.AMP.trajectory = AmpSeg;
 
@@ -69,10 +69,20 @@ transModel.stopIND  = featStopInd;
 
 transModel.param = param;
 
+
+%% Grab transition partial
+
+% take care not to get out of bounds:
+featStopInd = min(featStopInd, size(SMS.FRE,2));
+
+transModel.partials.FRE =  SMS.FRE(:,featStartInd:featStopInd);
+
+transModel.partials.AMP =  SMS.AMP(:,featStartInd:featStopInd);
+
 %% PLOT ?
 
 if param.plotit == true
-    features.pitchStrenght
+    CTL.pitchStrenght
     figure
     
     subplot(3,1,1)

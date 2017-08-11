@@ -20,6 +20,8 @@ classdef segment
         % struct with the analysis parameters
         param
         
+        partials
+        
     end
     
     methods

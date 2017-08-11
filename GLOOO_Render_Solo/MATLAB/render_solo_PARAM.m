@@ -59,15 +59,18 @@ paramSynth.sustainMode = 'plain';
 
 %% how to synthesize the glissandi
 
-paramSynth.glissandoMode = 'original';
+% paramSynth.glissandoMode    = 'original';
+
+paramSynth.glissandoMode    = 'linear';
+
 
 %% how to synthesize the attacks
 
-paramSynth.attackMode = 'original';
+paramSynth.attackMode       = 'original';
 
 %% how to synthesisze the noise
 
-paramSynth.noiseMode    = 'off';
-% paramSynth.noiseMode    = 'on';
-% paramSynth.noiseMode    = 'only';
+paramSynth.noiseMode        = 'off';
+% paramSynth.noiseMode      = 'on';
+% paramSynth.noiseMode      = 'only';
 

@@ -106,9 +106,13 @@ classdef single_sinmod_player
         inTransTrajectories;
         
         
-        % the first amplitude values for all partials
-        % are needed for the attack scaling
+        % the target values for all partials
+        % are needed for the attack and glissando scaling
         targetAmplitudes;
+        targetFrequencies;
+        % the initials, too:
+        initialAmplitudes;
+        initialFrequencies
         
         releaseAmplitudes;
         
@@ -181,6 +185,7 @@ classdef single_sinmod_player
             obj.kernels_LF  = SM.kernels_LF;
             obj.fracVec_LF  = SM.fracVec_LF;
             obj.fracVec     = SM.fracVec;
+            
             % the initial note values
             obj.nn          = noteModel.MIDI.nn;
             obj.vel         = noteModel.MIDI.vel;
@@ -232,8 +237,8 @@ classdef single_sinmod_player
             %obj.F           = SMS.FRE(1:paramSynth.nPartials, 2:end-1);
             
             % get lengths of attack and release
-            obj.l_inTrans  = length(obj.statMod.ATT.P_1.AMP.trajectory);
-            obj.l_release = length(obj.statMod.REL.P_1.AMP.trajectory);
+            
+            obj.l_release  = length(obj.statMod.REL.P_1.AMP.trajectory);
             
             
             obj.TRA_release =  struct2array(obj.statMod.REL);
@@ -272,17 +277,33 @@ classdef single_sinmod_player
             obj.noteStretchFactor   = 1;
             
             %
-            
             tmpParts = struct2cell(obj.statMod.SUS);
             
+            
+            % switch the transition type
             switch transition.type
-                
-                
                 
                 case 'glissando'
                     
+                    % go into in-transition
                     obj.inTransPos = 1;
                     
+                    % allocate target amplitude and frequency array
+                    obj.targetAmplitudes  = zeros((obj.paramSynth.nPartials),1);
+                    obj.targetFrequencies = zeros((obj.paramSynth.nPartials),1);
+                    
+                    obj.initialAmplitudes   = zeros((obj.paramSynth.nPartials),1);
+                    obj.initialFrequencies  = zeros((obj.paramSynth.nPartials),1);
+                    
+                    
+                    for i=1:obj.paramSynth.nPartials
+                        
+                        obj.initialAmplitudes(i)    = lastNoteModel.s2{i}.a;
+                        obj.initialFrequencies(i)   = lastNoteModel.s2{i}.f;
+                        obj.targetAmplitudes(i)     = tmpParts{i}.AMP.med;
+                        obj.targetFrequencies(i)    = obj.noteModel.F0.median;
+                        
+                    end
                     
                     switch obj.paramSynth.glissandoMode
                         
@@ -290,26 +311,38 @@ classdef single_sinmod_player
                             
                             for i=1:obj.nPart
                                 
-                                % get the last note's ampltudes
-                                obj.inTransTrajectories(i).AMP.trajectory   =  (transition.AMP.trajectory / transition.AMP.trajectory(1))* lastNoteModel.s2{i}.a;
+                                deltaA = obj.targetAmplitudes(i)  - obj.initialAmplitudes(i);
+                                deltaF = obj.targetFrequencies(i) - obj.initialFrequencies(i);
+                                
+                                obj.inTransTrajectories(i).AMP.trajectory   =  (transition.AMP.trajectory / transition.AMP.trajectory(1)) * obj.initialAmplitudes(i);
+                                
                                 obj.inTransTrajectories(i).FRE.trajectory   =  transition.F0.trajectory  * i;
+                                
                             end
                             
-                            % allocate target amplitude array
-                            obj.targetAmplitudes = zeros((obj.paramSynth.nPartials),1);
+                            obj.l_inTrans  =  obj.inTrans.stopIND - obj.inTrans.startIND;
                             
-                            tmpParts = struct2cell(obj.statMod.SUS);
+                        case 'linear'
                             
-                            % initialize target amplitudes
+                                                        obj.l_inTrans  =  obj.inTrans.stopIND - obj.inTrans.startIND;
+
+                                                        
                             for i=1:obj.paramSynth.nPartials
                                 
-                                obj.targetAmplitudes(i) = tmpParts{i}.AMP.med;
+                                obj.initialAmplitudes(i)    = lastNoteModel.s2{i}.a;
+                                obj.initialFrequencies(i)   = lastNoteModel.s2{i}.f;
+                                obj.targetAmplitudes(i)     = tmpParts{i}.AMP.med;
+                                obj.targetFrequencies(i)    = obj.noteModel.F0.median * i;
                                 
                             end
                             
-                        case 'other'
-                            
-                            
+                            for i=1:obj.nPart
+                                
+                                obj.inTransTrajectories(i).AMP.trajectory = linspace(obj.initialAmplitudes(i), obj.targetAmplitudes(i),obj.l_inTrans);
+                                
+                                obj.inTransTrajectories(i).FRE.trajectory = linspace(obj.initialFrequencies(i), obj.targetFrequencies(i),obj.l_inTrans);
+                                
+                            end
                             
                     end
                     
@@ -334,9 +367,9 @@ classdef single_sinmod_player
                         
                     end
                     
-                  % If no note is connected to it:
+                    % If no note is connected to it:
                     % simply start from the very beginning and
-                    % initialize partials  
+                    % initialize partials
                 case 'attack'
                     
                     
@@ -358,7 +391,7 @@ classdef single_sinmod_player
                             obj.inTransPos          = 1;
                             obj.inTransTrajectories =  struct2array(obj.statMod.ATT);
                             
-                            
+                            obj.l_inTrans           =   (  length(obj.inTransTrajectories(1).FRE.trajectory));
                             
                     end
             end
@@ -382,12 +415,7 @@ classdef single_sinmod_player
             % allocate output frame
             frame   = zeros(obj.paramSynth.lWin,1);
             
-             
-               
-                
-            
             tmpParts = struct2cell(obj.statMod.SUS);
-            
             
             % loop over all partials
             for partCNT = 1:obj.paramSynth.nPartials
@@ -397,7 +425,7 @@ classdef single_sinmod_player
                     
                     % do either the fixed method (partial trajectories from matrix)
                     % or the stochastic mode
-                    switch obj.paramSynth.smsMode
+                    switch obj.paramSynth.attackMode
                         
                         case 'fixed'
                             % each partial frequency (is always exactly N*f0synth)
@@ -408,7 +436,7 @@ classdef single_sinmod_player
                             
                             obj.s2{partCNT}.a   = obj.A(partCNT,obj.smsPOS);
                             
-                        case 'stochastic'
+                        case 'original'
                             
                             % if we are within the in-transition segment
                             if obj.inTransPos>0 && obj.inTransPos< obj.l_inTrans
@@ -418,19 +446,18 @@ classdef single_sinmod_player
                                     
                                     case 'attack'
                                         
-                                        obj.s2{partCNT}.f =  obj.noteModel.F0.median * partCNT ;%*  obj.inTransTrajectories(partCNT).FRE.trajectory(obj.inTransPos);
-                                        
+                                        obj.s2{partCNT}.f   =  obj.noteModel.F0.median * partCNT ;
                                         
                                         % scale here:
-                                        obj.s2{partCNT}.a = obj.targetAmplitudes(partCNT) * obj.inTransTrajectories(partCNT).AMP.trajectory(obj.inTransPos);
+                                        obj.s2{partCNT}.a   = obj.targetAmplitudes(partCNT)*  obj.interpolate(obj.inTransPos, obj.inTransTrajectories(partCNT).AMP.trajectory);
                                         
                                         
                                     case 'glissando'
                                         
-                                        obj.s2{partCNT}.f = obj.inTransTrajectories(partCNT).FRE.trajectory(obj.inTransPos);
+                                        obj.s2{partCNT}.f = obj.interpolate(obj.inTransPos,obj.inTransTrajectories(partCNT).FRE.trajectory );
                                         
                                         % scale here:
-                                        obj.s2{partCNT}.a = obj.inTransTrajectories(partCNT).AMP.trajectory(obj.inTransPos);
+                                        obj.s2{partCNT}.a =  obj.interpolate(obj.inTransPos, obj.inTransTrajectories(partCNT).AMP.trajectory);
                                         
                                 end
                                 
@@ -464,7 +491,7 @@ classdef single_sinmod_player
                                     case 'plain'
                                         
                                         
-                                        obj.s2{partCNT}.f = tmpParts{partCNT}.FRE.med * obj.noteModel.F0.median * partCNT;                                        
+                                        obj.s2{partCNT}.f = tmpParts{partCNT}.FRE.med * obj.noteModel.F0.median * partCNT;
                                         obj.s2{partCNT}.a = tmpParts{partCNT}.AMP.med;
                                         
                                 end
@@ -485,6 +512,8 @@ classdef single_sinmod_player
                         % initialize for scaling
                         if obj.releasePos == 1
                             obj.releaseAmplitudes(partCNT) = obj.s2{partCNT}.a;
+                            
+                            
                         end
                         
                         
@@ -503,10 +532,12 @@ classdef single_sinmod_player
                                 
                                 try
                                     
-                                    obj.s2{partCNT}.f = obj.f0synth * partCNT * obj.TRA_release(partCNT).FRE.trajectory(obj.releasePos);
+                                    obj.s2{partCNT}.f ;%= obj.releaseFreq * partCNT * obj.TRA_release(partCNT).FRE.trajectory(obj.releasePos);
                                     
                                     % scale the release trajectories here:
-                                    obj.s2{partCNT}.a = obj.releaseAmplitudes(partCNT) * obj.TRA_release(partCNT).AMP.trajectory(obj.releasePos);
+                                    obj.s2{partCNT}.a = obj.releaseAmplitudes(partCNT)* obj.interpolate(obj.releasePos, obj.TRA_release(partCNT).AMP.trajectory);
+                                    
+                                    
                                     
                                 catch
                                     
@@ -574,16 +605,32 @@ classdef single_sinmod_player
             
             % increment release counter if neccessary
             if obj.isReleased == 1 && obj.releasePos < obj.l_release
-                obj.releasePos = obj.releasePos + 1;
+                obj.releasePos = obj.releasePos  +  obj.paramSynth.stepRatioA;
             end
             
-            % increment attack counter if needed
+            % increment attack/glissando counter if needed
             if obj.inTransPos ~= 0 &&  obj.inTransPos<obj.l_inTrans
-                obj.inTransPos  = obj.inTransPos  + 1;
+                obj.inTransPos  = obj.inTransPos  +  obj.paramSynth.stepRatioA;
             end
             
         end
         
+        %% standard linear interpolation
+        % for fractional indices
+        
+        function   [val] = interpolate(~,fracInd, vector)
+            
+            % get supprot points
+            lB      = floor(fracInd);
+            uB      = ceil(fracInd);
+            frac    = rem(fracInd,1);
+            
+            val     = (1-frac)*vector(lB) + frac*vector(uB);
+            
+            
+        end
+        
     end
+    
     
 end

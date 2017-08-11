@@ -51,9 +51,23 @@ if 1%exist(partialName,'file') == 0
     
     %% export wav
     
-    wavwrite(tonal,    param.fs, [paths.tonal    baseName '.wav']);
-    wavwrite(residual, param.fs, [paths.residual baseName '.wav']);
-    wavwrite(residual, param.fs, [paths.complete baseName '.wav']);
+    % get matlab version
+    v = version;
+    % as cell array
+    V = strsplit(v,'.');
+    
+    % use wavread or audioread, depending on version
+    if str2double(V{1}) < 9
+        wavwrite(tonal,    param.fs, [paths.tonal    baseName '.wav']);
+        wavwrite(residual, param.fs, [paths.residual baseName '.wav']);
+        wavwrite(residual, param.fs, [paths.complete baseName '.wav']);
+    else
+        audiowrite([paths.tonal    baseName '.wav'],tonal,    param.fs );
+        audiowrite([paths.residual baseName '.wav'], residual, param.fs);
+        audiowrite([paths.complete baseName '.wav'], residual, param.fs );
+    end
+    
+    
     
     
     %% export text
@@ -75,21 +89,21 @@ if 1%exist(partialName,'file') == 0
     fprintf(fid, [repmat('%e ', 1, size(SMS.FRE, 1) ), ';\n'], SMS.FRE );
     fclose(fid);
     
-        tmpName     =[ paths.txtDir baseName '.PHA'];
+    tmpName     =[ paths.txtDir baseName '.PHA'];
     fid         = fopen(tmpName,'w');
     fprintf(fid, [repmat('%e ', 1, size(SMS.FRE, 1) ), ';\n'], SMS.PHA );
     fclose(fid);
-
+    
     % noise is not exported at this state
-%     tmpName     =[ paths.txtDir baseName '.NENV'];
-%     fid         = fopen(tmpName,'w');
-%     fprintf(fid, [repmat('%e ', 1, length(SMS) ), ';\n'], meanNoise );
-%     fclose(fid);
-%     
-%     tmpName     = [ paths.txtDir baseName '.NAMP'];
-%     fid         = fopen(tmpName,'w');
-%     fprintf(fid, '%e ;\n', noiseEnergy );
-%     fclose(fid);
+    %     tmpName     =[ paths.txtDir baseName '.NENV'];
+    %     fid         = fopen(tmpName,'w');
+    %     fprintf(fid, [repmat('%e ', 1, length(SMS) ), ';\n'], meanNoise );
+    %     fclose(fid);
+    %
+    %     tmpName     = [ paths.txtDir baseName '.NAMP'];
+    %     fid         = fopen(tmpName,'w');
+    %     fprintf(fid, '%e ;\n', noiseEnergy );
+    %     fclose(fid);
     
     
 else

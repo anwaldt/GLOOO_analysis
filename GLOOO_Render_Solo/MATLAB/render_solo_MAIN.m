@@ -10,14 +10,13 @@
 %   Edited : 2016-11-24
 %
 %
-
 %% RESET
 
 clearvars
 close all
 restoredefaultpath
 
- 
+
 %% These have to be set before starting
 
 %singlesoundDIR  = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/SingleSounds/BuK/2017-06-02/';
@@ -40,7 +39,7 @@ render_solo_PARAM;
 % a single file by name, or a subset:
 %filesToDo = 'All';
 %filesToDo = 'SampLib_DPA_01.wav';
-filesToDo = 'TwoNote_BuK_23.mat';
+filesToDo = 'TwoNote_BuK_24.mat';
 % filesToDo = 'TwoNote_BuK_100.mat';
 
 

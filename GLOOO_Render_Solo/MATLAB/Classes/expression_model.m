@@ -64,13 +64,13 @@ classdef expression_model
         function [F0_trans, A_trans] = calculate_glissando_trajectories(obj, smsPlayer, lastSMSplayer, inTrans, mode)
             
             
-            switch 'mode'
+            switch mode
                 
-                 case original
+                 case 'original'
                      
                      smsPlayer.A(:,1:smsPlayer.loop.points(1))   = [];
                 
-                case synth
+                case 'sigmoid'
                     
                     % delete attack segment
                     smsPlayer.A(:,1:smsPlayer.loop.points(1))   = [];

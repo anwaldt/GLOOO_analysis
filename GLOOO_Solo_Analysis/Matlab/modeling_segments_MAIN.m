@@ -23,7 +23,7 @@ restoredefaultpath
 %%  SET
 
 
-run_parallel             = 1;
+run_parallel             = 0;
 remote_results           = 0;
 
 % Decide which parts of the script should be executed:
@@ -44,11 +44,11 @@ micToDo     = 'BuK';
 
 % chose whether to process all files,
 % a single file by name, or a subset:
-filesToDo  = 'All';
-%  filesToDo  = 'SampLib_BuK_136.wav';
+% filesToDo  = 'All';
+% filesToDo  = 'SampLib_BuK_136.wav';
 % filesToDo   = 'TwoNote_BuK_04.wav';
 % filesToDo   = 'TwoNote_BuK_66.wav';
-%filesToDo  = 24;
+filesToDo  = 24;
 
 
 
@@ -168,6 +168,7 @@ end
 
 
 %% Modeling stage 1
+% 
 
 if do_modeling_segments == true
     
@@ -190,11 +191,6 @@ if do_modeling_segments == true
     end
     
 end
-
-
-%% Transition modeling LOOP
-% MORITZ:
-
 
 
 %% Single Sound Modeling

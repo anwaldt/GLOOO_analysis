@@ -22,8 +22,9 @@ if ...%exist(outName,'file') == 0 &&
     
     %% load controll and sinusoid data
     
-    % load([paths.sinusoids baseName]);
+    load([paths.sinusoids baseName]);
     load([paths.features baseName]);
+     
     
     param = CTL.param;
     
@@ -75,7 +76,7 @@ if ...%exist(outName,'file') == 0 &&
     
     %%  Analyze Segments
     
-    SEG = get_segment_parameters(SEG, CTL, param, paths);
+    SEG = get_segment_parameters(SEG, CTL, SMS,  param, paths);
     
     
     %% TODO: Write MIDI File (usable by matrix2midi)
