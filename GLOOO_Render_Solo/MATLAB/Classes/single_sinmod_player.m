@@ -497,16 +497,6 @@ classdef single_sinmod_player
                                         
                                         % directly from the distributions:
                                         
-                                        switch obj.paramSynth.vibratoMode
-                                            
-                                            case 'linear'
-                                                
-                                                obj.s2{partCNT}.a = 0.5 * ...
-                                                    (obj.s2{partCNT}.a + ...
-                                                    pick_inverse(tmpParts{partCNT}.AMP.dist', tmpParts{partCNT}.AMP.xval', 'closest') * ...
-                                                    (1+obj.vibratoModel.get_am_for_partial(obj.s2{partCNT}.f, obj.noteModel.F0.median, partCNT)));
-                                                
-                                        end
                                         
                                     case 'plain'
                                         
@@ -516,6 +506,21 @@ classdef single_sinmod_player
                                         obj.s2{partCNT}.a = tmpParts{partCNT}.AMP.med;
                                         
                                 end
+                                
+                                
+                                % now apply vibrato manipulations
+                                switch obj.paramSynth.vibratoMode
+                                    
+                                    case 'none'
+                                        
+                                    case 'linear'
+                                        
+                                        obj.s2{partCNT}.a = ...
+                                           obj.s2{partCNT}.a * ...
+                                            (1+obj.vibratoModel.get_am_for_partial(obj.s2{partCNT}.f, obj.noteModel.F0.median, partCNT));
+                                        
+                                end
+                                
                                 
                                 
                             end
