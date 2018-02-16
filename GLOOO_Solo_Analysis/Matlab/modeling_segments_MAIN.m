@@ -28,16 +28,19 @@ remote_results           = 0;
 
 % Decide which parts of the script should be executed:
 do_basic_analysis        = 1;
-do_partial_analysis      = 0;
+do_partial_analysis      = 1;
 do_modeling_segments     = 1;
 % only for single sounds:
-do_statistical_sms       = 0;
+do_statistical_sms       = 1;
 do_move_files_to_server  = 0;
 
 
+wav_dir = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Prepared/';
+
+
 % Decide which files should be processed
-% setToDo     = 'SingleSounds';
-setToDo     = 'TwoNote';
+setToDo     = 'SingleSounds';
+% setToDo     = 'TwoNote';
 
 % Decide which microphone to use
 micToDo     = 'BuK';
@@ -172,8 +175,8 @@ end
 
 if do_modeling_segments == true
     
-    parfor (fileCNT = filesToDo,parMode)
-        %              for  fileCNT = filesToDo
+    %parfor (fileCNT = filesToDo,parMode)
+        for  fileCNT = filesToDo
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);

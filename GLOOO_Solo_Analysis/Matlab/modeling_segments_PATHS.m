@@ -9,8 +9,7 @@
 %%
 
 % Set the output path for this set
-% ds = datestr(now,'yyyy-mm-dd');
-ds = '2017-08-11';
+ds = datestr(now,'yyyy-mm-dd');
 
 
 %% SET PATHS
@@ -24,20 +23,20 @@ if strcmp(setToDo,'TwoNote') ==1
         
         case 'BuK'
             outPath             = ['../Results/TwoNote/BuK/' ds '/'];
-            paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/TwoNote/BuK/';
+            paths.wavPrepared   = [wav_dir 'WAV/TwoNote/BuK/'];
             paths.server        = ['//NAS-AK/Forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/TwoNote/BuK/' ds '/'];
             paths.local         = ['../../../Violin_Library_2015/Analysis/TwoNote/BuK/' ds '/'];
             
             
         case 'DPA'
             outPath             = ['../Results/TwoNote/DPA/' ds '/'];
-            paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/TwoNote/DPA/';
+            paths.wavPrepared   = [wav_dir 'WAV/TwoNote/DPA/'];
             paths.server        = ['//NAS-AK/Forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/TwoNote/DPA/' ds '/'];
             paths.local         = ['../../../Violin_Library_2015/Analysis/TwoNote/DPA/' ds '/'];
             
     end
     
-    paths.segSV         = '../../../Violin_Library_2015/Prepared/Segments/TwoNote/';
+    paths.segSV         = [wav_dir 'Segments/TwoNote/'];
     paths.listDIR     = '../../../Violin_Library_2015/File_Lists/';
     
     
@@ -48,13 +47,13 @@ elseif strcmp(setToDo,'SingleSounds') ==1
         
         case 'DPA'
             outPath             = ['../Results/SingleSounds/DPA/' ds '/'];
-            paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/SingleSounds/DPA/';
+            paths.wavPrepared   = [wav_dir 'WAV/SingleSounds/DPA/'];
             paths.server        = ['//NAS-AK/Forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/SingleSounds/DPA/' ds '/'];
             paths.local         = ['../../../Violin_Library_2015/Analysis/SingleSounds/DPA/' ds '/'];
             
         case 'BuK'
             outPath             = ['../Results/SingleSounds/BuK/' ds '/'];
-            paths.wavPrepared   = '../../../Violin_Library_2015/Prepared/WAV/SingleSounds/BuK/';
+            paths.wavPrepared   = [wav_dir 'WAV/SingleSounds/BuK/'];
             paths.server        = ['//NAS-AK/Forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/SingleSounds/BuK/' ds '/'];
             paths.local         = ['../../../Violin_Library_2015/Analysis/SingleSounds/BuK/' ds '/'];
             
@@ -62,7 +61,8 @@ elseif strcmp(setToDo,'SingleSounds') ==1
             
     end
     
-    paths.segSV         ='../../../Violin_Library_2015/Prepared/Segments/SingleSounds/';
+        paths.segSV         = [wav_dir 'Segments/SingleSounds/'];
+
     paths.FILELISTS     = '../../../Violin_Library_2015/File_Lists/';
     
 end

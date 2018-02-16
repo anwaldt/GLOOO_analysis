@@ -39,7 +39,7 @@ if ...%exist(outName,'file') == 0 &&
         
         case 'TwoNote'
             
-            INF = load_solo_properties(regexprep(baseName,'BuK','DPA') , paths, setToDo, micToDo);
+            INF       = load_solo_properties(regexprep(baseName,'BuK','DPA') , paths, setToDo, micToDo);
             segBounds = load([paths.segSV regexprep(baseName,'BuK','DPA') '.txt']);
             
         case 'SingleSounds'

@@ -4,7 +4,8 @@
 
 % paths.inDir         = ['D:\Users\hvcoler_V2\Violin_Library_2015\WAV\SingleSounds\DPA\'];
 
-paths.inDir         = ['/home/anwaldt/Work/Violin_Library_2015/Prepared/WAV/SingleSounds/BuK/'];
+
+paths.segDIR = '../../../Violin_Library_2015/Segmentation/SingleSounds';
 
 
 paths.matDir        = [ rootDIR 'Sinusoidal_Data_MAT/Violin_2015/BuK/'];
@@ -13,8 +14,6 @@ paths.resDir        = [ rootDIR 'Residual/Violin_2015/BuK/'];
 paths.tonDir        = [ rootDIR 'Tonal/Violin_2015/BuK/'];
 paths.comDir        = [ rootDIR 'Complete/Violin_2015/BuK/'];
 
-
-paths.segDIR = '\\NAS-AK\Forschungsprojekte\Klanganalyse_und_Synthese\Violin_Library_2015\Segmentation\SingleSounds';
 
 
 %% Check for existence of paths

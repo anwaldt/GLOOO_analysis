@@ -18,7 +18,9 @@ restoredefaultpath
 
 %% OUTPUT directory
 
-rootDIR = '../Results/2/';
+paths.inDir = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Prepared/WAV/SingleSounds/DPA/';
+
+rootDIR     = '../Results/1/';
 
 
 %% SET
@@ -30,11 +32,11 @@ prepare_samples_PARAM
 
 %% Start Matlab Pool ???
 
-s = matlabpool('size');
-
-if s == 0 && param.parallel == true
-    matlabpool
-end
+% s = matlabpool('size');
+% 
+% if s == 0 && param.parallel == true
+%     matlabpool
+% end
 
 
 %% List of File Names
