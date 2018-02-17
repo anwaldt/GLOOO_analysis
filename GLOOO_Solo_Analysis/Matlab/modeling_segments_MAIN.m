@@ -1,4 +1,4 @@
-%% modelling_segments_MAIN.m
+    %% modelling_segments_MAIN.m
 %
 %   Does the solo analysis for a complete
 %   directory or a chosen subset.
