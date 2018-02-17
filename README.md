@@ -3,7 +3,7 @@ HvC
 2016-09-30
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 
-The Project constists of 4 'Sub-Projects'
+# The Project constists of 4 'Sub-Projects'
 
 	1. Sample Preparation
 	2. Solo Analysis
@@ -14,22 +14,20 @@ For working with it, the Project 'Violin_Library_2015' has
 to be cloned into the same base-directory, alongside with 
 the respective WAV-folder from the server.
 
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
-Folder/Project Descriptions:
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+# Folder/Project Descriptions:
 
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
-1: GLOOO_Sample_Preparation
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+
+## GLOOO_Sample_Preparation
+ 
 
 Sub-Project to calculate the partial trajectories for the
 single-sound sample library for a later use in the synthesis
 engine.
 
 
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
-2: GLOOO_Solo_Analysis
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+ 
+## GLOOO_Solo_Analysis
+
 
 Sub-Project to calculate and model the control- and partial trajectories 
 for the two-note library. This also includes a segment-wise analysis.
@@ -51,27 +49,23 @@ containing the following folders:
 	Tonal/		Wav files containing the tonal signal
 
 
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
-3: IFFT_Synthesis
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
-
+## IFFT_Synthesis
+ 
 This sub-project generates the main-lobe kernels for the IFFT synthesis,
 which are needed in the 'GLOOO_Render_Solo', if set to IFFT-mode.
 
 
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
-4: GLOOO_Render_Solo
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+ 
+## GLOOO_Render_Solo
+ 
 
 Sub-Project for rendering a solo, based on the analysis results of 
 'GLOOO_Solo_Analysis'.
 
 
 
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
-MATLAB
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
-
+ ## MATLAB
+ 
 Scripts shared by the sub-projects.
 
 
