@@ -17,8 +17,10 @@ the respective WAV-folder from the server.
 # Folder/Project Descriptions:
 
 
-## GLOOO_Sample_Preparation
+## `GLOOO_Sample_Preparation`
  
+This part is now obsolete -
+`GLOOO_Solo_Analysis` does this, too!
 
 Sub-Project to calculate the partial trajectories for the
 single-sound sample library for a later use in the synthesis
@@ -26,7 +28,7 @@ engine.
 
 
  
-## GLOOO_Solo_Analysis
+## `GLOOO_Solo_Analysis`
 
 
 Sub-Project to calculate and model the control- and partial trajectories 
@@ -34,9 +36,9 @@ for the two-note library. This also includes a segment-wise analysis.
 
 It contains three folders:
 
-	BASH/		
-	Matlab/
-	Results/
+	`BASH/`	
+	`Matlab/`
+	`Results/`
 
 Once a complete analyis is performed, a subdir is created in Results,
 containing the following folders:
@@ -56,15 +58,15 @@ which are needed in the 'GLOOO_Render_Solo', if set to IFFT-mode.
 
 
  
-## GLOOO_Render_Solo
+## `GLOOO_Render_Solo`
  
 
 Sub-Project for rendering a solo, based on the analysis results of 
-'GLOOO_Solo_Analysis'.
+`GLOOO_Solo_Analysis`.
 
 
 
- ## MATLAB
+ ## `MATLAB`
  
 Scripts shared by the sub-projects.
 
