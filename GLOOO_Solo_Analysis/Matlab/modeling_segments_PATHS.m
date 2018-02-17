@@ -48,13 +48,13 @@ elseif strcmp(setToDo,'SingleSounds') ==1
         case 'DPA'
             outPath             = ['../Results/SingleSounds/DPA/' ds '/'];
             paths.wavPrepared   = [wav_dir 'WAV/SingleSounds/DPA/'];
-            paths.server        = ['//NAS-AK/Forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/SingleSounds/DPA/' ds '/'];
+            paths.server        = ['/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/SingleSounds/DPA/' ds '/'];
             paths.local         = ['../../../Violin_Library_2015/Analysis/SingleSounds/DPA/' ds '/'];
             
         case 'BuK'
             outPath             = ['../Results/SingleSounds/BuK/' ds '/'];
             paths.wavPrepared   = [wav_dir 'WAV/SingleSounds/BuK/'];
-            paths.server        = ['//NAS-AK/Forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/SingleSounds/BuK/' ds '/'];
+            paths.server        = ['/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/SingleSounds/BuK/' ds '/'];
             paths.local         = ['../../../Violin_Library_2015/Analysis/SingleSounds/BuK/' ds '/'];
             
             

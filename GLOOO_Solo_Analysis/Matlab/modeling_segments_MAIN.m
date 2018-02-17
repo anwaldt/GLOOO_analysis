@@ -50,8 +50,8 @@ micToDo     = 'BuK';
 % filesToDo  = 'All';
 % filesToDo  = 'SampLib_BuK_136.wav';
 % filesToDo   = 'TwoNote_BuK_04.wav';
-% filesToDo   = 'TwoNote_BuK_66.wav';
-filesToDo  = 24;
+filesToDo   = 'SampLib_BuK_01.wav';
+%filesToDo  = 24;
 
 
 
