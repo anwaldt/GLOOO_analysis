@@ -23,7 +23,7 @@ restoredefaultpath
 %%  SET
 
 
-run_parallel             = 0;
+run_parallel             = 1;
 remote_results           = 0;
 
 % Decide which parts of the script should be executed:
@@ -35,7 +35,7 @@ do_statistical_sms       = 1;
 do_move_files_to_server  = 0;
 
 
-wav_dir = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Prepared/';
+wav_dir = '../../../Violin_Library_2015/Prepared/';
 
 
 % Decide which files should be processed
@@ -47,10 +47,10 @@ micToDo     = 'BuK';
 
 % chose whether to process all files,
 % a single file by name, or a subset:
-% filesToDo  = 'All';
+ filesToDo  = 'All';
 % filesToDo  = 'SampLib_BuK_136.wav';
 % filesToDo   = 'TwoNote_BuK_04.wav';
-filesToDo   = 'SampLib_BuK_01.wav';
+%filesToDo   = 'SampLib_BuK_01.wav';
 %filesToDo  = 24;
 
 
@@ -154,8 +154,8 @@ end
 
 if do_partial_analysis == true
     
-%     parfor (fileCNT = filesToDo,parMode)
-        for fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+  %      for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);
@@ -175,8 +175,8 @@ end
 
 if do_modeling_segments == true
     
-    %parfor (fileCNT = filesToDo,parMode)
-        for  fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+    %    for  fileCNT = filesToDo
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);
