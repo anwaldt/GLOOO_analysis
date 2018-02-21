@@ -6,7 +6,7 @@
 % Henrik von Coler
 % 2014-02-17
 
-function [transModel] = analyze_transition(transModel, CTL, SMS, param )
+function [transModel] = analyze_transition(transModel, CTL, SMS, INF, param )
 
 if param.info == true
     disp('    analyze_transition(): Starting...');
@@ -40,6 +40,9 @@ transModel.F0.strength      = CTL.pitchStrenght(featStartInd:featStopInd);
 % [h,x] = hist(f0seg,xVal);
 
 
+% f0 Interpolation
+transModel.F0.interpolation = interpolate_f0(f0seg, INF, param,false);
+
 f0seg = upfirdn(f0seg,4);
 
 transModel.F0.median = median(f0seg);
@@ -63,6 +66,9 @@ F = polyval(P,(1:length(AmpSeg))');
 % plot(AmpSeg),hold on, plot(F,'r'), hold off
 
 transModel.AMP.polynom = P;
+
+% Interpolate the amplitude
+transModel.AMP.interpolation = interpolate_amp(AmpSeg,param.AMP.numPoints,false);;
 
 transModel.startIND = featStartInd;
 transModel.stopIND  = featStopInd;

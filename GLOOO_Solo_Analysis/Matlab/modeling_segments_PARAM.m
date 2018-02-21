@@ -43,6 +43,11 @@ param.F0decomp.tresh1       = 0.1;
 param.F0decomp.cutHighHZ    = 1;
 param.F0decomp.cutLowHZ     = 10;
 
+%% Interpolation
+
+param.F0.numPoints   = 5; % min 5, max 12
+
+param.AMP.numPoints  = 5; % min 5, max 12
 
 %% Partial tracking
 

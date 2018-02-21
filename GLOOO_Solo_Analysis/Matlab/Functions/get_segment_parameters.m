@@ -9,7 +9,7 @@
 %
 %%
 
-function  [SEG] = get_segment_parameters(SEG, CTL, SMS, param, paths)
+function  [SEG] = get_segment_parameters(SEG, CTL, SMS, INF, param, paths)
 
 if param.info == true
     disp('    get_segment_parameters(): Starting...');
@@ -33,7 +33,7 @@ for segCNT = 1:nSeg
             tmpSeg = analyze_note(tmpSeg, CTL, param, paths);
             
         case 'trans'
-            tmpSeg = analyze_transition(tmpSeg, CTL, SMS, param);
+            tmpSeg = analyze_transition(tmpSeg, CTL, SMS, INF, param);
             
         otherwise
             error('Unknown Segment Type!');
