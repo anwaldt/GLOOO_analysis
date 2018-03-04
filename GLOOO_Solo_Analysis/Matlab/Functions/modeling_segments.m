@@ -76,7 +76,7 @@ if ...%exist(outName,'file') == 0 &&
     
     %%  Analyze Segments
     
-    SEG = get_segment_parameters(SEG, CTL, SMS,  param, paths);
+    SEG = get_segment_parameters(SEG, CTL, SMS, INF,  param, paths);
     
     
     %% TODO: Write MIDI File (usable by matrix2midi)
