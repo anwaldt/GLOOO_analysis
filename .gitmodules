@@ -1,0 +1,3 @@
+[submodule "MATLAB/orchidas/Pitch-Tracking"]
+	path = MATLAB/orchidas/Pitch-Tracking
+	url = https://github.com/orchidas/Pitch-Tracking.git

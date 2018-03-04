@@ -130,8 +130,8 @@ end
 
 if do_basic_analysis == true
     
-    parfor (fileCNT = filesToDo,parMode)
-        %for fileCNT = filesToDo
+    %parfor (fileCNT = filesToDo,parMode)
+    for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);

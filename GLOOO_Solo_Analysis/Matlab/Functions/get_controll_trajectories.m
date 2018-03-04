@@ -21,7 +21,7 @@ L                   = length(x);
 nWin                = floor((L)/param.lHop);
 features.rmsVec     = zeros(nWin,1);
 
-%% Filter input for better results 
+%% Filter input for better results
 if param.info == true
     disp('    get_controll_trajectories(): prefilter input with bandpass');
 end
@@ -32,26 +32,26 @@ filter_type = 'fir';
 %cent_deviation = 200;
 % f_interval = get_f_interval(INF,cent_deviation);
 % Wn = f_interval/(fs/2);
-% 
+%
 % % Calculate Filter Coefficients
 % if strcmp(filter_type,'iir') == true;
-%     
+%
 %     order = 6;
-%     
+%
 %     [B_high,A_high] = butter(order,Wn(1),'high');
 %     [B_low,A_low]   = butter(order,Wn(2),'low');
-%     
+%
 % elseif strcmp(filter_type,'fir') == true;
-%     
+%
 %     order = 4096;
-% 
+%
 %     B_high = fir1(order,Wn(1),'high');
 %     B_low  = fir1(order,Wn(2),'low');
 %     A_high = 1;
 %     A_low = 1;
 % end
 
-% Filter Signal 
+% Filter Signal
 %x = filter(B_low,A_low,x);
 %x = filter(B_high,A_high,x);
 
@@ -69,7 +69,7 @@ sTHR     = param.F0.minStrength;  % swipe default: -inf
 
 cent = 100;
 % every iteration for swipe cent gets multiplicated with this factor
-cent_iteration_factor = 3; 
+cent_iteration_factor = 3;
 % Maximum Iterations for SWIPE Calcluation
 maxTry = 3;
 
@@ -87,10 +87,10 @@ for iTry = 1: maxTry
     
     % Check Result:
     % Known Issue: swipeVec values are all the same (check deviation)
-    swipeVec_dev = std(swipeVec);    
+    swipeVec_dev = std(swipeVec);
     ps_sum = sum(ps);
     
-    % If deviation smaller than epsilon than we can assume that its false 
+    % If deviation smaller than epsilon than we can assume that its false
     if ( swipeVec_dev < 1e-5 || isnan(swipeVec_dev) ) && ps_sum == 0
         %try again with lager cent deviation
         cent = cent * cent_iteration_factor;
@@ -102,17 +102,17 @@ for iTry = 1: maxTry
         end
     else
         if param.info == true
-            disp(['    get_controll_trajectories(): Found correct f0 with SWIPE' ... 
-                    ' after ' num2str(iTry) ' Iterations.']);
+            disp(['    get_controll_trajectories(): Found correct f0 with SWIPE' ...
+                ' after ' num2str(iTry) ' Iterations.']);
         end
         break;
     end
 end
 
- 
+
 features.f0swipe        = swipeVec(1:nWin);
 features.pitchStrenght  = ps;
- 
+
 
 %% RMS
 if param.info == true
