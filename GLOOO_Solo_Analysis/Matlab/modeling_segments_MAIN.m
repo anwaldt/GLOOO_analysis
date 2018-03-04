@@ -1,4 +1,4 @@
-    %% modelling_segments_MAIN.m
+%% modelling_segments_MAIN.m
 %
 %   Does the solo analysis for a complete
 %   directory or a chosen subset.
@@ -11,8 +11,8 @@
 %
 % Created: 2014-02-17
 % Edited : 2016-08-08
-
-
+%
+%
 %% RESET
 
 close all
@@ -23,6 +23,10 @@ restoredefaultpath
 %%  SET
 
 
+
+% Set the (output) path for this set
+ds = datestr(now,'yyyy-mm-dd');
+
 run_parallel             = 1;
 remote_results           = 0;
 
@@ -30,13 +34,12 @@ remote_results           = 0;
 do_basic_analysis        = 1;
 do_partial_analysis      = 1;
 do_modeling_segments     = 1;
+
 % only for single sounds:
 do_statistical_sms       = 1;
 do_move_files_to_server  = 0;
 
-
-wav_dir = '../../../Violin_Library_2015/Prepared/';
-
+ 
 
 % Decide which files should be processed
 setToDo     = 'SingleSounds';
@@ -47,23 +50,17 @@ micToDo     = 'BuK';
 
 % chose whether to process all files,
 % a single file by name, or a subset:
- filesToDo  = 'All';
+% filesToDo  = 'All';
 % filesToDo  = 'SampLib_BuK_136.wav';
 % filesToDo   = 'TwoNote_BuK_04.wav';
-%filesToDo   = 'SampLib_BuK_01.wav';
-%filesToDo  = 24;
+ filesToDo   = 'SampLib_BuK_301.wav';
 
 
-
-
-% set another path to use the results from the server
-% outPath = '/mnt/forschungsprojekte/Klanganalyse_und_Synthese/Violin_Library_2015/Analysis/2017-03-26/';
-
-
+ 
 %% PARAMETERS AND PATHS
 
 modeling_segments_STARTUP
-modeling_segments_PATHS
+GLOOO_PATHS
 modeling_segments_PARAM
 
 %% start and manage pool
@@ -99,7 +96,6 @@ for n = 1:length(directoryFiles);
         validFileidx = validFileidx + 1;
     end
 end
-
 
 % resort filenames
 numVec              = regexprep(fileNames,'SampLib_DPA_','');

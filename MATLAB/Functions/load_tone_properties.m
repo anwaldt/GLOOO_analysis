@@ -11,7 +11,7 @@ function I = load_tone_properties(baseName, paths, setToDo, micToDo);
 tuningFreq = 443;
 
 % load file
-f1 = fopen([paths.FILELISTS 'list_Single.txt'],'r');
+f1 = fopen([paths.listDIR 'list_Single.txt'],'r');
 A  = textscan(f1,'%s %s %s %s %s %s',inf);
 fclose(f1);
 

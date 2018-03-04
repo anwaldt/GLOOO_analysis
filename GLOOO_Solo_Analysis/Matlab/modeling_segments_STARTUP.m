@@ -6,6 +6,8 @@
 % 2014-02-17
 %%
 
+addpath('../../../common');
+
 addpath('../../MATLAB/SWIPE/');
 addpath('../../MATLAB/yaml/');
 addpath('../../MATLAB/Functions/');
