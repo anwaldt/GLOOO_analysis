@@ -110,8 +110,24 @@ for iTry = 1: maxTry
 end
 
 
-features.f0swipe        = swipeVec(1:nWin);
-features.pitchStrenght  = ps;
+features.f0.swipe.f0       = swipeVec(1:nWin);
+features.f0.swipe.strength = ps;
+
+
+%% orchidas pitch collection
+
+
+[f0_eckf,amp_eckf,phase_eckf,x_est_eckf] = eckf_pitch(x',fs,0.01,1);
+
+features.f0.eckf.f0     = f0_eckf; 
+features.f0.eckf.amp    = amp_eckf; 
+features.f0.eckf.phase  = phase_eckf;
+features.f0.eckf.x_est  = x_est_eckf; 
+
+[t_yin,f0_yin] = yin_estimator(x',fs);
+
+features.f0.yin.t  = t_yin;
+features.f0.yin.f0 = f0_yin;
 
 
 %% RMS

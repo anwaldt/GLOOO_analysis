@@ -36,7 +36,7 @@ do_partial_analysis      = 1;
 do_modeling_segments     = 1;
 
 % only for single sounds:
-do_statistical_sms       = 1;
+do_statistical_sms       = 0;
 do_move_files_to_server  = 0;
 
  
@@ -50,11 +50,12 @@ micToDo     = 'BuK';
 
 % chose whether to process all files,
 % a single file by name, or a subset:
-% filesToDo  = 'All';
+
+filesToDo  = 'All';
 % filesToDo  = 'SampLib_BuK_136.wav';
 % filesToDo   = 'TwoNote_BuK_04.wav';
- filesToDo   = 'SampLib_BuK_301.wav';
-
+% filesToDo   = 'SampLib_BuK_301.wav';
+% filesToDo   = 'SampLib_BuK_332.wav';
 
  
 %% PARAMETERS AND PATHS
@@ -89,7 +90,7 @@ directoryFiles = dir(paths.wavPrepared);
 validFileidx    = 1;
 fileNames       = cell(1);
 
-for n = 1:length(directoryFiles);
+for n = 1:length(directoryFiles)
     [pathstr,name,ext] = fileparts(directoryFiles(n).name);
     if strcmp(ext,'.wav')
         fileNames{validFileidx} = directoryFiles(n).name;
@@ -130,8 +131,8 @@ end
 
 if do_basic_analysis == true
     
-    %parfor (fileCNT = filesToDo,parMode)
-    for fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+    % for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);
