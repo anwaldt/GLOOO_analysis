@@ -40,11 +40,10 @@ if 1%exist(partialName,'file') == 0
     
     % only calculate, if not existent
     %
-    psVec = (smooth(CTL.pitchStrenght,100));
+    psVec = (smooth(CTL.f0.swipe.strength,100));
     
-    [f0vec, SMS, noiseFrames, residual, tonal]  = get_partial_trajectories(x, param, CTL.f0swipe, psVec);
-    
-    
+    [f0vec, SMS, noiseFrames, residual, tonal]  = get_partial_trajectories(x, param, CTL);
+     
     SMS.param = param;
     
     save(partialName, 'SMS');

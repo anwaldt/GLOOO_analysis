@@ -9,7 +9,7 @@
 %   2014-12-10
 %%
 
-function [f0vec, SMS, noiseSynth,  resVec, tonalVec] = get_partial_trajectories(x, param, f0vec, psVec)
+function [f0vec, SMS, noiseSynth,  resVec, tonalVec] = get_partial_trajectories(x, param, CTL)
 
 
 
@@ -69,6 +69,8 @@ lastPartials = [];
 percent_done = 5;
 percent_interval = 10;
 
+ 
+
 for frameCNT = frameStart:nFrames-1
    
      if param.PART.info == true && floor(frameCNT/nFrames*10000)/100 > percent_done        
@@ -102,8 +104,19 @@ for frameCNT = frameStart:nFrames-1
     if nargin<3
         f0est           = get_f0_autocorr_peakpick(frame, param.fs, param.upsampFactor,f0_min, f0_max);
         f0vec(frameCNT) = f0est;
+
     else
-        f0est = f0vec(frameCNT);
+        
+        t = sampleIDX/param.fs;
+  
+        tmpIdx = min(abs(CTL.f0.yin.t-t));
+        
+        f0est = CTL.f0.yin.f0(tmpIdx+1);
+        
+ %       f0est = CTL.f0.swipe.f0(frameCNT);
+  
+ 
+        f0vec(frameCNT) = f0est;
     end
     
     % get partials parameters (if f0 is valid)
@@ -112,7 +125,7 @@ for frameCNT = frameStart:nFrames-1
         % call the main analysis function for each frame
         % ONLY if the pitch strength is above threshold
         
-        if psVec(frameCNT) > param.PART.psThresh
+        if CTL.f0.swipe.strength(frameCNT) > param.PART.psThresh
             
             [tmpPartials,resFrame,sinusoidal] = ...
                 get_partial_frame(frame, lastPartials, f0est, param);
