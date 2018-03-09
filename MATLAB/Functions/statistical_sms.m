@@ -63,7 +63,7 @@ for partCNT = 1:param.PART.nPartials
     fS      = fSteady(partCNT,: );
     
     % normalize to: deviation from f / (f0*N)
-    fS      = fS./ mean(CTL.f0swipe(startSamp:stopSamp))'./partCNT;
+    fS      = fS./ mean(CTL.f0.swipe.f0(startSamp:stopSamp))'./partCNT;
     
     % decompose ?!
     
@@ -158,7 +158,7 @@ for partCNT = 1:param.PART.nPartials
     
     % partial frequencies
     tmpF    = SMS.FRE(partCNT,1:startSamp);
-    tmpVal  = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
+    tmpVal  = tmpF./mean(CTL.f0.swipe.f0(startSamp:stopSamp))./partCNT;
     tmpVal  = tmpVal./tmpVal(end);
     
     eval(['ATT.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
@@ -194,7 +194,7 @@ for partCNT = 1:param.PART.nPartials
     
     % partial frequencies
     tmpF    = SMS.FRE(partCNT,stopSamp:end);
-    tmpVal  = tmpF./mean(CTL.f0swipe(startSamp:stopSamp))./partCNT;
+    tmpVal  = tmpF./mean(CTL.f0.swipe.f0(startSamp:stopSamp))./partCNT;
     tmpVal  = tmpVal./tmpVal(1);
     
     eval(['REL.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);

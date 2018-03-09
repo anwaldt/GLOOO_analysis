@@ -109,11 +109,11 @@ for frameCNT = frameStart:nFrames-1
         
         t = sampleIDX/param.fs;
   
-        tmpIdx = min(abs(CTL.f0.yin.t-t));
+        %tmpIdx = min(abs(CTL.f0.yin.t-t));
         
-        f0est = CTL.f0.yin.f0(tmpIdx+1);
+        %f0est = CTL.f0.yin.f0(tmpIdx+1);
         
- %       f0est = CTL.f0.swipe.f0(frameCNT);
+        f0est = CTL.f0.swipe.f0(frameCNT);
   
  
         f0vec(frameCNT) = f0est;

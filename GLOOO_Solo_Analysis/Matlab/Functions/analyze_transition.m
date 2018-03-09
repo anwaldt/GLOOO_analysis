@@ -16,7 +16,7 @@ end
 switch param.F0.f0Mode
 
     case 'swipe'
-        f0vec = CTL.f0swipe;
+        f0vec = CTL.f0.swipe.f0;
     
     case 'yin'
         f0vec = CTL.f0yin;
@@ -35,7 +35,7 @@ featStopInd  = min(length(f0vec),     round(stop  /(param.lHop/param.fs)));
 f0seg                       = f0vec(featStartInd:featStopInd);
 
 transModel.F0.trajectory    = f0seg;
-transModel.F0.strength      = CTL.pitchStrenght(featStartInd:featStopInd);
+transModel.F0.strength      = CTL.f0.swipe.strength(featStartInd:featStopInd);
 % xVal = linspace(min(f0seg),max(f0seg),round(length(f0seg)/5));
 % [h,x] = hist(f0seg,xVal);
 

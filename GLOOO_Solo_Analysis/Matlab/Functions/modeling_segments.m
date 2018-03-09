@@ -50,7 +50,7 @@ if ...%exist(outName,'file') == 0 &&
                 'xxx'    
             end
             
-            f1 = fopen([paths.segSV regexprep(baseName,'BuK','DPA') '.txt']);
+            f1 = fopen([paths.segmentationPrepared regexprep(baseName,'BuK','DPA') '.txt']);
             segBounds = textscan(f1,'%f %s' );
             fclose(f1);
             
