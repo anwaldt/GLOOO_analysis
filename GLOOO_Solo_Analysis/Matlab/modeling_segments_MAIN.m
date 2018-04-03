@@ -26,7 +26,7 @@ restoredefaultpath
 
 % Set the (output) path for this set
 ds = datestr(now,'yyyy-mm-dd');
-ds = '2018-03-06';
+%ds = '2018-03-06';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
@@ -36,11 +36,11 @@ remote_results           = 0;
 
 % Decide which parts of the script should be executed:
 do_basic_analysis        = 0;
-do_partial_analysis      = 0;
+do_partial_analysis      = 1;
 do_modeling_segments     = 1;
 
 % only for single sounds:
-do_statistical_sms       = 0;
+do_statistical_sms       = 1;
 
 do_move_files_to_server  = 0;
 
@@ -49,8 +49,8 @@ do_move_files_to_server  = 0;
 setToDo     = 'TwoNote';
 
 % Decide which microphone to use
-% micToDo     = 'DPA';
-micToDo     = 'BuK';
+micToDo     = 'DPA';
+%akvmicToDo     = 'BuK';
 
 % chose whether to process all files,
 % a single file by name, or a subset:
