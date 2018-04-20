@@ -26,21 +26,21 @@ restoredefaultpath
 
 % Set the (output) path for this set
 ds = datestr(now,'yyyy-mm-dd');
-%ds = '2018-03-06';
+ds = '2018-04-03';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
-run_parallel             = 1;
+run_parallel             = 0;
 
 remote_results           = 0;
 
 % Decide which parts of the script should be executed:
-do_basic_analysis        = 0;
+do_basic_analysis        = 1;
 do_partial_analysis      = 1;
 do_modeling_segments     = 1;
 
 % only for single sounds:
-do_statistical_sms       = 1;
+do_statistical_sms       = 0;
 
 do_move_files_to_server  = 0;
 
@@ -55,12 +55,18 @@ micToDo     = 'DPA';
 % chose whether to process all files,
 % a single file by name, or a subset:
 
-filesToDo  = 'All';
+%filesToDo  = 'All';
 % filesToDo  = 'SampLib_BuK_136.wav';
 % filesToDo   = 'TwoNote_BuK_04.wav';
 % filesToDo   = 'SampLib_BuK_301.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';
-
+filesToDo = {'TwoNote_DPA_18.wav',
+    'TwoNote_DPA_19.wav',
+    'TwoNote_DPA_65.wav',
+    'TwoNote_DPA_66.wav',
+    'TwoNote_DPA_113.wav',
+    'TwoNote_DPA_137.wav',
+    'TwoNote_DPA_186.wav'};
 
 %% PARAMETERS AND PATHS
 
@@ -102,7 +108,7 @@ for n = 1:length(directoryFiles)
     end
 end
 
-% resort filenames
+% re-sort filenames
 numVec              = regexprep(fileNames,'SampLib_DPA_','');
 numVec              = regexprep(fileNames,'SampLib_BuK_','');
 numVec              = regexprep(fileNames,'TwoNote_DPA_','');
@@ -127,6 +133,18 @@ else
         end
         
     end
+    
+    if iscell(filesToDo)
+        
+        tmp = zeros(size(filesToDo));
+        
+        for i=1:length(tmp)
+            tmp(i) =  find(ismember(fileNames,filesToDo{i}));
+        end
+        
+        filesToDo = sort(tmp)';
+        
+    end
 end
 
 
@@ -135,8 +153,8 @@ end
 
 if do_basic_analysis == true
     
-    parfor (fileCNT = filesToDo,parMode)
-        % for fileCNT = filesToDo
+%     parfor (fileCNT = filesToDo,parMode)
+         for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);
@@ -155,8 +173,8 @@ end
 
 if do_partial_analysis == true
     
-    parfor (fileCNT = filesToDo,parMode)
-        %      for fileCNT = filesToDo
+%     parfor (fileCNT = filesToDo,parMode)
+              for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);
@@ -178,8 +196,8 @@ end
 
 if do_modeling_segments == true
     
-    parfor (fileCNT = filesToDo,parMode)
-        %    for  fileCNT = filesToDo
+%     parfor (fileCNT = filesToDo,parMode)
+           for  fileCNT = filesToDo
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);

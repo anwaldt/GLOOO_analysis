@@ -19,7 +19,9 @@ switch param.F0.f0Mode
         f0vec = CTL.f0.swipe.f0;
     
     case 'yin'
-        f0vec = CTL.f0yin;
+        f0vec = CTL.f0.yin.f0;
+    case 'eckf'
+        f0vec = CTL.f0.eckf.f0;
 
 end
 

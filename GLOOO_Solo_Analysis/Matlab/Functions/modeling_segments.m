@@ -16,8 +16,8 @@ function [] = modeling_segments(baseName, paths, setToDo, micToDo)
 
 outName = [paths.segments baseName '.mat'];
 
-if ...%exist(outName,'file') == 0 &&  
-    exist([paths.features baseName '.mat'],'file') ~= 0 
+if 1%...%exist(outName,'file') == 0 &&  
+    %exist([paths.features baseName '.mat'],'file') ~= 0 
     
     
     %% load controll and sinusoid data
