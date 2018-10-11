@@ -26,7 +26,7 @@ restoredefaultpath
 
 % Set the (output) path for this set
 ds = datestr(now,'yyyy-mm-dd');
-ds = '2018-04-03';
+ds = '2018-09-01';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
@@ -60,13 +60,7 @@ micToDo     = 'DPA';
 % filesToDo   = 'TwoNote_BuK_04.wav';
 % filesToDo   = 'SampLib_BuK_301.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';
-filesToDo = {'TwoNote_DPA_18.wav',
-    'TwoNote_DPA_19.wav',
-    'TwoNote_DPA_65.wav',
-    'TwoNote_DPA_66.wav',
-    'TwoNote_DPA_113.wav',
-    'TwoNote_DPA_137.wav',
-    'TwoNote_DPA_186.wav'};
+filesToDo = {'TwoNote_DPA_18.wav'};
 
 %% PARAMETERS AND PATHS
 
