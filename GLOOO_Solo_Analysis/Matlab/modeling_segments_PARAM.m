@@ -14,6 +14,10 @@
 
 %% BASIC PARAMTERS
 
+% not implemented, yet:
+param.MACHINE     = 'Wintermute';
+
+
 param.plotit      = false;
 param.saveit      = true;
 param.info        = true;
@@ -31,9 +35,10 @@ param.lWinNoise     = 2^12;
 
 %% F0 ANALYSIS
 
-%param.F0.f0Mode         = 'swipe';
+param.F0.f0Mode         = 'swipe';
 %param.F0.f0Mode         = 'eckf';
-param.F0.f0Mode         = 'yin';
+%param.F0.f0Mode         = 'yin';
+
 param.F0.lWinYIN        = 2^13;
 param.F0.lWinF0         = 2^13;
 

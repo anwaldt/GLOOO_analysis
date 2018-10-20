@@ -26,41 +26,41 @@ restoredefaultpath
 
 % Set the (output) path for this set
 ds = datestr(now,'yyyy-mm-dd');
-ds = '2018-09-01';
+%ds = '2018-09-01';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
-run_parallel             = 0;
+run_parallel             = 1;
 
 remote_results           = 0;
 
 % Decide which parts of the script should be executed:
-do_basic_analysis        = 1;
-do_partial_analysis      = 1;
+do_basic_analysis        = 0;
+do_partial_analysis      = 0;
 do_modeling_segments     = 1;
 
 % only for single sounds:
-do_statistical_sms       = 0;
+do_statistical_sms       = 1;
 
 do_move_files_to_server  = 0;
 
 % Decide which files should be processed
-% setToDo     = 'SingleSounds';
-setToDo     = 'TwoNote';
+setToDo     = 'SingleSounds';
+% setToDo     = 'TwoNote';
 
 % Decide which microphone to use
-micToDo     = 'DPA';
-%akvmicToDo     = 'BuK';
+%micToDo     = 'DPA';
+micToDo     = 'BuK';
 
 % chose whether to process all files,
 % a single file by name, or a subset:
 
-%filesToDo  = 'All';
+filesToDo  = 'All';
 % filesToDo  = 'SampLib_BuK_136.wav';
 % filesToDo   = 'TwoNote_BuK_04.wav';
 % filesToDo   = 'SampLib_BuK_301.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';
-filesToDo = {'TwoNote_DPA_18.wav'};
+%filesToDo = {'TwoNote_DPA_18.wav'};
 
 %% PARAMETERS AND PATHS
 
@@ -147,8 +147,8 @@ end
 
 if do_basic_analysis == true
     
-%     parfor (fileCNT = filesToDo,parMode)
-         for fileCNT = filesToDo
+     parfor (fileCNT = filesToDo,parMode)
+         %for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);
@@ -167,8 +167,8 @@ end
 
 if do_partial_analysis == true
     
-%     parfor (fileCNT = filesToDo,parMode)
-              for fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+%              for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);
@@ -190,7 +190,7 @@ end
 
 if do_modeling_segments == true
     
-%     parfor (fileCNT = filesToDo,parMode)
+     %parfor (fileCNT = filesToDo,parMode)
            for  fileCNT = filesToDo
         
         if param.info == true

@@ -37,8 +37,10 @@ featStopInd  = min(length(f0vec),     round(stop  /(param.lHop/param.fs)));
 f0seg                       = f0vec(featStartInd:featStopInd);
 
 transModel.F0.trajectory    = f0seg;
+
 transModel.F0.strength      = CTL.f0.swipe.strength(featStartInd:featStopInd);
-% xVal = linspace(min(f0seg),max(f0seg),round(length(f0seg)/5));
+
+% xVal  = linspace(min(f0seg),max(f0seg),round(length(f0seg)/5));
 % [h,x] = hist(f0seg,xVal);
 
 

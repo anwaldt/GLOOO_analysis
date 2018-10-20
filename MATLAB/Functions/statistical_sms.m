@@ -239,7 +239,7 @@ MOD.ATT = ATT;
 MOD.SUS = SUS;
 MOD.REL = REL;
 
-YAMLname = [paths.statSMS baseName '.yml'];
+YAMLname = [paths.yaml baseName '.yml'];
 %S = YAML.dump(MOD);
 YAML.write(YAMLname,MOD);
 
