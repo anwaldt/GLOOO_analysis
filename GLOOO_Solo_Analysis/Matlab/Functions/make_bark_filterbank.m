@@ -34,7 +34,7 @@ for i=1:nFilters
 
     [b,a] = cheby1(order, 3,[edges(i)/fs, edges(i+1)/fs]);
 
-    freqz(b,a)
+    %freqz(b,a)
     
     coeff.b=b;
     coeff.a=a;

@@ -20,7 +20,7 @@ nFrames     = floor((nSamples-param.PART.lWin)/param.lHop);
 
 % allocate output vectors
 resVec       = zeros(size(x));
-noiseSynth  = zeros(nFrames,param.PART.lWin/2);
+noiseSynth  = zeros(nFrames,param.PART.lWin);
 tonalVec       = zeros(size(x));
 nSamples    = length(x);
 
@@ -146,8 +146,11 @@ for frameCNT = frameStart:nFrames-1
         
         % calculate the distribution of the residual
         % noiseSynth(idxs)   = noiseSynth(idxs) + get_residual_distribution(residual);
-        noiseSynth(frameCNT,:) =  get_residual_distribution(resFrame);
-        
+        %noiseSynth(frameCNT,:) =  get_residual_distribution(resFrame);
+                
+        noiseSynth(frameCNT,:) =   resFrame;
+                
+
         %% reassamble residual
         %         if length(idxsPEAK)<param.lWinSynthPEAK
         %             FRAMEres = FRAMEres(1:length(idxsPEAK));
@@ -201,25 +204,6 @@ for frameCNT = frameStart:nFrames-1
    
 end
 
-%% Get statistical values for each partial's f0-deviation
-%
-%   IS NOT USED, NOW
-%
-% for partCnt = 1:param.nPartials
-%
-%     tmp     = partialFre(partCnt,:)/partCnt;
-%
-%     tmpDev  = partialFre(1,:)./tmp;
-%
-%     tmpDev(isnan(tmpDev))=[];
-%     tmpDev(isinf(tmpDev))=[];
-%
-%     xx      = linspace(min(tmpDev),max(tmpDev),20);
-%     tmpStd  = std(tmpDev);
-%     [N,X]   = hist(tmp,xx);
-%
-%     plot(X,N)
-% end
 
 %%
 

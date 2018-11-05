@@ -35,15 +35,18 @@ if 1%exist(partialName,'file') == 0
     
     
     %% CALL the Partial Analysis
-    
-    
-    
+        
     % only calculate, if not existent
     %
     psVec = (smooth(CTL.f0.swipe.strength,100));
     
     [f0vec, SMS, noiseFrames, residual, tonal]  = get_partial_trajectories(x, param, CTL);
      
+           
+    [BET]  = get_residual_trajectories(noiseFrames, param, CTL);
+
+    SMS.BET = BET;
+    
     SMS.param = param;
     
     save(partialName, 'SMS');
