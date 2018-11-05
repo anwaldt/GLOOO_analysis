@@ -35,8 +35,8 @@ run_parallel             = 1;
 remote_results           = 0;
 
 % Decide which parts of the script should be executed:
-do_basic_analysis        = 0;
-do_partial_analysis      = 0;
+do_basic_analysis        = 1;
+do_partial_analysis      = 1;
 do_modeling_segments     = 1;
 
 % only for single sounds:
