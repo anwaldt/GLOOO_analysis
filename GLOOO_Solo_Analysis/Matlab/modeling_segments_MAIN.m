@@ -25,8 +25,8 @@ restoredefaultpath
 
 
 % Set the (output) path for this set
-% ds = datestr(now,'yyyy-mm-dd');
-ds = '2018-11-05';
+ ds = datestr(now,'yyyy-mm-dd');
+%ds = '2018-11-05';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
@@ -38,9 +38,9 @@ remote_results           = 0;
 
 
 % Decide which parts of the script should be executed:
-do_basic_analysis        = 0;
-do_partial_analysis      = 0;
-do_modeling_segments     = 0;
+do_basic_analysis        = 1;
+do_partial_analysis      = 1;
+do_modeling_segments     = 1;
 
 % only for single sounds:
 do_statistical_sms       = 1;
