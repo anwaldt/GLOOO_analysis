@@ -68,7 +68,7 @@ for partCNT = 1:param.PART.nPartials
     % decompose ?!
     
     
-     tmpMed  = median(fS);
+    tmpMed  = median(fS);
     tmpMean = mean(fS);
     tmpStd  = std(fS);
     
@@ -145,16 +145,16 @@ for partCNT = 1:param.PART.nPartials
     eval(['SUS.P_' num2str(partCNT) '.AMP' '.med  = tmpMed;']);
     eval(['SUS.P_' num2str(partCNT) '.AMP' '.std  = tmpStd;']);
     eval(['SUS.P_' num2str(partCNT) '.AMP' '.mean  = tmpMean;']);
-
     
-  
-
+    
+    
+    
 end
 
 
 for bandCNT = 1:size(SMS.BET,2)
-
-  % the noise bands
+    
+    % the noise bands
     nSteady = SMS.BET(startSamp:stopSamp,:);
     nS      = nSteady(:,bandCNT);
     
@@ -200,16 +200,16 @@ for partCNT = 1:param.PART.nPartials
     % partial amplitudes
     tmpTra = SMS.AMP(partCNT,1:startSamp);
     
-        if length(find(tmpTra==0)) ~= length(tmpTra)
-            if tmpTra(end) == 0
-    
-                lastVal = find(tmpTra>0,1,'last') ;
-                tmpTra(lastVal+1:end)=tmpTra(lastVal);
-    
-            end
-            tmpTra = tmpTra./(tmpTra(end));
-    
+    if length(find(tmpTra==0)) ~= length(tmpTra)
+        if tmpTra(end) == 0
+            
+            lastVal = find(tmpTra>0,1,'last') ;
+            tmpTra(lastVal+1:end)=tmpTra(lastVal);
+            
         end
+        tmpTra = tmpTra./(tmpTra(end));
+        
+    end
     
     eval(['ATT.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
     
@@ -219,6 +219,28 @@ for partCNT = 1:param.PART.nPartials
     
 end
 
+% for the noise bands
+for bandCNT = 1:size(SMS.BET,2)
+    
+    %
+    tmpTra     = SMS.BET(1:startSamp,bandCNT);
+    
+    if length(find(tmpTra==0)) ~= length(tmpTra)
+        if tmpTra(end) == 0
+            
+            lastVal = find(tmpTra>0,1,'last') ;
+            tmpTra(lastVal+1:end)=tmpTra(lastVal);
+            
+        end
+        tmpTra = tmpTra./(tmpTra(end));
+        
+    end
+    
+    tmpTra(isnan(tmpTra)) = 0;
+    
+    eval(['ATT.BARK_' num2str(bandCNT) '.AMP' '.trajectory = tmpTra;']);
+    
+end
 
 %% release
 
@@ -237,10 +259,10 @@ for partCNT = 1:param.PART.nPartials
     tmpTra = SMS.AMP(partCNT,stopSamp:end);
     
     if length(find(tmpTra==0)) ~= length(tmpTra)
-                
+        
         if tmpTra(1) == 0
             
-            firstVal = find(tmpTra>0,1);           
+            firstVal = find(tmpTra>0,1);
             tmpTra(1:firstVal-1)=tmpTra(firstVal);
             
         end
@@ -260,6 +282,33 @@ end
 
 
 
+for bandCNT = 1:size(SMS.BET,2)
+    
+    % partial frequencies
+    tmp = SMS.BET(stopSamp:end,bandCNT);
+    
+    tmpTra = tmp./(tmp(1));
+    
+    if length(find(tmpTra==0)) ~= length(tmpTra)
+        
+        if tmpTra(1) == 0
+            
+            firstVal = find(tmpTra>0,1);
+            tmpTra(1:firstVal-1)=tmpTra(firstVal);
+            
+        end
+        
+        tmpTra = tmpTra./(tmpTra(1));
+        
+    end
+    
+    tmpTra(isnan(tmpTra)) = 0;
+    
+    
+    eval(['REL.BARK_' num2str(bandCNT) '.AMP' '.trajectory = tmpTra;']);
+    
+end
+
 %% Put together and export
 
 if param.info == true
@@ -267,11 +316,11 @@ if param.info == true
 end
 
 
-MOD.param = param;
-MOD.INF = INF;
-MOD.ATT = ATT;
-MOD.SUS = SUS;
-MOD.REL = REL;
+MOD.param   = param;
+MOD.INF     = INF;
+MOD.ATT     = ATT;
+MOD.SUS     = SUS;
+MOD.REL     = REL;
 
 YAMLname = [paths.yaml baseName '.yml'];
 %S = YAML.dump(MOD);
