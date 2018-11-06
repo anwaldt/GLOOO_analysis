@@ -147,8 +147,42 @@ for partCNT = 1:param.PART.nPartials
     eval(['SUS.P_' num2str(partCNT) '.AMP' '.mean  = tmpMean;']);
 
     
+  
+
 end
 
+
+for bandCNT = 1:size(SMS.BET,2)
+
+  % the noise bands
+    nSteady = SMS.BET(startSamp:stopSamp,:);
+    nS      = nSteady(:,bandCNT);
+    
+    % create cmf
+    [h,x]=hist(nS,50);
+    
+    % normalize
+    h = h./sum(h);
+    
+    % get cdf
+    cdf = cumsum(h);
+    
+    tmpMed  = median(nS);
+    tmpMean = mean(nS);
+    tmpStd  = std(nS);
+    
+    % write to struct
+    
+    % the direct distribution
+    eval(['SUS.BARK_' num2str(bandCNT) '.AMP' '.dist = cdf;']);
+    eval(['SUS.BARK_' num2str(bandCNT) '.AMP' '.xval = x;']);
+    
+    % basic parameters
+    eval(['SUS.BARK_' num2str(bandCNT) '.AMP' '.med  = tmpMed;']);
+    eval(['SUS.BARK_' num2str(bandCNT) '.AMP' '.std  = tmpStd;']);
+    eval(['SUS.BARK_' num2str(bandCNT) '.AMP' '.mean  = tmpMean;']);
+    
+end
 
 %% attack
 
