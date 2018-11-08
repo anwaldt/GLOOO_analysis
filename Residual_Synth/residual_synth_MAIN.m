@@ -27,15 +27,23 @@ addpath(p);
 
 
 
+fs = 48000;
+
+
+% this cell structure is for use in MATLAB
+C = make_bark_filterbank(fs,3);
+
+% export to yaml with unique names for use in synthesis
+bark_filterbank_to_YAML(C,['bark-bank_' num2str(fs) '.yml'],fs)
+
+
+
 %%
 
 nr = '56';
 
 load(['/mnt/wintermute/mnt/DATA/USERS/HvC/TU-Note_Violin/Analysis/2018-11-05/SingleSounds/BuK/Sinusoids/SampLib_BuK_' nr '.mat'])
 
-fs = 48000;
-
-C = make_bark_filterbank(fs,3);
 
 nBands  = size(SMS.BET,2);
 nFrames = size(SMS.BET,1);
@@ -66,4 +74,4 @@ for frameCNT = 1:nFrames
 
 end
 
-audiowrite([nr '.wav'],y,fs)
+% audiowrite([nr '.wav'],y,fs)

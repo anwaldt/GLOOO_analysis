@@ -1,13 +1,10 @@
 %% function [] = make_bark_filterbank()
 %
-%   Function for preparing the segment structures
-%   which are needed for the following analysis!
-%
-%   Gets note boundaries ('segBounds') from the annotations of the GLOOO!
+%  create a cell structure with coefficients
+%  for a bark-filter-bank!
 %
 % Henrik von Coler
-% Created:  2014-02-17
-% Edited :  2016-08-09
+% Created:  2018-11-05
 %
 %%
 
