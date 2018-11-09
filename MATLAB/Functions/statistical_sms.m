@@ -93,13 +93,13 @@ for partCNT = 1:param.PART.nPartials
     % write to struct
     
     % the direct distribution
-    eval(['SUS.P_' num2str(partCNT) '.FRE' '.dist = cdf;']);
-    eval(['SUS.P_' num2str(partCNT) '.FRE' '.xval = x;']);
+    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.dist = cdf;']);
+    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.xval = x;']);
     
     % basic parameters
-    eval(['SUS.P_' num2str(partCNT) '.FRE' '.med  = tmpMed;']);
-    eval(['SUS.P_' num2str(partCNT) '.FRE' '.std  = tmpStd;']);
-    eval(['SUS.P_' num2str(partCNT) '.FRE' '.mean  = tmpMean;']);
+    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.med  = tmpMed;']);
+    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.std  = tmpStd;']);
+    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.mean  = tmpMean;']);
     
     
     % get AMP partial trajectory for sustain part
