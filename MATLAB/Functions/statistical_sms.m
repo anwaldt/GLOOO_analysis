@@ -138,13 +138,13 @@ for partCNT = 1:param.PART.nPartials
     % write to struct
     
     % the direct distribution
-    eval(['SUS.P_' num2str(partCNT) '.AMP' '.dist = cdf;']);
-    eval(['SUS.P_' num2str(partCNT) '.AMP' '.xval = x;']);
+    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.dist = cdf;']);
+    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.xval = x;']);
     
     % basic parameters
-    eval(['SUS.P_' num2str(partCNT) '.AMP' '.med  = tmpMed;']);
-    eval(['SUS.P_' num2str(partCNT) '.AMP' '.std  = tmpStd;']);
-    eval(['SUS.P_' num2str(partCNT) '.AMP' '.mean  = tmpMean;']);
+    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.med  = tmpMed;']);
+    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.std  = tmpStd;']);
+    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.mean  = tmpMean;']);
     
     
     
@@ -174,13 +174,13 @@ for bandCNT = 1:size(SMS.BET,2)
     % write to struct
     
     % the direct distribution
-    eval(['SUS.BARK_' num2str(bandCNT) '.AMP' '.dist = cdf;']);
-    eval(['SUS.BARK_' num2str(bandCNT) '.AMP' '.xval = x;']);
+    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.dist = cdf;']);
+    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.xval = x;']);
     
     % basic parameters
-    eval(['SUS.BARK_' num2str(bandCNT) '.AMP' '.med  = tmpMed;']);
-    eval(['SUS.BARK_' num2str(bandCNT) '.AMP' '.std  = tmpStd;']);
-    eval(['SUS.BARK_' num2str(bandCNT) '.AMP' '.mean  = tmpMean;']);
+    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.med  = tmpMed;']);
+    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.std  = tmpStd;']);
+    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.mean  = tmpMean;']);
     
 end
 
@@ -195,7 +195,7 @@ for partCNT = 1:param.PART.nPartials
     tmpVal  = tmpF./mean(CTL.f0.swipe.f0(startSamp:stopSamp))./partCNT;
     tmpVal  = tmpVal./tmpVal(end);
     
-    eval(['ATT.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
+    eval(['ATT.PARTIALS.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
     
     % partial amplitudes
     tmpTra = SMS.AMP(partCNT,1:startSamp);
@@ -211,7 +211,7 @@ for partCNT = 1:param.PART.nPartials
         
     end
     
-    eval(['ATT.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
+    eval(['ATT.PARTIALS.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
     
     if any(isnan(tmpF)) || any(isnan(tmpTra))
         error(['NaN in: ' baseName])
@@ -238,7 +238,7 @@ for bandCNT = 1:size(SMS.BET,2)
     
     tmpTra(isnan(tmpTra)) = 0;
     
-    eval(['ATT.BARK_' num2str(bandCNT) '.AMP' '.trajectory = tmpTra;']);
+    eval(['ATT.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.trajectory = tmpTra;']);
     
 end
 
@@ -253,7 +253,7 @@ for partCNT = 1:param.PART.nPartials
     tmpVal  = tmpF./mean(CTL.f0.swipe.f0(startSamp:stopSamp))./partCNT;
     tmpVal  = tmpVal./tmpVal(1);
     
-    eval(['REL.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
+    eval(['REL.PARTIALS.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
     
     % partial amplitudes
     tmpTra = SMS.AMP(partCNT,stopSamp:end);
@@ -272,7 +272,7 @@ for partCNT = 1:param.PART.nPartials
     end
     
     
-    eval(['REL.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
+    eval(['REL.PARTIALS.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
     
     if any(isnan(tmpF)) || any(isnan(tmpTra))
         error(['NaN in: ' baseName])
@@ -305,7 +305,7 @@ for bandCNT = 1:size(SMS.BET,2)
     tmpTra(isnan(tmpTra)) = 0;
     
     
-    eval(['REL.BARK_' num2str(bandCNT) '.AMP' '.trajectory = tmpTra;']);
+    eval(['REL.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.trajectory = tmpTra;']);
     
 end
 
