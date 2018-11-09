@@ -7,7 +7,7 @@
 % 2018-11-05
 
 
-function [] = bark_filterbank_to_YAML(C,name,fs)
+function [] = bark_filterbank_to_YAML(C,name,fs,order)
 
 
 nFilters = size(C,1);
@@ -18,11 +18,12 @@ for i=1:nFilters
     b = C{i}.b;
     a = C{i}.a;
     
-    eval(['BF.band_' num2str(i) '.b' ' = b;']);
-    eval(['BF.band_' num2str(i) '.a' ' = a;']);
+    eval(['BF.COEFFICIENTS.band_' num2str(i) '.b' ' = b;']);
+    eval(['BF.COEFFICIENTS.band_' num2str(i) '.a' ' = a;']);
     
 end
 
-BF.fs = fs;
+BF.PARAMETERS.fs    = fs;
+BF.PARAMETERS.order = order;
 
 YAML.write(name,BF);

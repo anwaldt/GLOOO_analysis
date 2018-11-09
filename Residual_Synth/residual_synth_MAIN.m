@@ -27,14 +27,15 @@ addpath(p);
 
 
 
-fs = 48000;
+fs    = 48000; 
 
+order = 3;
 
 % this cell structure is for use in MATLAB
-C = make_bark_filterbank(fs,3);
+C = make_bark_filterbank(fs,order);
 
 % export to yaml with unique names for use in synthesis
-bark_filterbank_to_YAML(C,['bark-bank_' num2str(fs) '.yml'],fs)
+bark_filterbank_to_YAML(C,['bark-bank_' num2str(fs) '.yml'], fs, order)
 
 
 
