@@ -8,7 +8,7 @@
 %
 %%
 
-function [BF] = make_bark_filterbank(fs,order)
+function [BF] = make_bark_filterbank(fs,order,ripple)
 
 
 %%
@@ -18,19 +18,20 @@ edges = [20, 100, 200, 300, 400, 510, 630, 770, 920, 1080, 1270, 1480, 1720, 200
 nEdges      = length(edges);
 nFilters    = nEdges -1;
 BF          = cell(nFilters,1);
-fCent       = 50;
-fCut        = [20 100]; 
+
 
 for i=1:nFilters
 
-    [b,a] = cheby1(order, 3,[edges(i)/fs, edges(i+1)/fs]);
+    [b,a] = cheby1(order, ripple,[edges(i)/fs, edges(i+1)/fs]);
 
-    %freqz(b,a)
+    impz(b,a)
     
     coeff.b=b;
     coeff.a=a;
     coeff.fs = fs;
     
     BF{i} = coeff;
+    
+    pause(1)
 
 end

@@ -26,13 +26,13 @@ p = genpath('../GLOOO_Solo_Analysis/Matlab');
 addpath(p);
 
 
+fs      = 48000; 
 
-fs    = 48000; 
-
-order = 3;
+order   = 2;
+ripple  = 1;
 
 % this cell structure is for use in MATLAB
-C = make_bark_filterbank(fs,order);
+C       = make_bark_filterbank(fs,order,ripple);
 
 % export to yaml with unique names for use in synthesis
 bark_filterbank_to_YAML(C,['bark-bank_' num2str(fs) '.yml'], fs, order)
@@ -41,9 +41,10 @@ bark_filterbank_to_YAML(C,['bark-bank_' num2str(fs) '.yml'], fs, order)
 
 %%
 
-nr = '56';
+P =  '';%;'/mnt/wintermute/mnt/DATA/USERS/HvC/TU-Note_Violin/Analysis/2018-11-06/SingleSounds/BuK/Sinusoids/';
+nr = '57';
 
-load(['/mnt/wintermute/mnt/DATA/USERS/HvC/TU-Note_Violin/Analysis/2018-11-05/SingleSounds/BuK/Sinusoids/SampLib_BuK_' nr '.mat'])
+load([P 'SampLib_BuK_' nr '.mat'])
 
 
 nBands  = size(SMS.BET,2);
@@ -66,7 +67,7 @@ for frameCNT = 1:nFrames
         
         tmp = filter(C{bandCNT}.b,C{bandCNT}.a,n);
         
-        tmp = tmp.*hann(lWin).*SMS.BET(frameCNT,bandCNT);
+        tmp = 20* tmp.*hann(lWin).*SMS.BET(frameCNT,bandCNT);
         
         y(idx:idx+lWin-1) =  y(idx:idx+lWin-1) + tmp;
     end
@@ -75,4 +76,8 @@ for frameCNT = 1:nFrames
 
 end
 
-% audiowrite([nr '.wav'],y,fs)
+audiowrite([nr '.wav'],y,fs)
+
+%%
+
+plot(SMS.BET(:,4))
