@@ -72,7 +72,7 @@ F = polyval(P,(1:length(AmpSeg))');
 transModel.AMP.polynom = P;
 
 % Interpolate the amplitude
-transModel.AMP.interpolation = interpolate_amp(AmpSeg,param.AMP.numPoints,false);;
+transModel.AMP.interpolation = interpolate_amp(AmpSeg,param.AMP.numPoints,false);
 
 transModel.startIND = featStartInd;
 transModel.stopIND  = featStopInd;

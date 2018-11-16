@@ -83,7 +83,7 @@ for iTry = 1: maxTry
     
     %f_interval = get_f_interval(cent, INF);
     f_interval = [30 3000];
-    [swipeVec,t,ps] = swipep(x,fs,f_interval,hopSec,dlog2p,dERBs,woverlap,sTHR);
+    [swipeVec,swipeT,ps] = swipep(x,fs,f_interval,hopSec,dlog2p,dERBs,woverlap,sTHR);
     
     % Check Result:
     % Known Issue: swipeVec values are all the same (check deviation)
@@ -110,7 +110,8 @@ for iTry = 1: maxTry
 end
 
 
-features.f0.swipe.f0       = swipeVec(1:nWin);
+features.f0.swipe.f0       = swipeVec;
+features.f0.swipe.t       = swipeT;
 features.f0.swipe.strength = ps;
 
 
@@ -126,8 +127,8 @@ features.f0.eckf.x_est  = x_est_eckf;
 
 [t_yin,f0_yin] = yin_estimator(x',fs);
 
-features.f0.yin.t  = t_yin;
-features.f0.yin.f0 = f0_yin;
+features.f0.yin.t  = t_yin';
+features.f0.yin.f0 = f0_yin';
 
 
 %% RMS

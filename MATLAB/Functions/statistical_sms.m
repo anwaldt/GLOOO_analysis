@@ -141,14 +141,11 @@ for partCNT = 1:param.PART.nPartials
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.dist = cdf;']);
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.xval = x;']);
     
-    % basic parameters
+    % write basic parameters
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.med  = tmpMed;']);
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.std  = tmpStd;']);
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.mean  = tmpMean;']);
-    
-    
-    
-    
+        
 end
 
 

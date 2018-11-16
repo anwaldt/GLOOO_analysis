@@ -18,7 +18,7 @@ switch param.F0.f0Mode
         f0vec = CTL.f0.swipe.f0;
     case 'yin'
         % flip result to column vector
-        f0vec = CTL.f0.yin.f0';
+        f0vec = CTL.f0.yin.f0;
         
 end
 

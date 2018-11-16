@@ -66,15 +66,17 @@ lastPartials = [];
 %% LOOP over all frames
 
 % Variables for Info output
-percent_done = 5;
-percent_interval = 10;
+percent_done        = 5;
+percent_interval    = 10;
 
- 
+
+disp(['Using ' param.F0.f0Mode ' for partial tracking!']);
+
 
 for frameCNT = frameStart:nFrames-1
    
      if param.PART.info == true && floor(frameCNT/nFrames*10000)/100 > percent_done        
-        disp(['    Frame: ' num2str(frameCNT) ', ' num2str(floor(frameCNT/nFrames*10000)/100) '% done']);
+        disp(['    Frame: ' num2str(frameCNT) ', ' num2str(floor(frameCNT/nFrames*10000/100)) '% done']);
         percent_done = percent_done + percent_interval;
     end
  
@@ -107,15 +109,30 @@ for frameCNT = frameStart:nFrames-1
 
     else
         
+        
         t = sampleIDX/param.fs;
-  
-        %tmpIdx = min(abs(CTL.f0.yin.t-t));
         
-        %f0est = CTL.f0.yin.f0(tmpIdx+1);
+               
+        switch param.F0.f0Mode            
+            
+            case 'yin'
+                
+                % get index of nearest support point in f0
+                [~, tmpIdx] = min(abs(CTL.f0.yin.t-t));
+                
+                % pick f0 value at index
+                f0est = CTL.f0.yin.f0(tmpIdx+1);
+                
+            case 'swipe'
+                
+                % get index of nearest support point in f0
+               [~, tmpIdx] = min(abs(CTL.f0.swipe.t-t));
+                
+                % pick f0 value at index
+                f0est = CTL.f0.swipe.f0(tmpIdx);
+                
+        end
         
-        f0est = CTL.f0.swipe.f0(frameCNT);
-  
- 
         f0vec(frameCNT) = f0est;
     end
     

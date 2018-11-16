@@ -25,19 +25,23 @@ restoredefaultpath
 
 
 % Set the (output) path for this set
-ds = datestr(now,'yyyy-mm-dd'); 
+% ds = datestr(now,'yyyy-mm-dd'); 
 % ds = '2018-11-06';
+
+ds = 'YIN';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
 run_parallel             = 0;
 
 % overwrite existing results
-renew_all                = 0;
+renew_all                = 1;
+
+% use remote folders (to be removed)
 remote_results           = 0;
 
 
-% Decide which parts of the script should be executed:
+% Decide which parts should be executed:
 do_basic_analysis        = 1;
 do_partial_analysis      = 1;
 do_modeling_segments     = 1;
@@ -48,8 +52,8 @@ do_statistical_sms       = 1;
 do_move_files_to_server  = 0;
 
 % Decide which files should be processed
-setToDo     = 'SynthResults';
-% setToDo     = 'SingleSounds';
+% setToDo     = 'SynthResults';
+setToDo     = 'SingleSounds';
 % setToDo     = 'TwoNote';
 
 % Decide which microphone to use
@@ -59,8 +63,8 @@ micToDo     = 'BuK';
 % chose whether to process all files,
 % a single file by name, or a subset:
 
-filesToDo  = 'All';
-% filesToDo  = 'SampLib_BuK_136.wav';
+% filesToDo  = 'All';
+filesToDo  = 'SampLib_BuK_136.wav';
 % filesToDo   = 'TwoNote_BuK_04.wav';
 % filesToDo   = 'SampLib_BuK_301.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';
@@ -69,8 +73,9 @@ filesToDo  = 'All';
 %% PARAMETERS AND PATHS
 
 modeling_segments_STARTUP
-GLOOO_PATHS
 modeling_segments_PARAM
+
+GLOOO_PATHS
 
 %% start and manage pool
 
@@ -107,10 +112,10 @@ for n = 1:length(directoryFiles)
 end
 
 % re-sort filenames
-numVec              = regexprep(fileNames,'SampLib_DPA_','');
+%numVec              = regexprep(fileNames,'SampLib_DPA_','');
 numVec              = regexprep(fileNames,'SampLib_BuK_','');
-numVec              = regexprep(fileNames,'TwoNote_DPA_','');
-numVec              = regexprep(fileNames,'TwoNote_BuK_','');
+%numVec              = regexprep(fileNames,'TwoNote_DPA_','');
+%numVec              = regexprep(fileNames,'TwoNote_BuK_','');
 numVec              = str2double(regexprep(numVec,'.wav',''));
 
 
@@ -196,8 +201,8 @@ end
 
 if do_modeling_segments == true
     
-     parfor (fileCNT = filesToDo,parMode)
-%               for  fileCNT = filesToDo
+%     parfor (fileCNT = filesToDo,parMode)
+               for  fileCNT = filesToDo
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);

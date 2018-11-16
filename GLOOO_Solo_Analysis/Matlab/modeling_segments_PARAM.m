@@ -14,9 +14,7 @@
 
 %% BASIC PARAMTERS
 
-% not implemented, yet:
-param.MACHINE     = 'Wintermute';
-
+[~, param.MACHINE] = system('hostname');
 
 param.plotit      = false;
 param.saveit      = true;
@@ -34,10 +32,13 @@ param.lWinNoise     = 2^12;
 
 
 %% F0 ANALYSIS
+% all f0-trajectories are extracted in the 
+% first stage - this just tells which to use
+% later in modeling
 
-param.F0.f0Mode         = 'swipe';
-%param.F0.f0Mode         = 'eckf';
-%param.F0.f0Mode         = 'yin';
+% param.F0.f0Mode         = 'swipe';
+% param.F0.f0Mode         = 'eckf';
+param.F0.f0Mode         = 'yin';
 
 param.F0.lWinYIN        = 2^13;
 param.F0.lWinF0         = 2^13;
@@ -58,12 +59,16 @@ param.AMP.numPoints  = 5; % min 5, max 12
 
 %% Partial tracking
 
+% set true to print frame-wise progress
+% - recommended only for single file use
+param.PART.info         = true;
+
 % threshold of the swipe pitch strength above which the partials are
 % tracked
 param.PART.psThresh     = 0.1;
 
 param.PART.getPhases    = true;
-param.PART.info         = true;
+
 param.PART.lWin         = 2^12;
     
 % upsampling for the autocorr f0-detection
@@ -78,7 +83,7 @@ param.PART.fMax          = 4000;
 % this is for the precision of the phase estimation
 % keep in mind: it takes 'param.nPhaseSteps' coarse
 % and 'param.nPhaseSteps' fine steps
-param.PART.nPhaseSteps   = 5;
+param.PART.nPhaseSteps   = 10;
 
 
 %% NOISE
