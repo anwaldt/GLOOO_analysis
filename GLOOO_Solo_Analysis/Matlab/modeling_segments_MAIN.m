@@ -25,12 +25,12 @@ restoredefaultpath
 
 
 % Set the (output) path for this set
-% ds = datestr(now,'yyyy-mm-dd'); 
-ds = '2018-11-06';
+ds = datestr(now,'yyyy-mm-dd'); 
+% ds = '2018-11-06';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
-run_parallel             = 1;
+run_parallel             = 0;
 
 % overwrite existing results
 renew_all                = 0;
@@ -38,9 +38,9 @@ remote_results           = 0;
 
 
 % Decide which parts of the script should be executed:
-do_basic_analysis        = 0;
-do_partial_analysis      = 0;
-do_modeling_segments     = 0;
+do_basic_analysis        = 1;
+do_partial_analysis      = 1;
+do_modeling_segments     = 1;
 
 % only for single sounds:
 do_statistical_sms       = 1;
@@ -48,7 +48,8 @@ do_statistical_sms       = 1;
 do_move_files_to_server  = 0;
 
 % Decide which files should be processed
-setToDo     = 'SingleSounds';
+setToDo     = 'SynthResults';
+% setToDo     = 'SingleSounds';
 % setToDo     = 'TwoNote';
 
 % Decide which microphone to use
@@ -150,8 +151,8 @@ end
 
 if do_basic_analysis == true
     
-    parfor (fileCNT = filesToDo,parMode)
-        %for fileCNT = filesToDo
+ %   parfor (fileCNT = filesToDo,parMode)        
+        for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);
@@ -170,8 +171,8 @@ end
 
 if do_partial_analysis == true
     
-    parfor (fileCNT = filesToDo,parMode)
-        %   for fileCNT = filesToDo
+   % parfor (fileCNT = filesToDo,parMode)
+           for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);

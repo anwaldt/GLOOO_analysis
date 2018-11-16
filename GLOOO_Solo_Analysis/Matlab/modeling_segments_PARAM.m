@@ -79,3 +79,9 @@ param.PART.fMax          = 4000;
 % keep in mind: it takes 'param.nPhaseSteps' coarse
 % and 'param.nPhaseSteps' fine steps
 param.PART.nPhaseSteps   = 5;
+
+
+%% NOISE
+
+param.NOISE.order  = 2;
+param.NOISE.ripple = 3;

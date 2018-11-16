@@ -24,7 +24,7 @@ for i=1:nFilters
 
     [b,a] = cheby1(order, ripple,[edges(i)/fs, edges(i+1)/fs]);
 
-    impz(b,a)
+%    impz(b,a)
     
     coeff.b=b;
     coeff.a=a;

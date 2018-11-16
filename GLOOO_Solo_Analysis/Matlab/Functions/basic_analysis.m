@@ -43,6 +43,8 @@ if 1%exist(outName,'file')==0
             INF = load_solo_properties(regexprep(baseName,'BuK','BuK') , paths);
         case 'SingleSounds'
             INF = load_tone_properties(regexprep(baseName,'BuK','BuK') , paths);
+        case 'SynthResults'
+            INF = 0;            
     end
     
     %% Controll parameter ANALYSIS

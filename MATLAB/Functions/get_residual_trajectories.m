@@ -11,7 +11,9 @@
 function [BET] = get_residual_trajectories(noiseFrames, param, CTL)
 
 nFrames     = size(noiseFrames,1);
-C           = make_bark_filterbank(param.fs,3);
+
+C           = make_bark_filterbank(param.fs, param.NOISE.order, param.NOISE.ripple);
+
 nBands      = length(C);
 
 % bark energy trajectories
@@ -24,9 +26,9 @@ for frameCNT =1:nFrames
     for bandCNT = 1:nBands    
           
         tmpVal = sum(abs(filter(C{bandCNT}.b, C{bandCNT}.a, tmpFrame)))/length(tmpFrame);
-        
-        
+                
         BET(frameCNT,bandCNT) = tmpVal;
                
     end
+    
 end
