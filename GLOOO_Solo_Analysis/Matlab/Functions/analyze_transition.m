@@ -14,15 +14,15 @@ end
 
 % select the f0-trajectory
 switch param.F0.f0Mode
-
+    
     case 'swipe'
         f0vec = CTL.f0.swipe.f0;
-    
+        
     case 'yin'
         f0vec = CTL.f0.yin.f0;
     case 'eckf'
         f0vec = CTL.f0.eckf.f0;
-
+        
 end
 
 start = transModel.startSEC;
@@ -30,7 +30,8 @@ stop  = transModel.stopSEC;
 
 % get related frame positions of features
 featStartInd = max(1,round(start /(param.lHop/param.fs)));
-featStopInd  = min(length(f0vec),     round(stop  /(param.lHop/param.fs)));
+
+featStopInd  = min(length(CTL.rmsVec),     round(stop  /(param.lHop/param.fs)));
 
 %% extract F0 properties
 
@@ -57,7 +58,11 @@ f0segSmooth  = smooth(f0seg,10);
 
 %% extract RMS properties
 
-AmpSeg = CTL.rmsVec(featStartInd:featStopInd);
+try
+    AmpSeg = CTL.rmsVec(featStartInd:featStopInd);
+catch
+    error('Possibly out of range!')
+end
 
 transModel.AMP.trajectory = AmpSeg;
 
@@ -115,7 +120,7 @@ if param.plotit == true
     plot(transModel.AMP.trajectory);
     % ylim([0, max(transModel.AMP.trajectory)*1.2]);
     ylabel('rms')
-  
+    
     title(['Transition Trajectory Modeling: ' transModel.type]);
     
 end

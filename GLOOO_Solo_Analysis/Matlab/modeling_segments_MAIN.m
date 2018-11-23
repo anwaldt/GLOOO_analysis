@@ -26,28 +26,27 @@ restoredefaultpath
 
 % Set the (output) path for this set
 % ds = datestr(now,'yyyy-mm-dd'); 
-% ds = '2018-11-06';
+ ds = '2018-11-16';
 
-ds = 'YIN';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
 run_parallel             = 0;
 
 % overwrite existing results
-renew_all                = 1;
-
-% use remote folders (to be removed)
-remote_results           = 0;
-
+renew_all                = 0;
 
 % Decide which parts should be executed:
-do_basic_analysis        = 1;
-do_partial_analysis      = 1;
+do_basic_analysis        = 0;
+do_partial_analysis      = 0;
 do_modeling_segments     = 1;
 
 % only for single sounds:
 do_statistical_sms       = 1;
+
+
+% use remote folders (to be removed)
+remote_results           = 0;
 
 do_move_files_to_server  = 0;
 
@@ -63,8 +62,8 @@ micToDo     = 'BuK';
 % chose whether to process all files,
 % a single file by name, or a subset:
 
-% filesToDo  = 'All';
-filesToDo  = 'SampLib_BuK_136.wav';
+filesToDo  = 'All';
+% filesToDo  = 'SampLib_BuK_136.wav';
 % filesToDo   = 'TwoNote_BuK_04.wav';
 % filesToDo   = 'SampLib_BuK_301.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';
@@ -156,8 +155,8 @@ end
 
 if do_basic_analysis == true
     
- %   parfor (fileCNT = filesToDo,parMode)        
-        for fileCNT = filesToDo
+ parfor (fileCNT = filesToDo,parMode)        
+ %       for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);
@@ -176,8 +175,8 @@ end
 
 if do_partial_analysis == true
     
-   % parfor (fileCNT = filesToDo,parMode)
-           for fileCNT = filesToDo
+ parfor (fileCNT = filesToDo,parMode)
+ %          for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);
@@ -201,8 +200,8 @@ end
 
 if do_modeling_segments == true
     
-%     parfor (fileCNT = filesToDo,parMode)
-               for  fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+%               for  fileCNT = filesToDo
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);
@@ -227,7 +226,7 @@ end
 if do_statistical_sms == true
     
     % YAML stuff does not like parallel
-    %      parfor (fileCNT = filesToDo,parMode)
+    % parfor (fileCNT = filesToDo,parMode)
     
     for fileCNT = filesToDo
         
