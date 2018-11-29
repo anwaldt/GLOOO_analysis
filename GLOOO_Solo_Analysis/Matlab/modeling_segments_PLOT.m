@@ -1,5 +1,18 @@
 %% Create the complete/partial decomposed trajectories
 
+%% RESET
+
+close all
+clearvars
+restoredefaultpath
+
+
+
+p=genpath('../MATLAB/');
+addpath(p)
+
+%%
+    
 close all
 % make it empty for plotting all notes
 noteIndices = 1:2;
@@ -8,8 +21,8 @@ noteIndices = 1:2;
 
 figure
 set(gcf,'PaperPositionMode','auto')
-set(gcf, 'PaperPosition', [0 0 5 5]); %Position plot at left hand corner with width 5 and height 5.
-set(gcf, 'PaperSize', [5 5]); %Set the paper to have width 5 and height 5.
+set(gcf, 'PaperPosition', [0 0 5 5]);   % Position plot at left hand corner with width 5 and height 5.
+set(gcf, 'PaperSize', [5 5]);           % Set the paper to have width 5 and height 5.
 plot(f0.dc,'linewidth',2);
 
 ylim([100,180]);
@@ -21,8 +34,8 @@ print('-dpdf','-r0','f0_step')
 figure
 plot(smooth(f0.comp,4),'linewidth',2);
 set(gcf,'PaperPositionMode','auto')
-set(gcf, 'PaperPosition', [0 0 5 5]); %Position plot at left hand corner with width 5 and height 5.
-set(gcf, 'PaperSize', [5 5]); %Set the paper to have width 5 and height 5.xlabel('t / Frames');
+set(gcf, 'PaperPosition', [0 0 5 5]);   % Position plot at left hand corner with width 5 and height 5.
+set(gcf, 'PaperSize', [5 5]);           % Set the paper to have width 5 and height 5.xlabel('t / Frames');
 xlabel('t / Frames');
 ylabel('f /Hz');
 print('-dpdf','-r0','f0_comp')

@@ -58,6 +58,10 @@ if 1%...%exist(outName,'file') == 0 &&
             
             segBounds = [( segBounds{1}), segType];
             
+        case 'SynthResults'
+            segBounds = [];
+            INF = [];
+            
     end
     
     
