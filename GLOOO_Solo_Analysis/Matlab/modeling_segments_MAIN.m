@@ -36,12 +36,12 @@ run_parallel             = 0;
 renew_all                = 0;
 
 % Decide which parts should be executed:
-do_basic_analysis        = 0;
-do_partial_analysis      = 0;
-do_modeling_segments     = 1;
+do_basic_analysis        = 1;
+do_partial_analysis      = 1;
+do_modeling_segments     = 0;
 
 % only for single sounds:
-do_statistical_sms       = 1;
+do_statistical_sms       = 0;
 
 
 % use remote folders (to be removed)
@@ -50,9 +50,9 @@ remote_results           = 0;
 do_move_files_to_server  = 0;
 
 % Decide which files should be processed
-setToDo     = 'SynthResults';
-%setToDo     = 'SingleSounds';
-% setToDo     = 'TwoNote';
+% setToDo     = 'SynthResults';
+% setToDo     = 'SingleSounds';
+setToDo     = 'TwoNote';
 
 % Decide which microphone to use
 %micToDo     = 'DPA';
@@ -65,7 +65,7 @@ micToDo     = 'BuK';
 %filesToDo  = '1-oct-sweep.wav';
 % filesToDo  = 'All';
  % filesToDo  = 'SampLib_BuK_136.wav';
- filesToDo   = 'TwoNote_BuK_04.wav';
+ filesToDo   = 'TwoNote_BuK_22.wav';
 % filesToDo   = 'SampLib_BuK_301.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';
 %filesToDo = {'TwoNote_DPA_18.wav'};
