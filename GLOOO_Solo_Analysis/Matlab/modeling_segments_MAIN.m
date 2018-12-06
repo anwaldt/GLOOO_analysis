@@ -25,8 +25,7 @@ restoredefaultpath
 
 
 % Set the (output) path for this set
-% ds = datestr(now,'yyyy-mm-dd');
-ds = '2018-11-16';
+ds = datestr(now,'yyyy-mm-dd'); 
 
 
 % set this false for debugging
@@ -34,11 +33,11 @@ ds = '2018-11-16';
 run_parallel             = 0;
 
 % overwrite existing results
-renew_all                = 1;
+renew_all                = 0;
 
 % Decide which parts should be executed:
-do_basic_analysis        = 1;
-do_partial_analysis      = 1;
+do_basic_analysis        = 0;
+do_partial_analysis      = 0;
 do_modeling_segments     = 1;
 
 % only for single sounds:
@@ -62,10 +61,11 @@ micToDo     = 'BuK';
 % chose whether to process all files,
 % a single file by name, or a subset:
 
-%filesToDo  = 'All';
-filesToDo  = '1-oct-sweep.wav';
-% filesToDo  = 'SampLib_BuK_136.wav';
-% filesToDo   = 'TwoNote_BuK_04.wav';
+ %filesToDo  = 'All';
+%filesToDo  = '1-oct-sweep.wav';
+% filesToDo  = 'All';
+ % filesToDo  = 'SampLib_BuK_136.wav';
+ filesToDo   = 'TwoNote_BuK_04.wav';
 % filesToDo   = 'SampLib_BuK_301.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';
 %filesToDo = {'TwoNote_DPA_18.wav'};
@@ -159,6 +159,8 @@ if do_basic_analysis == true
     %  parfor (fileCNT = filesToDo,parMode)
     for fileCNT = filesToDo
         
+        
+        
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);
         end
@@ -178,6 +180,7 @@ if do_partial_analysis == true
     
     %parfor (fileCNT = filesToDo,parMode)
     for fileCNT = filesToDo
+        
         
         if param.info == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);
