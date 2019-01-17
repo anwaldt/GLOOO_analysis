@@ -10,7 +10,7 @@
 % Author : Henrik von Coler
 %
 % Created: 2014-02-17
-% Edited : 2016-08-08
+% Edited : 2019-01-08
 %
 %
 %% RESET
@@ -30,7 +30,7 @@ ds = datestr(now,'yyyy-mm-dd');
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
-run_parallel             = 0;
+run_parallel             = 1;
 
 % overwrite existing results
 renew_all                = 0;
@@ -38,10 +38,10 @@ renew_all                = 0;
 % Decide which parts should be executed:
 do_basic_analysis        = 1;
 do_partial_analysis      = 1;
-do_modeling_segments     = 0;
+do_modeling_segments     = 1;
 
 % only for single sounds:
-do_statistical_sms       = 0;
+do_statistical_sms       = 1;
 
 
 % use remote folders (to be removed)
@@ -51,8 +51,8 @@ do_move_files_to_server  = 0;
 
 % Decide which files should be processed
 % setToDo     = 'SynthResults';
-% setToDo     = 'SingleSounds';
-setToDo     = 'TwoNote';
+setToDo     = 'SingleSounds';
+% setToDo     = 'TwoNote';
 
 % Decide which microphone to use
 %micToDo     = 'DPA';
@@ -61,11 +61,13 @@ micToDo     = 'BuK';
 % chose whether to process all files,
 % a single file by name, or a subset:
 
- %filesToDo  = 'All';
-%filesToDo  = '1-oct-sweep.wav';
-% filesToDo  = 'All';
- % filesToDo  = 'SampLib_BuK_136.wav';
- filesToDo   = 'TwoNote_BuK_22.wav';
+filesToDo  = 'All';
+
+% filesToDo  = '1-oct-sweep.wav';
+% filesToDo  = 'TwoNote_BuK_22.wav';
+
+% filesToDo  = 'SampLib_BuK_136.wav';
+ %filesToDo   = 'TwoNote_BuK_22.wav';
 % filesToDo   = 'SampLib_BuK_301.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';
 %filesToDo = {'TwoNote_DPA_18.wav'};
@@ -156,8 +158,8 @@ end
 
 if do_basic_analysis == true
     
-    %  parfor (fileCNT = filesToDo,parMode)
-    for fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+    % for fileCNT = filesToDo
         
         
         
@@ -178,8 +180,8 @@ end
 
 if do_partial_analysis == true
     
-    %parfor (fileCNT = filesToDo,parMode)
-    for fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+    % for fileCNT = filesToDo
         
         
         if param.info == true
@@ -204,8 +206,8 @@ end
 
 if do_modeling_segments == true
     
-    %    parfor (fileCNT = filesToDo,parMode)
-    for  fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+    % for  fileCNT = filesToDo
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);
@@ -230,8 +232,7 @@ end
 if do_statistical_sms == true
     
     % YAML stuff does not like parallel
-    % parfor (fileCNT = filesToDo,parMode)
-    
+     
     for fileCNT = filesToDo
         
         

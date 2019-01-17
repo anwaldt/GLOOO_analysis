@@ -59,7 +59,7 @@ end
 
 xlim([0.95, 1.05])
 
-xlabel('$f_i / f_1$');
+xlabel('$f_i / (f_1  i)$');
 ylabel('CMF')
 hold off
 

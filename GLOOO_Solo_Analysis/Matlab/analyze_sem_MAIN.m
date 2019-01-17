@@ -25,7 +25,7 @@ for partCNT=1:30
     
     colVec = [1 1 1] * partCNT/30;
     
-    set(xxx,{'linew'},{1.2},'Color',colVec)
+    set(xxx,{'linew'},{1},'Color',colVec)
     
     hold on
     
@@ -103,7 +103,7 @@ for partCNT=1:30
     
     colVec = [1 1 1] * 0.5;
     
-    set(xxx,{'linew'},{1.2},'Color',colVec)
+    set(xxx,{'linew'},{1.0},'Color',colVec)
     
     
     
