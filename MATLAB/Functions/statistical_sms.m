@@ -1,6 +1,6 @@
 % statistical_sms.m
 %
-% Function for extracting   and stochastic parxameters
+% Function for extracting and stochastic parxameters
 % fom the sustain - works only for single sounds.
 %
 % Also, attack and release are captured!
@@ -37,16 +37,15 @@ end
 load([paths.segments   baseName  '.mat']);
 % C   = textscan(fid, '%f %s');
 % fclose(fid);
-%
 
-bounds = [0 0];
-bounds(1) =  SOLO.SEG{2}.startSEC;
-bounds(2) =  SOLO.SEG{2}.stopSEC;
+bounds      = [0 0];
+bounds(1)   = SOLO.SEG{2}.startSEC;
+bounds(2)   = SOLO.SEG{2}.stopSEC;
 
-bSamp   =  round( bounds /(SMS.param.lHop / SMS.param.fs));
+bSamp       = round( bounds /(SMS.param.lHop / SMS.param.fs));
 
 startSamp   = max(1,bSamp(1));
-stopSamp    =   bSamp(2);
+stopSamp    = bSamp(2);
 
 
 %% Sustain part

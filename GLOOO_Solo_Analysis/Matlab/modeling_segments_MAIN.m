@@ -26,7 +26,7 @@ restoredefaultpath
 
 % Set the (output) path for this set
 ds = datestr(now,'yyyy-mm-dd'); 
-
+% ds = '2019-01-17';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
@@ -180,8 +180,8 @@ end
 
 if do_partial_analysis == true
     
-    %   parfor (fileCNT = filesToDo,parMode)
-    for fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+    %for fileCNT = filesToDo
         
         
         if param.info == true
