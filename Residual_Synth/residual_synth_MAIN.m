@@ -10,6 +10,10 @@
 %%
 
 clearvars
+restoredefaultpath
+
+%%
+
 
 addpath('../../common');
 
@@ -18,11 +22,13 @@ addpath(p)
 
 p = genpath('../GLOOO_Solo_Analysis/Matlab');
 addpath(p);
+ 
 
+%%
 
-fs      = 48000;
+fs      = 44100;
 
-order   = 2;
+order   = 3;
 ripple  = 1;
 
 % this cell structure is for use in MATLAB
@@ -35,8 +41,9 @@ bark_filterbank_to_YAML(C,['bark-bank_' num2str(fs) '.yml'], fs, order)
 
 %%
 
-P =  '/mnt/wintermute/mnt/DATA/USERS/HvC/TU-Note_Violin/Analysis/2018-11-06/SingleSounds/BuK/Sinusoids/';
-nr = '206';
+P =  '/home/anwaldt/WORK/GLOOO/Violin_Library_2015/Analysis/SingleSounds_ BuK_ yin_2019-01-21/Sinusoids/';
+
+nr = '136';
 
 load([P 'SampLib_BuK_' nr '.mat'])
     
@@ -70,11 +77,14 @@ for frameCNT = 1:nFrames
     
     idx=idx+lHop;
     
+    disp(frameCNT/nFrames);
+    
 end
 
 audiowrite([nr '.wav'],y,fs)
 
-%%
+%% PLOT
+
 close all
 
 h = figure;

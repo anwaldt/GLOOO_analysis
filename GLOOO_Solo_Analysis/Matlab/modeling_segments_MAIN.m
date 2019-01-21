@@ -79,6 +79,11 @@ modeling_segments_PARAM
 
 GLOOO_PATHS
 
+% Check for existence of paths
+%  and make them, if necessary
+check_paths(paths)
+
+
 %% start and manage pool
 
 p = gcp('nocreate'); % If no pool, do not create new one.
