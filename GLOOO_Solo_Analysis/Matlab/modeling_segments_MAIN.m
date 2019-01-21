@@ -180,8 +180,8 @@ end
 
 if do_partial_analysis == true
     
-    parfor (fileCNT = filesToDo,parMode)
-    % for fileCNT = filesToDo
+    %   parfor (fileCNT = filesToDo,parMode)
+    for fileCNT = filesToDo
         
         
         if param.info == true
