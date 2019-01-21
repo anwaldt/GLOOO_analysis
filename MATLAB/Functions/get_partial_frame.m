@@ -11,6 +11,7 @@
 function    [partials, residual, sinusoidal] = get_partial_frame(frame, lastPartials, f0est, param)
 
 
+
 %% PREPARE
 
 % the time axis for each frame
@@ -36,6 +37,7 @@ FRAMEpha    = angle(FRAME);
 partFre = zeros(param.PART.nPartials, 1);
 partAmp = zeros(param.PART.nPartials, 1);
 partPha = zeros(param.PART.nPartials, 1);
+partStr = zeros(param.PART.nPartials, 1);
 
 % harmonicPart = zeros(size(FRAME));
 
@@ -85,7 +87,7 @@ for partCNT = 1:param.PART.nPartials
         end
         
         % check peak hight
-        [truePeakHeight, truePeakPos]   = get_peak_hight(FRAMEabs,partInd);
+        [truePeakHeight, truePeakPos]   = get_peak_hight(FRAMEabs,partInd, param);
         
         % check for badly conditioned interpolation
         if abs(truePeakHeight-FRAMEabs(partInd)) > 0.1
@@ -113,18 +115,19 @@ for partCNT = 1:param.PART.nPartials
         
         
         
+        
         % assign parameters if valid  
-        if truePeakHeight/max(FRAMEabs) > -1%0.000001
+        if truePeakHeight / max(FRAMEabs) > 0.00001
             
             
             
             % calculate partial frequency:
             % DON'T FORGET THE OFFSET '-1' CAUSED BY MATLAB INDEXING
-            partFre(partCNT) = ((truePeakPos-1)*param.fs)/param.PART.nFFT;
+            partFre(partCNT) = ((truePeakPos-1) * param.fs)/param.PART.nFFT;
             
             % get amplitude
             % MIND THE window correction
-            partAmp(partCNT) =  winCorr*truePeakHeight/(param.PART.lWin/2);
+            partAmp(partCNT) =  winCorr * truePeakHeight / (param.PART.lWin/2);
             
             % and phase
             partPha(partCNT) = phaseEstimate;
@@ -135,62 +138,7 @@ for partCNT = 1:param.PART.nPartials
             
             if param.PART.getPhases == true
                 
-                sP              = linspace(-pi,pi,param.PART.nPhaseSteps);
-                minValues       = zeros(1,param.PART.nPhaseSteps);
-                partialPhase    = zeros(1,param.PART.nPhaseSteps);
-                searchInd = 1;
-                
-                % first rough
-                for searchPhase = sP
-                    
-                    thisPartial     = partAmp(partCNT) * sin(2*pi*partFre(partCNT).*t + searchPhase ).*windowFunction;
-                    tmpResidual     = residual   - thisPartial;
-                    
-                    partialPhase(searchInd) = searchPhase;
-                    minValues(searchInd)    = sum( (tmpResidual).^2);
-                    searchInd = searchInd+1;
-
-                end
-                
-                [~, ind]         = min(minValues);
-                
-                partPha(partCNT) = partialPhase(ind);
-                
-                
-                % then fine
-                
-                if ind>1
-                    lowerBound = partialPhase(ind-1);
-                else
-                    lowerBound = partialPhase(end);
-                end
-                
-                if ind<param.PART.nPhaseSteps
-                    upperBound = partialPhase(ind+1);
-                else
-                    upperBound = partialPhase(1);
-                end
-                
-                sP              = linspace(lowerBound, upperBound, param.PART.nPhaseSteps);
-                minValues       = zeros(1,param.PART.nPhaseSteps);
-                partialPhase    = zeros(1,param.PART.nPhaseSteps);
-                
-                searchInd = 1;
-                
-                for searchPhase = sP
-                    
-                    thisPartial     = partAmp(partCNT) * sin(2*pi*partFre(partCNT).*t + searchPhase ).*windowFunction;
-                    tmpResidual     = residual   - thisPartial;
-                    
-                    partialPhase(searchInd) = searchPhase;
-                    minValues(searchInd)    = sum( (tmpResidual).^2);
-                    searchInd = searchInd+1;
-                end
-                
-                [~, ind] = min(minValues);
-                
-                partPha(partCNT) = partialPhase(ind);
-                
+                partPha(partCNT) = get_phase_min(param, t, partCNT, partAmp, partFre, windowFunction, residual);
                 
             end
             
@@ -199,37 +147,13 @@ for partCNT = 1:param.PART.nPartials
             %% check relation to previous peaks
             if ~isempty(lastPartials)
                 
-                if lastPartials.AMPL(partCNT)~=0
-                    
-                    if lastPartials.FREQ(partCNT)~=0
-                        
-                        % get relative distance to last frequency
-                        lastPartFre = lastPartials.FREQ(partCNT);
-                        deltaFreqRel =   (lastPartFre-partFre(partCNT)) / f0est ;
-                        
-%                         if deltaFreqRel > 2
-%                             partFre(partCNT) = lastPartials.FREQ(partCNT);
-%                         end
-                       
-                        % get relative distance to last amplitude
-                        lastPartAmp = lastPartials.AMPL(partCNT);
-                        deltaAmpRel = abs(lastPartAmp-partAmp(partCNT))/mean([lastPartAmp,partAmp(partCNT)]);
-                        
-                          if deltaAmpRel > 10
-                             partAmp(partCNT) = lastPartials.AMPL(partCNT);
-                         end
-                        
-                    end
-                end
-                
+                % get the strength of each partial
+                partStr(partCNT) =  get_partial_strength(param, lastPartials.AMPL(partCNT) , lastPartials.FREQ(partCNT) ,lastPartials.PHAS(partCNT)  , partAmp(partCNT), partFre(partCNT), partPha(partCNT));
+         
             end
             
-            
-            %% check relation to harmonic spectrum
-            
-            
-            
-            
+         
+   
             
             %% resynthesize partial for subtraction
             
@@ -253,32 +177,11 @@ for partCNT = 1:param.PART.nPartials
             % assemble sinusoidal by adding
             % mind the amplitude correction and the *0.25
             sinusoidal          = sinusoidal + 0.25*thisPartial./winCorr;
+  
             
+        else
             
-            %% other method: erase spectral peak
-            
-            
-            %     peakBoundaries = [partInd, partInd];
-            %
-            %     % lower boundary
-            %     tmpInd = partInd;
-            %     while FRAMEabs(tmpInd) > FRAMEabs(tmpInd-1) && tmpInd>1
-            %         tmpInd = tmpInd-1;
-            %     end
-            %     peakBoundaries(1)=tmpInd;
-            %
-            %     % upper boundary
-            %     tmpInd = partInd;
-            %     while FRAMEabs(tmpInd) > FRAMEabs(tmpInd+1)&& tmpInd<length(FRAMEabs)
-            %         tmpInd = tmpInd+1;
-            %     end
-            %
-            %     peakBoundaries(2)=tmpInd;
-            %
-            %     extinctionIndexes = (peakBoundaries);
-            %
-            %     X2(tmpIDX)= mean(X2(extinctionIndexes) ) ;
-            %     X2(length(X2)-tmpIDX)= mean(X2(extinctionIndexes) );
+            disp('Peak too weak!')
             
         end
         
@@ -290,6 +193,7 @@ end
 partials.FREQ = partFre;
 partials.AMPL = partAmp;
 partials.PHAS = partPha;
+partials.STRE = partStr;
 
 
 

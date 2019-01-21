@@ -184,6 +184,8 @@ end
 
 ATT = struct();
 
+ATT.LENGTH =  SOLO.SEG{1}.stopSEC - SOLO.SEG{1}.startSEC;
+
 for partCNT = 1:param.PART.nPartials
     
     % partial frequencies
@@ -241,6 +243,9 @@ end
 %% release
 
 REL = struct();
+
+REL.LENGTH =  SOLO.SEG{1}.stopSEC - SOLO.SEG{1}.startSEC;
+
 
 for partCNT = 1:param.PART.nPartials
     

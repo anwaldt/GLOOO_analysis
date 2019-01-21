@@ -40,7 +40,7 @@ param.lWinNoise     = 2^12;
 % param.F0.f0Mode         = 'eckf';
 param.F0.f0Mode         = 'yin';
 
-param.F0.lWinYIN        = 2^13;
+param.F0.lWinYIN        = 2^14;
 param.F0.lWinF0         = 2^13;
 
 param.F0.minStrength    = -Inf;
@@ -75,7 +75,7 @@ param.PART.lWin         = 2^12;
 param.PART.upsampFactor  = 5;
 
 % windowsize of peak picking
-param.PART.nFFT          = 2^13;
+param.PART.nFFT          = 2^14;
 param.PART.nPartials     = 80;
 param.PART.fMin          = 20;
 param.PART.fMax          = 4000;

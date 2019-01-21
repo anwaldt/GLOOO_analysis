@@ -22,10 +22,7 @@ nFrames     = floor((nSamples-param.PART.lWin)/param.lHop);
 resVec       = zeros(size(x));
 noiseSynth  = zeros(nFrames,param.PART.lWin);
 tonalVec       = zeros(size(x));
-nSamples    = length(x);
-
-
-
+ 
 % allocate memory for sinusoidal parameter trajectories and co
 SMS.FRE  = zeros(param.PART.nPartials,nFrames);
 SMS.AMP  = zeros(param.PART.nPartials,nFrames);
@@ -38,6 +35,8 @@ x = [x;zeros(param.PART.lWin+1,1)];
 
 % set individual start point
 frameStart  = 2;
+
+% sample index is always the center of the analysis window
 sampleIDX   = 1;
 
 if frameStart~= 1
@@ -83,7 +82,7 @@ for frameCNT = frameStart:nFrames-1
     % Get index vectors
     idxs        = sampleIDX-(param.PART.lWin/2):sampleIDX+(param.PART.lWin/2)-1;
     idxsPEAK    = sampleIDX-(param.PART.lWin/2):sampleIDX+(param.PART.lWin/2)-1;
-    
+
     % get frame
     if isempty(find(idxsPEAK(idxsPEAK<1), 1))
         frame       = x(idxs);
@@ -153,6 +152,7 @@ for frameCNT = frameStart:nFrames-1
             tmpPartials.FREQ = zeros(param.PART.nPartials,1);
             tmpPartials.AMPL = zeros(param.PART.nPartials,1);
             tmpPartials.PHAS = zeros(param.PART.nPartials,1);
+            tmpPartials.STRE = zeros(param.PART.nPartials,1);
         end
         
         lastPartials = tmpPartials;
@@ -160,6 +160,8 @@ for frameCNT = frameStart:nFrames-1
         SMS.FRE(:,frameCNT) = tmpPartials.FREQ;
         SMS.AMP(:,frameCNT) = tmpPartials.AMPL;
         SMS.PHA(:,frameCNT) = tmpPartials.PHAS;
+        SMS.STR(:,frameCNT) = tmpPartials.STRE;
+   
         
         % calculate the distribution of the residual
         % noiseSynth(idxs)   = noiseSynth(idxs) + get_residual_distribution(residual);

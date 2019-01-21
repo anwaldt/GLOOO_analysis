@@ -33,7 +33,7 @@ ds = datestr(now,'yyyy-mm-dd');
 run_parallel             = 1;
 
 % overwrite existing results
-renew_all                = 0;
+renew_all                = 1;
 
 % Decide which parts should be executed:
 do_basic_analysis        = 1;
@@ -61,12 +61,12 @@ micToDo     = 'BuK';
 % chose whether to process all files,
 % a single file by name, or a subset:
 
-filesToDo  = 'All';
+% filesToDo  = 'All';
 
 % filesToDo  = '1-oct-sweep.wav';
 % filesToDo  = 'TwoNote_BuK_22.wav';
 
-% filesToDo  = 'SampLib_BuK_136.wav';
+filesToDo  = 'SampLib_BuK_136.wav';
  %filesToDo   = 'TwoNote_BuK_22.wav';
 % filesToDo   = 'SampLib_BuK_301.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';
@@ -158,8 +158,8 @@ end
 
 if do_basic_analysis == true
     
-    parfor (fileCNT = filesToDo,parMode)
-    % for fileCNT = filesToDo
+    %parfor (fileCNT = filesToDo,parMode)
+     for fileCNT = filesToDo
         
         
         
@@ -180,9 +180,8 @@ end
 
 if do_partial_analysis == true
     
-    parfor (fileCNT = filesToDo,parMode)
-    %for fileCNT = filesToDo
-        
+    %parfor (fileCNT = filesToDo,parMode)
+    for fileCNT = filesToDo        
         
         if param.info == true
             disp(['starting partial analysis for: ',fileNames{fileCNT}]);
@@ -196,18 +195,19 @@ if do_partial_analysis == true
         end
         
     end
+    
 end
 
 
 
-
 %% Modeling stage 1
-%
+%  - generate the segments
+%    with all metadata
 
 if do_modeling_segments == true
     
-    parfor (fileCNT = filesToDo,parMode)
-    % for  fileCNT = filesToDo
+    % parfor (fileCNT = filesToDo,parMode)
+      for  fileCNT = filesToDo
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);
