@@ -26,9 +26,9 @@ addpath(p);
 
 %%
 
-fs      = 44100;
+fs      = 48000;
 
-order   = 3;
+order   = 2;
 ripple  = 1;
 
 % this cell structure is for use in MATLAB
@@ -36,7 +36,6 @@ C       = make_bark_filterbank(fs,order,ripple);
 
 % export to yaml with unique names for use in synthesis
 bark_filterbank_to_YAML(C,['bark-bank_' num2str(fs) '.yml'], fs, order)
-
 
 
 %%
@@ -50,6 +49,64 @@ load([P 'SampLib_BuK_' nr '.mat'])
 
 %[x,fs] = audioread([P 'Residual_BuK_' nr '.wav']);
 
+
+
+
+
+
+
+
+
+%% one band MANUAL
+
+
+
+BAND    = 06;
+
+b       = C{BAND}.b;
+a       = C{BAND}.a;
+
+N       = length(b);
+
+inBuff  = zeros(length(b),1);
+outBuff = zeros(length(a),1);
+
+nSamp   = 48000;
+y       = zeros(1,nSamp);
+
+for sampCNT = 1:nSamp
+    
+ 
+        % manage input
+        in          = randn(1,1);        
+        inBuff      =  circshift(inBuff,1);
+        inBuff(1)   = in;
+        
+        out = 0;
+        
+        for i=1:N        
+            out = out+inBuff(i)*b(i);
+        end
+        
+        for i=2:N
+            out = out-outBuff(i-1)*a(i);
+        end
+        
+        outBuff      =  circshift(outBuff,1);
+        outBuff(1)   = out;
+        
+       y(sampCNT) = out;
+       
+     
+    
+end
+
+soundsc(y,fs)
+
+
+%%
+
+
 nBands  = size(SMS.BET,2);
 nFrames = size(SMS.BET,1);
 
@@ -62,11 +119,13 @@ idx = 1;
 
 y = zeros(1000000,1);
 
+%%
+
 for frameCNT = 1:nFrames
     
     for bandCNT = 1:nBands
         
-        n = randn(lWin,1);
+        n   = randn(lWin,1);
         
         tmp = filter(C{bandCNT}.b,C{bandCNT}.a,n);
         
@@ -117,4 +176,3 @@ for bandCNT = 3:10
     
     
 end
-
