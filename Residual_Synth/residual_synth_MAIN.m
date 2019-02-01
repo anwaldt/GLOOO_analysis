@@ -38,7 +38,7 @@ C       = make_bark_filterbank(fs,order,ripple);
 bark_filterbank_to_YAML(C,['bark-bank_' num2str(fs) '.yml'], fs, order)
 
 
-%%
+%% import from .mat files
 
 P =  '/home/anwaldt/WORK/GLOOO/Violin_Library_2015/Analysis/SingleSounds_ BuK_ yin_2019-01-21/Sinusoids/';
 
@@ -50,11 +50,17 @@ load([P 'SampLib_BuK_' nr '.mat'])
 %[x,fs] = audioread([P 'Residual_BuK_' nr '.wav']);
 
 
+lHop = SMS.param.lHop*0.5;
+lWin = SMS.param.lWinNoise;
 
 
+%% import from txt data
 
+nr = '03';
+X = importfile('/home/anwaldt/WORK/GLOOO/GLOOO_synth/MODEL/txt_60P/SampLib_BuK_03.BBE');
 
-
+lHop = 128;
+lWin = 4096;
 
 
 %% one band MANUAL
@@ -104,39 +110,32 @@ end
 soundsc(y,fs)
 
 
-%%
+%% Full re-synthesis
 
 
-nBands  = size(SMS.BET,2);
-nFrames = size(SMS.BET,1);
-
-
-lHop = SMS.param.lHop*0.5;
-lWin = SMS.param.lWinNoise;
-
+nBands  = size(X,2);
+nFrames = size(X,1);
 
 idx = 1;
+y   = zeros(1000000,1);
 
-y = zeros(1000000,1);
-
-%%
 
 for frameCNT = 1:nFrames
     
-    for bandCNT = 1:nBands
+    for bandCNT = 1:nBands-1
         
         n   = randn(lWin,1);
         
         tmp = filter(C{bandCNT}.b,C{bandCNT}.a,n);
         
-        tmp = 20* tmp.*hann(lWin).*SMS.BET(frameCNT,bandCNT);
+        tmp = 20* tmp.*hann(lWin).*X(frameCNT,bandCNT);
         
         y(idx:idx+lWin-1) =  y(idx:idx+lWin-1) + tmp;
     end
     
     idx=idx+lHop;
     
-    disp(frameCNT/nFrames);
+%     disp(frameCNT/nFrames);
     
 end
 
@@ -152,7 +151,7 @@ for bandCNT = 3:10
     
     
     % downsample by 4 when plotting
-    xxx = semilogy(SMS.BET(1:4:end,bandCNT));
+    xxx = semilogy(X(1:4:end,bandCNT));
     
     set(xxx,{'linew'},{1.2},'Color',[0 0 0])
     
