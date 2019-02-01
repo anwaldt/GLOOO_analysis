@@ -26,7 +26,7 @@ addpath(p);
 
 %%
 
-fs      = 48000;
+fs      = 44100;
 
 order   = 2;
 ripple  = 1;
@@ -67,7 +67,7 @@ lWin = 4096;
 
 
 
-BAND    = 06;
+BAND    = 07;
 
 b       = C{BAND}.b;
 a       = C{BAND}.a;
@@ -139,7 +139,10 @@ for frameCNT = 1:nFrames
     
 end
 
-audiowrite([nr '.wav'],y,fs)
+
+soundsc(y,fs)
+
+%audiowrite([nr '.wav'],y,fs)
 
 %% PLOT
 
