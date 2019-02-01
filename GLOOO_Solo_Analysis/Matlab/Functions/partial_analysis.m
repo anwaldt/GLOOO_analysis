@@ -96,16 +96,10 @@ if 1%exist(partialName,'file') == 0
     fprintf(fid, [repmat('%e ', 1, size(SMS.FRE, 1) ), ';\n'], SMS.PHA );
     fclose(fid);
     
-    % noise is not exported at this state
-    %     tmpName     =[ paths.txtDir baseName '.NENV'];
-    %     fid         = fopen(tmpName,'w');
-    %     fprintf(fid, [repmat('%e ', 1, length(SMS) ), ';\n'], meanNoise );
-    %     fclose(fid);
-    %
-    %     tmpName     = [ paths.txtDir baseName '.NAMP'];
-    %     fid         = fopen(tmpName,'w');
-    %     fprintf(fid, '%e ;\n', noiseEnergy );
-    %     fclose(fid);
+    tmpName     =[ paths.txtDir baseName '.BBE'];
+    fid         = fopen(tmpName,'w');
+    fprintf(fid, [repmat('%e ', 1, size(SMS.BET', 1) ), ';\n'], SMS.BET' );
+    fclose(fid); 
     
     
 else

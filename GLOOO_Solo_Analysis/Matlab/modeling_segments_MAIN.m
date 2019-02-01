@@ -33,15 +33,15 @@ ds = '2019-01-21';
 run_parallel             = 1;
 
 % overwrite existing results
-renew_all                = 0;
+renew_all                = 1;
 
 % Decide which parts should be executed:
 do_basic_analysis        = 0;
-do_partial_analysis      = 0;
+do_partial_analysis      = 1;
 do_modeling_segments     = 0;
 
 % only for single sounds:
-do_statistical_sms       = 1;
+do_statistical_sms       = 0;
 
 
 % use remote folders (to be removed)
@@ -185,24 +185,30 @@ end
 
 if do_partial_analysis == true
     
-    %parfor (fileCNT = filesToDo,parMode)
-     for fileCNT = filesToDo        
+    parfor (fileCNT = filesToDo,parMode)
+        % for fileCNT = filesToDo
         
-        if param.info == true
-            disp(['starting partial analysis for: ',fileNames{fileCNT}]);
-        end
+        
         
         [~,baseName,~]      = fileparts(fileNames{fileCNT});
         
         if ~exist([paths.sinusoids baseName  '.mat'],'file') || renew_all == 1
             % Get partial trajectories
             [SMS]               = partial_analysis(baseName,  paths);
+            
+            if param.info == true
+                disp(['starting partial analysis for: ',fileNames{fileCNT}]);
+            end
+        else
+            if param.info == true
+                disp(['Analysis for: ',fileNames{fileCNT} ' is already done!']);
+            end
+            
         end
         
     end
     
 end
-
 
 
 %% Modeling stage 1
