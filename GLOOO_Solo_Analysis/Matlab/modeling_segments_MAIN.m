@@ -105,6 +105,7 @@ end
 %% get list of files
 
 directoryFiles = dir(paths.wavPrepared);
+
 % only get the wave files out of the folder into the list of audio files
 % which should be processed
 validFileidx    = 1;
@@ -166,8 +167,6 @@ if do_basic_analysis == true
     parfor (fileCNT = filesToDo,parMode)
      %for fileCNT = filesToDo
         
-        
-        
         if param.info == true
             disp(['starting basic analysis for: ',fileNames{fileCNT}]);
         end
@@ -178,6 +177,7 @@ if do_basic_analysis == true
         [CTL, INF]           = basic_analysis(baseName, paths, param, setToDo);
         
     end
+    
 end
 
 

@@ -42,13 +42,13 @@ bark_filterbank_to_YAML(C,['bark-bank_' num2str(fs) '.yml'], fs, order)
 
 P =  '/home/anwaldt/WORK/GLOOO/Violin_Library_2015/Analysis/SingleSounds_ BuK_ yin_2019-01-21/Sinusoids/';
 
-nr = '136';
+nr = '01';
 
 load([P 'SampLib_BuK_' nr '.mat'])
     
 
 %[x,fs] = audioread([P 'Residual_BuK_' nr '.wav']);
-
+scp -r studio@130.149.23.16:/mnt/DATA
 
 lHop = SMS.param.lHop*0.5;
 lWin = SMS.param.lWinNoise;
@@ -56,8 +56,8 @@ lWin = SMS.param.lWinNoise;
 
 %% import from txt data
 
-nr = '03';
-X = importfile('/home/anwaldt/WORK/GLOOO/GLOOO_synth/MODEL/txt_60P/SampLib_BuK_03.BBE');
+nr = '01';
+X = importfile('/home/anwaldt/WORK/GLOOO/GLOOO_synth/MODEL/txt_60P/SampLib_BuK_01.BBE');
 
 lHop = 128;
 lWin = 4096;
