@@ -32,3 +32,12 @@ for frameCNT =1:nFrames
     end
     
 end
+
+
+% subsequent smoothing
+
+for bandCNT = 1:nBands
+
+    BET(:,bandCNT) = smooth(BET(:,bandCNT),20);
+
+end

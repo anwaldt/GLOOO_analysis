@@ -45,6 +45,7 @@ if 1%exist(partialName,'file') == 0
            
     [BET]  = get_residual_trajectories(noiseFrames, param, CTL);
 
+  
     SMS.BET = BET;
     
     SMS.param = param;
