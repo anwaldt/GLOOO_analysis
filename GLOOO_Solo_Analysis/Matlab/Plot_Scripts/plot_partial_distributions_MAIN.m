@@ -15,36 +15,39 @@ addpath(p)
 
 %% LOAD YAML FILE
 
-P =  '/home/anwaldt/WORK/GLOOO/GLOOO_synth/MODEL/yaml/';
+P =  '/home/anwaldt/WORK/GLOOO/GLOOO_synth/MODEL/yaml_60P/';
 
-nr = '57';
+nr = '55';
 
 MOD = YAML.read([P 'SampLib_BuK_' nr '.yml']);
 
 %% Frequencies
 
-close all
+ 
 
 P = struct2cell(MOD.SUS.PARTIALS);
 
 figure
-hold on
+
+F = axes;
+
 
 mapC =[];
 
-for partCNT= 1:30
+for partCNT= 1:5
     
     
     
-    xxx = plot(P{partCNT}.FRE.xval,P{partCNT}.FRE.dist);
-    
-    colVec = [1 1 1] * partCNT/30;
+    xxx = plot(P{partCNT}.FRE.xval*partCNT,P{partCNT}.FRE.dist);
+    hold on
+
+    colVec = [1 1 1] * partCNT/6;
     set(xxx,{'linew'},{1.2},'Color',colVec)
 
     mapC = [mapC;colVec];
     
     
-    set(xxx,{'linewidth'},{1})
+    set(xxx,{'linewidth'},{0.5})
     
     
     
@@ -57,59 +60,62 @@ for partCNT= 1:30
     
 end
 
-xlim([0.95, 1.05])
+ xlim([0.9, 5.5])
 
-xlabel('$f_i / (f_1  i)$');
+ set(F,'xscale','log')
+
+xlabel('$f/ (f_0)$');
 ylabel('CMF')
 hold off
 
 
 colormap(mapC)
-caxis([0 30]);
+caxis([0 5]);
 
-h=colorbar
+h=colorbar;
 set(get(h,'title'),'string','Partial index');
 
-axoptions={'scaled y ticks = false',...
+axoptions={'axis on top',...
+    'scaled y ticks = false',...
     'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=2}'};
 
 
-matlab2tikz(['cmf-freq.tex'],'width','0.9\textwidth','height','0.5\textheight', ...
+matlab2tikz(['cmf-freq.tex'],'width','0.35\textwidth','height','0.125\textwidth', ...
     'tikzFileComment','created from: plot_partial_distributions_MAIN.m ', ...
     'parseStrings',false,'extraAxisOptions',axoptions);
 
 
 %% AMPLITUDES
 
-close all
-
+figure
 P = struct2cell(MOD.SUS.PARTIALS);
 
-F = axes
+F = axes;
+
 hold on
 
 mapC =[];
 
-for partCNT= 1:30
+for partCNT= 1:5
     
     
     
     xxx = plot(P{partCNT}.AMP.xval,P{partCNT}.AMP.dist);
     
-    colVec = [1 1 1] * partCNT/30;
+    colVec = [1 1 1] * partCNT/6;
     set(xxx,{'linew'},{1.2},'Color',colVec)
 
     mapC = [mapC;colVec];
     
     
-    set(xxx,{'linewidth'},{1})
+    set(xxx,{'linewidth'},{0.5})
     
     
 end
 
 set(F,'xscale','log')
 
-xlim([10e-7, 0.1])
+xlim([10e-5, 0.1])
 
 xlabel('$\log(a_i)$');
 ylabel('CMF')
@@ -117,17 +123,18 @@ hold off
 
 
 colormap(mapC)
-caxis([0 30]);
+caxis([0 5]);
 
-h=colorbar
+h=colorbar;
 
 set(get(h,'title'),'string','Partial index');
 
-axoptions={'scaled y ticks = false',...
+axoptions={    'axis on top',...
+    'scaled y ticks = false',...
     'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=2}'};
 
 
-matlab2tikz(['cmf-amp.tex'],'width','0.9\textwidth','height','0.5\textheight', ...
+matlab2tikz(['cmf-amp.tex'],'width','0.35\textwidth','height','0.125\textwidth', ...
     'tikzFileComment','created from: plot_partial_distributions_MAIN.m ', ...
     'parseStrings',false,'extraAxisOptions',axoptions);
 
@@ -135,28 +142,27 @@ matlab2tikz(['cmf-amp.tex'],'width','0.9\textwidth','height','0.5\textheight', .
 
 %% BARK
 
-close all
-
+figure
 P = struct2cell(MOD.SUS.RESIDUAL);
 
-F = axes
+F = axes;
 hold on
 
 mapC =[];
 
-for partCNT= 1:24
+for partCNT= 1:5
     
     
     
     xxx = plot(P{partCNT}.AMP.xval,P{partCNT}.AMP.dist);
     
-    colVec = [1 1 1] * partCNT/24;
+    colVec = [1 1 1] * partCNT/6;
     set(xxx,{'linew'},{1.2},'Color',colVec)
 
     mapC = [mapC;colVec];
     
     
-    set(xxx,{'linewidth'},{1})
+    set(xxx,{'linewidth'},{0.5})
     
     
 end
@@ -171,16 +177,16 @@ hold off
 
 
 colormap(mapC)
-caxis([0 24]);
+caxis([0 5]);
 
-h=colorbar
+h=colorbar;
 
 set(get(h,'title'),'string','Bark index');
 
-axoptions={'scaled y ticks = false',...
+axoptions={    'scaled y ticks = false',...
     'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=2}'};
 
 
-matlab2tikz(['cmf-bark.tex'],'width','0.9\textwidth','height','0.5\textheight', ...
+matlab2tikz(['cmf-bark.tex'],'width','0.35\textwidth','height','0.125\textwidth', ...
     'tikzFileComment','created from: plot_partial_distributions_MAIN.m ', ...
     'parseStrings',false,'extraAxisOptions',axoptions);

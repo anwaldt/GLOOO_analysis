@@ -154,7 +154,7 @@ for bandCNT = 1:size(SMS.BET,2)
     nSteady = SMS.BET(startSamp:stopSamp,:);
     nS      = nSteady(:,bandCNT);
     
-    % create cmf
+    % create cmfhttps://www.quora.com/What-does-cumulative-mass-function-mean
     [h,x]=hist(nS,50);
     
     % normalize
