@@ -55,52 +55,37 @@ stopSamp    = bSamp(2);
 
 SUS = struct();
 
+% get FRE partial trajectory for sustain part
+fSteady = SMS.FRE(:,startSamp:stopSamp);
+
+
+
 for partCNT = 1:param.PART.nPartials
-    
-    % get FRE partial trajectory for sustain part
-    fSteady = SMS.FRE(:,startSamp:stopSamp);
+        
+    % get segment and normalize to: deviation from f / (f0*N)
     fS      = fSteady(partCNT,: );
-    
-    % normalize to: deviation from f / (f0*N)
     fS      = fS./ mean(CTL.f0.swipe.f0(startSamp:stopSamp))'./partCNT;
     
-    % decompose ?!
-    
-    
+    %  get standard distribution features
     tmpMed  = median(fS);
     tmpMean = mean(fS);
     tmpStd  = std(fS);
     
+    [H, CMF, cmf_values] = get_transition_probabilities(fS, param.MARKOV.N_distributions, param.MARKOV.N_icmf);    
     
-    % create cmf
-    [h,x]=hist(fS,50);
-    
-    % normalize
-    h = h./sum(h);
-    
-    % create cdf
-    cdf = cumsum(h);
-    
-    %
-    %       subplot(2,1,1)
-    %         hold on
-    %
-    %      plot(x,cdf)
-    %          drawnow
-    %            pause(1)
-    
+       
     % write to struct
-    
-    % the direct distribution
-    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.dist = cdf;']);
-    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.xval = x;']);
-    
-    % basic parameters
+   
+     % basic parameters
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.med  = tmpMed;']);
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.std  = tmpStd;']);
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.mean  = tmpMean;']);
+   
+    % the direct distribution
+    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.ICMF = CMF;']);
+    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.xval = cmf_values;']);
     
-    
+      
     % get AMP partial trajectory for sustain part
     aSteady = SMS.AMP(:,startSamp:stopSamp);
     aS      = aSteady(partCNT,:);
@@ -108,43 +93,29 @@ for partCNT = 1:param.PART.nPartials
     % normalize to: contribution to overall harmonic amplitude
     %aS = aS./smooth(sum(SMS.AMP(:,startSamp:stopSamp)),10)';
     
-    % create cmf
-    [h,x]=hist(aS,50);
-    
-    % normalize
-    h = h./sum(h);
-    
-    % get cdf
-    cdf = cumsum(h);
-    
-    %
-    %       subplot(2,1,2)
-    %         hold on
-    %
-    %      plot(x,cdf)
-    %          drawnow
-    %            pause(1)
-    
-    
-    % write to struct
-    %    SUS(partCNT).AMP.cdf  = cdf;
-    %    SUS(partCNT).AMP.xVal = x;
-    
+        
+    % get standard distribution features
     tmpMed  = median(aS);
     tmpMean = mean(aS);
     tmpStd  = std(aS);
     
-    % write to struct
     
-    % the direct distribution
-    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.dist = cdf;']);
-    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.xval = x;']);
+    [H, CMF, cmf_values] = get_transition_probabilities(aS, param.MARKOV.N_distributions, param.MARKOV.N_icmf);
+
+
+    
+    % write to struct
     
     % write basic parameters
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.med  = tmpMed;']);
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.std  = tmpStd;']);
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.mean  = tmpMean;']);
-        
+    
+    % the direct distribution
+    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.ICMF = CMF;']);
+    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.xval = cmf_values;']);
+    
+    
 end
 
 
@@ -153,30 +124,24 @@ for bandCNT = 1:size(SMS.BET,2)
     % the noise bands
     nSteady = SMS.BET(startSamp:stopSamp,:);
     nS      = nSteady(:,bandCNT);
-    
-    % create cmfhttps://www.quora.com/What-does-cumulative-mass-function-mean
-    [h,x]=hist(nS,50);
-    
-    % normalize
-    h = h./sum(h);
-    
-    % get cdf
-    cdf = cumsum(h);
-    
+         
     tmpMed  = median(nS);
     tmpMean = mean(nS);
     tmpStd  = std(nS);
     
+    [H, CMF, cmf_values] = get_transition_probabilities(aS, param.MARKOV.N_distributions, param.MARKOV.N_icmf);
+
     % write to struct
     
-    % the direct distribution
-    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.dist = cdf;']);
-    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.xval = x;']);
-    
     % basic parameters
-    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.med  = tmpMed;']);
-    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.std  = tmpStd;']);
-    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.mean  = tmpMean;']);
+    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.NRG' '.med  = tmpMed;']);
+    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.NRG' '.std  = tmpStd;']);
+    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.NRG' '.mean  = tmpMean;']);
+    
+    % the direct distribution
+    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.NRG' '.ICMF = CMF;']);
+    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.NRG' '.xval = cmf_values;']);
+    
     
 end
 
@@ -199,7 +164,7 @@ for partCNT = 1:param.PART.nPartials
     tmpL    = length(tmpVal);
     %eval(['ATT.PARTIALS.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
     eval(['REL.PARTIALS.P_' num2str(partCNT) '.length = tmpL;']);
-       
+    
     % partial amplitudes
     tmpTra = SMS.AMP(partCNT,1:startSamp);
     
@@ -241,10 +206,10 @@ for bandCNT = 1:size(SMS.BET,2)
     
     tmpTra(isnan(tmpTra)) = 0;
     tmpL    = length(tmpF);
-     
+    
     %eval(['ATT.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.trajectory = tmpTra;']);
     eval(['REL.RESIDUAL.BARK_' num2str(bandCNT) '.length = tmpL;']);
-     
+    
 end
 
 %% release
@@ -268,33 +233,33 @@ for partCNT = 1:param.PART.nPartials
     
     eval(['REL.PARTIALS.P_' num2str(partCNT) '.length = tmpL;']);
     
-%     
-%     eval(['REL.PARTIALS.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
-%     
-%     % partial amplitudes
-%     tmpTra = SMS.AMP(partCNT,stopSamp:end);
-%     
-%     if length(find(tmpTra==0)) ~= length(tmpTra)
-%         
-%         if tmpTra(1) == 0
-%             
-%             firstVal = find(tmpTra>0,1);
-%             tmpTra(1:firstVal-1)=tmpTra(firstVal);
-%             
-%         end
-%         
-%         tmpTra = tmpTra./(tmpTra(1));
-%         
-%     end
-%     
-%     
-%     eval(['REL.PARTIALS.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
-%     
-%     if any(isnan(tmpF)) || any(isnan(tmpTra))
-%         error(['NaN in: ' baseName])
-%     end
-%     
-%     
+    %
+    %     eval(['REL.PARTIALS.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
+    %
+    %     % partial amplitudes
+    %     tmpTra = SMS.AMP(partCNT,stopSamp:end);
+    %
+    %     if length(find(tmpTra==0)) ~= length(tmpTra)
+    %
+    %         if tmpTra(1) == 0
+    %
+    %             firstVal = find(tmpTra>0,1);
+    %             tmpTra(1:firstVal-1)=tmpTra(firstVal);
+    %
+    %         end
+    %
+    %         tmpTra = tmpTra./(tmpTra(1));
+    %
+    %     end
+    %
+    %
+    %     eval(['REL.PARTIALS.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
+    %
+    %     if any(isnan(tmpF)) || any(isnan(tmpTra))
+    %         error(['NaN in: ' baseName])
+    %     end
+    %
+    %
     
 end
 

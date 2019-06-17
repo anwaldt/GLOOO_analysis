@@ -86,7 +86,11 @@ param.PART.fMax          = 4000;
 param.PART.nPhaseSteps   = 10;
 
 
-%% NOISE
+%% MODLEING /  NOISE
+
+% number of steps for discrete value range
+param.MARKOV.N_distributions  = 21;
+param.MARKOV.N_icmf = 21;
 
 param.NOISE.order  = 2;
 param.NOISE.ripple = 3;
