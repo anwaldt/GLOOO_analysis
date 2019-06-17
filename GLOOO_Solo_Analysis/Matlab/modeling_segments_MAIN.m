@@ -25,19 +25,19 @@ restoredefaultpath
 
 
 % Set the (output) path for this set
-%ds = datestr(now,'yyyy-mm-dd');
-ds = '2019-06-16';
+ds = datestr(now,'yyyy-mm-dd');
+%ds = '2019-06-16';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
 run_parallel             = 1;
 
 % overwrite existing results
-renew_all                = 0;
+renew_all                = 1;
 
 % Decide which parts should be executed:
-do_basic_analysis        = 0;
-do_partial_analysis      = 0;
+do_basic_analysis        = 1;
+do_partial_analysis      = 1;
 do_modeling_segments     = 1;
 
 % only for single sounds:
@@ -61,12 +61,14 @@ micToDo     = 'BuK';
 % chose whether to process all files,
 % a single file by name, or a subset:
 
-%filesToDo  = 'All';
+filesToDo  = 'All';
 
 % filesToDo  = '1-oct-sweep.wav';
 % filesToDo  = 'TwoNote_BuK_22.wav';
 
-filesToDo  = {'SampLib_BuK_01.wav','SampLib_BuK_02.wav','SampLib_BuK_03.wav','SampLib_BuK_04.wav'};
+%filesToDo  = {'SampLib_BuK_01.wav','SampLib_BuK_02.wav','SampLib_BuK_03.wav','SampLib_BuK_04.wav', ...
+%   'SampLib_BuK_05.wav','SampLib_BuK_06.wav','SampLib_BuK_07.wav','SampLib_BuK_08.wav' };
+
 % filesToDo   = 'TwoNote_BuK_22.wav';
 % filesToDo   = 'SampLib_BuK_301.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';

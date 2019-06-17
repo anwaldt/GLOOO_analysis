@@ -83,7 +83,7 @@ for partCNT = 1:param.PART.nPartials
    
     % the direct distribution
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.ICMF = CMF;']);
-    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.xval = cmf_values;']);
+    %eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.xval = cmf_values;']);
     
       
     % get AMP partial trajectory for sustain part
@@ -99,11 +99,8 @@ for partCNT = 1:param.PART.nPartials
     tmpMean = mean(aS);
     tmpStd  = std(aS);
     
-    
     [H, CMF, cmf_values] = get_transition_probabilities(aS, param.MARKOV.N_distributions, param.MARKOV.N_icmf);
-
-
-    
+  
     % write to struct
     
     % write basic parameters
@@ -113,7 +110,7 @@ for partCNT = 1:param.PART.nPartials
     
     % the direct distribution
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.ICMF = CMF;']);
-    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.xval = cmf_values;']);
+    %%eval(['SUS.PARTIALS.P_' num2str(partCNT) '.AMP' '.xval = cmf_values;']);
     
     
 end
@@ -140,7 +137,7 @@ for bandCNT = 1:size(SMS.BET,2)
     
     % the direct distribution
     eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.NRG' '.ICMF = CMF;']);
-    eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.NRG' '.xval = cmf_values;']);
+    %%eval(['SUS.RESIDUAL.BARK_' num2str(bandCNT) '.NRG' '.xval = cmf_values;']);
     
     
 end
