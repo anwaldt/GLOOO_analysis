@@ -184,17 +184,22 @@ end
 
 ATT = struct();
 
-ATT.LENGTH =  SOLO.SEG{1}.stopSEC - SOLO.SEG{1}.startSEC;
+% main parameters
+ATT.start   =  SOLO.SEG{1}.startIND;
+ATT.stop    =  SOLO.SEG{1}.stopIND;
+ATT.duration =  SOLO.SEG{1}.stopSEC - SOLO.SEG{1}.startSEC;
 
 for partCNT = 1:param.PART.nPartials
     
     % partial frequencies
     tmpF    = SMS.FRE(partCNT,1:startSamp);
     tmpVal  = tmpF./mean(CTL.f0.swipe.f0(startSamp:stopSamp))./partCNT;
+    
     tmpVal  = tmpVal./tmpVal(end);
-    
-    eval(['ATT.PARTIALS.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
-    
+    tmpL    = length(tmpVal);
+    %eval(['ATT.PARTIALS.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
+    eval(['REL.PARTIALS.P_' num2str(partCNT) '.length = tmpL;']);
+       
     % partial amplitudes
     tmpTra = SMS.AMP(partCNT,1:startSamp);
     
@@ -209,7 +214,7 @@ for partCNT = 1:param.PART.nPartials
         
     end
     
-    eval(['ATT.PARTIALS.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
+    %eval(['ATT.PARTIALS.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
     
     if any(isnan(tmpF)) || any(isnan(tmpTra))
         error(['NaN in: ' baseName])
@@ -235,17 +240,22 @@ for bandCNT = 1:size(SMS.BET,2)
     end
     
     tmpTra(isnan(tmpTra)) = 0;
-    
-    eval(['ATT.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.trajectory = tmpTra;']);
-    
+    tmpL    = length(tmpF);
+     
+    %eval(['ATT.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.trajectory = tmpTra;']);
+    eval(['REL.RESIDUAL.BARK_' num2str(bandCNT) '.length = tmpL;']);
+     
 end
 
 %% release
 
 REL = struct();
 
-REL.LENGTH =  SOLO.SEG{1}.stopSEC - SOLO.SEG{1}.startSEC;
+REL.duration =  SOLO.SEG{3}.stopSEC - SOLO.SEG{3}.startSEC;
 
+
+REL.start   =  SOLO.SEG{3}.startIND;
+REL.stop   =  SOLO.SEG{3}.stopIND;
 
 for partCNT = 1:param.PART.nPartials
     
@@ -254,30 +264,37 @@ for partCNT = 1:param.PART.nPartials
     tmpVal  = tmpF./mean(CTL.f0.swipe.f0(startSamp:stopSamp))./partCNT;
     tmpVal  = tmpVal./tmpVal(1);
     
-    eval(['REL.PARTIALS.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
+    tmpL    = length(tmpF);
     
-    % partial amplitudes
-    tmpTra = SMS.AMP(partCNT,stopSamp:end);
+    eval(['REL.PARTIALS.P_' num2str(partCNT) '.length = tmpL;']);
     
-    if length(find(tmpTra==0)) ~= length(tmpTra)
-        
-        if tmpTra(1) == 0
-            
-            firstVal = find(tmpTra>0,1);
-            tmpTra(1:firstVal-1)=tmpTra(firstVal);
-            
-        end
-        
-        tmpTra = tmpTra./(tmpTra(1));
-        
-    end
-    
-    
-    eval(['REL.PARTIALS.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
-    
-    if any(isnan(tmpF)) || any(isnan(tmpTra))
-        error(['NaN in: ' baseName])
-    end
+%     
+%     eval(['REL.PARTIALS.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
+%     
+%     % partial amplitudes
+%     tmpTra = SMS.AMP(partCNT,stopSamp:end);
+%     
+%     if length(find(tmpTra==0)) ~= length(tmpTra)
+%         
+%         if tmpTra(1) == 0
+%             
+%             firstVal = find(tmpTra>0,1);
+%             tmpTra(1:firstVal-1)=tmpTra(firstVal);
+%             
+%         end
+%         
+%         tmpTra = tmpTra./(tmpTra(1));
+%         
+%     end
+%     
+%     
+%     eval(['REL.PARTIALS.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
+%     
+%     if any(isnan(tmpF)) || any(isnan(tmpTra))
+%         error(['NaN in: ' baseName])
+%     end
+%     
+%     
     
 end
 
@@ -305,8 +322,12 @@ for bandCNT = 1:size(SMS.BET,2)
     
     tmpTra(isnan(tmpTra)) = 0;
     
+    tmpL    = length(tmpF);
     
-    eval(['REL.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.trajectory = tmpTra;']);
+    %     eval(['REL.RESIDUAL.BARK_' num2str(bandCNT) '.AMP' '.trajectory = tmpTra;']);
+    
+    eval(['REL.RESIDUAL.BARK_' num2str(bandCNT) '.length = tmpL;']);
+    
     
 end
 

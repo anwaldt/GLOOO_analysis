@@ -25,8 +25,8 @@ restoredefaultpath
 
 
 % Set the (output) path for this set
-ds = datestr(now,'yyyy-mm-dd'); 
-% ds = '2019-01-21';
+%ds = datestr(now,'yyyy-mm-dd'); 
+ds = '2019-05-17';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
