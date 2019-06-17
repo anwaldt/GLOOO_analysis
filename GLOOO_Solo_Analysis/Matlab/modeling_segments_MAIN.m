@@ -33,12 +33,12 @@ ds = datestr(now,'yyyy-mm-dd');
 run_parallel             = 1;
 
 % overwrite existing results
-renew_all                = 1;
+renew_all                = 0;
 
 % Decide which parts should be executed:
 do_basic_analysis        = 0;
 do_partial_analysis      = 0;
-do_modeling_segments     = 1;
+do_modeling_segments     = 0;
 
 % only for single sounds:
 do_statistical_sms       = 1;
