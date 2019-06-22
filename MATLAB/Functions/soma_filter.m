@@ -5,33 +5,43 @@
 % Author: Henrik von Coler
 % Edited: 2016-08-11
 
-function [ f0_ac ] = soma_filter( f0_Raw )
+function [out] = soma_filter(in, tresh)
  
 
-
 % allocate result vector:
-diffValTrack = zeros(size(f0_Raw));
+diffValTrack = zeros(size(in));
 
 % append a leading zero:
-f0_Raw  = [0;f0_Raw];
+% in  = [in];
 
 % vector for calculations
-f0_ac   = f0_Raw;
+out   = in;
 
 
 %% stage 1
 
 % how many samples look ahead ?
 nSteps = 1;
-tresh1 = 0.2;
+
+% previously hard coded value:
+%tresh1 = 0.2;
+
+
+m = mean(in);
+s = std(in);
+
+tresh1 = s*tresh;
+
+offset_memory = 0;
 
 % loop over all samples of the trajectory
-for i=1:length(f0_Raw)-nSteps
+for i=2:length(in) 
     
     % get relative (absolute) distance
     % of succesive f0-samples
-    diffVal             = (f0_ac(i+nSteps)-f0_ac(i));
-    relDiffVal          = diffVal/((f0_Raw(i+1)+f0_Raw(i))/2);
+    diffVal             = ((in(i)-in(i-1)));
+    relDiffVal          = diffVal/((in(i)+in(i-1))/2);
+    
     diffValTrack(i)     = relDiffVal;
     
     % either drag the following samples down by the differece between the
@@ -42,12 +52,15 @@ for i=1:length(f0_Raw)-nSteps
     % by shifting all following samples by
     % amount of relevant jumps
     
-    if abs(relDiffVal) > tresh1
-        f0_ac(i+1:end) = f0_ac(i+1:end)-f0_ac(i+1);
-    end
     
+    if abs(diffVal) > tresh1
+        offset_memory = offset_memory+diffVal;
+    end
+        
+   
+    out(i) = in(i)-offset_memory;
 end
 
 % remove leading zero:
-f0_ac(1) = [];
+% out(1) = [];
 

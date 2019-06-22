@@ -25,28 +25,27 @@ restoredefaultpath
 
 
 % Set the (output) path for this set
-ds = datestr(now,'yyyy-mm-dd');
-%ds = '2019-06-16';
+% either by actual date
+% ds = datestr(now,'yyyy-mm-dd');
+% work on specific set, instead:
+ds = '2019-06-16';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
-run_parallel             = 1;
+run_parallel             = 0;
 
 % overwrite existing results
-renew_all                = 1;
+renew_all                = 0;
 
 % Decide which parts should be executed:
-do_basic_analysis        = 1;
-do_partial_analysis      = 1;
-do_modeling_segments     = 1;
+do_basic_analysis        = 0;
+do_partial_analysis      = 0;
+do_modeling_segments     = 0;
 
 % only for single sounds:
 do_statistical_sms       = 1;
 
-
-% use remote folders (to be removed)
-remote_results           = 0;
-
+% automatically copy files (legacy)
 do_move_files_to_server  = 0;
 
 % Decide which files should be processed
@@ -169,15 +168,22 @@ if do_basic_analysis == true
     parfor (fileCNT = filesToDo,parMode)
         %for fileCNT = filesToDo
         
-        if param.info == true
-            disp(['starting basic analysis for: ',fileNames{fileCNT}]);
-        end
         
         [~,baseName,~]    = fileparts(fileNames{fileCNT});
         
-        % Get control- and   trajectories and features
-        [CTL, INF]           = basic_analysis(baseName, paths, param, setToDo);
         
+        if ~exist([paths.features baseName  '.mat'],'file') || renew_all == 1
+            
+            if param.info == true
+                disp(['starting basic analysis for: ',fileNames{fileCNT}]);
+            end
+            
+            
+            
+            % Get control- and   trajectories and features
+            [CTL, INF]           = basic_analysis(baseName, paths, param, setToDo);
+            
+        end
     end
     
 end
