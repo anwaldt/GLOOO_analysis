@@ -11,9 +11,10 @@ function [H, CMF, cmf_support] = get_transition_probabilities(in, N_distribution
 cmf_support = linspace(0,1,N_icmf);
 
 % we are assuming normal distribution, here
-minval = median(in)-1.5*std(in);
-maxval = median(in)+1.5*std(in);
 
+
+maxval = prctile(in,95);
+minval = median(in) + (median(in) - prctile(in,97));
 
 tmpAmps     = linspace(minval,maxval, N_distributions);
 
