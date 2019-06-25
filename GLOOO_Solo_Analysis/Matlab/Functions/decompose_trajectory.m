@@ -23,7 +23,7 @@ fs = 1/(param.lHop/param.fs);
 
 
 % vector for calculations
-cleanVEC = soma_filter(inVEC);
+cleanVEC = soma_filter(inVEC,0.1);
 
 
 %% POST PROCESSING

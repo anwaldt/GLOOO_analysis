@@ -36,7 +36,7 @@ noteModel.stopIND  = featStopInd;
 f0seg       = f0vec(featStartInd:featStopInd);
 
 % intercept formant/octave errors
-f0segPOST   = soma_filter(f0seg)+f0seg(1);
+f0segPOST   = soma_filter(f0seg,0.1);
 f0clean     = remove_octave_errors(f0seg);
 
 

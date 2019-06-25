@@ -28,11 +28,11 @@ restoredefaultpath
 % either by actual date
 % ds = datestr(now,'yyyy-mm-dd');
 % work on specific set, instead:
-ds = '2019-06-16';
+ds = '2019-06-24';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
-run_parallel             = 0;
+run_parallel             = 1;
 
 % overwrite existing results
 renew_all                = 0;
@@ -40,7 +40,7 @@ renew_all                = 0;
 % Decide which parts should be executed:
 do_basic_analysis        = 0;
 do_partial_analysis      = 0;
-do_modeling_segments     = 0;
+do_modeling_segments     = 1;
 
 % only for single sounds:
 do_statistical_sms       = 1;
@@ -89,7 +89,7 @@ check_paths(paths)
 
 p = gcp('nocreate'); % If no pool, do not create new one.
 if isempty(p)
-    parpool
+    parpool(4)
 else
     disp(['Pool with '   num2str(p.NumWorkers) ' already active!']);
 end
@@ -98,7 +98,7 @@ if run_parallel == true
     parMode = Inf;
     disp('Running in PARALEL mode!')
 else
-    parMode = 0;
+    parMode = 12;
     disp('Running in SERIAL mode!')
     
 end
