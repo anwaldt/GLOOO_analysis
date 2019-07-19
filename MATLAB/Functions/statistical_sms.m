@@ -61,7 +61,7 @@ fSteady = SMS.FRE(:,startSamp:stopSamp);
 
 
 for partCNT = 1:param.PART.nPartials
-        
+    
     % get segment and normalize to: deviation from f / (f0*N)
     fS      = fSteady(partCNT,: );
     fS      = fS./ mean(CTL.f0.swipe.f0(startSamp:stopSamp))'./partCNT;
@@ -71,21 +71,23 @@ for partCNT = 1:param.PART.nPartials
     tmpMean = mean(fS);
     tmpStd  = std(fS);
     
-    [H, CMF, cmf_values] = get_transition_probabilities(fS, param.MARKOV.N_distributions, param.MARKOV.N_icmf);    
     
-       
+    
+    [H, CMF, cmf_values] = get_transition_probabilities(fS, param.MARKOV.N_distributions, param.MARKOV.N_icmf);
+    
+    
     % write to struct
-   
-     % basic parameters
+    
+    % basic parameters
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.med  = tmpMed;']);
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.std  = tmpStd;']);
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.mean  = tmpMean;']);
-   
+    
     % the direct distribution
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.ICMF = CMF;']);
     %eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.xval = cmf_values;']);
     
-      
+    
     % get AMP partial trajectory for sustain part
     aSteady = SMS.AMP(:,startSamp:stopSamp);
     aS      = aSteady(partCNT,:);
@@ -93,14 +95,17 @@ for partCNT = 1:param.PART.nPartials
     % normalize to: contribution to overall harmonic amplitude
     %aS = aS./smooth(sum(SMS.AMP(:,startSamp:stopSamp)),10)';
     
-        
+    
     % get standard distribution features
     tmpMed  = median(aS);
     tmpMean = mean(aS);
     tmpStd  = std(aS);
     
-    [H, CMF, cmf_values] = get_transition_probabilities(aS, param.MARKOV.N_distributions, param.MARKOV.N_icmf);
-  
+    [tmp_a, a_cor, a_mod, a_fluct] = decompose_trajectory(aS', param);
+    
+    
+    [H, CMF, cmf_values] = get_transition_probabilities(a_fluct, param.MARKOV.N_distributions, param.MARKOV.N_icmf);
+    
     % write to struct
     
     % write basic parameters
@@ -121,13 +126,15 @@ for bandCNT = 1:size(SMS.BET,2)
     % the noise bands
     nSteady = SMS.BET(startSamp:stopSamp,:);
     nS      = nSteady(:,bandCNT);
-         
+    
     tmpMed  = median(nS);
     tmpMean = mean(nS);
     tmpStd  = std(nS);
     
-    [H, CMF, cmf_values] = get_transition_probabilities(aS, param.MARKOV.N_distributions, param.MARKOV.N_icmf);
-
+    [tmp_e, e_cor, e_mod, e_fluct] = decompose_trajectory(nS, param);
+     
+    [H, CMF, cmf_values] = get_transition_probabilities(e_fluct, param.MARKOV.N_distributions, param.MARKOV.N_icmf);
+    
     % write to struct
     
     % basic parameters

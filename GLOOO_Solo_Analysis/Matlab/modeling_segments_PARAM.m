@@ -18,6 +18,8 @@
 
 param.plotit      = false;
 param.saveit      = true;
+
+% debug information
 param.info        = true;
 
 
@@ -36,9 +38,9 @@ param.lWinNoise     = 2^12;
 % first stage - this just tells which to use
 % later in modeling
 
-% param.F0.f0Mode         = 'swipe';
+param.F0.f0Mode         = 'swipe';
 % param.F0.f0Mode         = 'eckf';
-param.F0.f0Mode         = 'yin';
+% param.F0.f0Mode         = 'yin';
 
 param.F0.lWinYIN        = 2^14;
 param.F0.lWinF0         = 2^13;
@@ -83,14 +85,20 @@ param.PART.fMax          = 4000;
 % this is for the precision of the phase estimation
 % keep in mind: it takes 'param.nPhaseSteps' coarse
 % and 'param.nPhaseSteps' fine steps
-param.PART.nPhaseSteps   = 10;
+param.PART.nPhaseSteps   = 11;
 
 
 %% MODLEING /  NOISE
 
 % number of steps for discrete value range
-param.MARKOV.N_distributions  = 21;
-param.MARKOV.N_icmf = 21;
+param.MARKOV.N_distributions  = 11;
+param.MARKOV.N_icmf = 11;
+
+% cutoff frequency for preprocessing partial 
+% trajectories before Markovian modeling
+% (heuristic standard: 10 Hz)
+param.MARKOV.hpf_cutoff = 7;
+
 
 param.NOISE.order  = 2;
 param.NOISE.ripple = 3;

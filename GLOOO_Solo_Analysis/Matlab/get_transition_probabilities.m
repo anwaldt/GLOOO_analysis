@@ -1,3 +1,9 @@
+% get_transition_probabilities(in, N_distributions, N_icmf)
+%
+% Generates a markov model for the 
+%
+% HVC
+% 2017-02-20
 
 function [H, CMF, cmf_support] = get_transition_probabilities(in, N_distributions, N_icmf)
 
