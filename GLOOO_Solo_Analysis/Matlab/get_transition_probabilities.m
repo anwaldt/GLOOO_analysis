@@ -1,11 +1,11 @@
 % get_transition_probabilities(in, N_distributions, N_icmf)
 %
-% Generates a markov model for the 
+% Generates a markov model for the
 %
 % HVC
 % 2017-02-20
 
-function [H, CMF, cmf_support] = get_transition_probabilities(in, N_distributions, N_icmf)
+function [H, ICMF, cmf_support, tmpAmps] = get_transition_probabilities(in, N_distributions, N_icmf)
 
 
 % use soma filter (maybe?)
@@ -19,8 +19,8 @@ cmf_support = linspace(0,1,N_icmf);
 % we are assuming normal distribution, here
 
 
-maxval = prctile(in,95);
-minval = median(in) + (median(in) - prctile(in,97));
+maxval = max(in);%prctile(in,99);
+minval = min(in);%median(in) + (median(in) - prctile(in,99));
 
 tmpAmps     = linspace(minval,maxval, N_distributions);
 
@@ -29,7 +29,7 @@ H           = cell(1, N_distributions);
 
 for frameCNT = 1:length(in)-1
     
-    tmpVal      = in(frameCNT);   
+    tmpVal      = in(frameCNT);
     
     if tmpVal >= minval && tmpVal <= maxval
         
@@ -46,22 +46,24 @@ end
 
 
 
-CMF = struct();
-CMF.support = cmf_support;
 
-CMF.valid = zeros(1,N_distributions);
+ICMF            = struct();
+
+
+
+valid = zeros(1,N_distributions);
+
 
 for distCNT = 1:N_distributions
-    
     
     %% create cmf
     
     [pmf,x_values]   = hist(H{distCNT}, tmpAmps);
     
     if sum(pmf)==0
-        CMF.valid(distCNT) = 0;
+        valid(distCNT) = 0;
     else
-        CMF.valid(distCNT) = 1;
+        valid(distCNT) = 1;
     end
     
     % normalize
@@ -72,38 +74,63 @@ for distCNT = 1:N_distributions
     
     %% INVERT
     
+    
+    
     icmf    = zeros(1,N_icmf);
     
-    for icmfCNT = 1: N_icmf
+    
+    for icmfCNT = 1: N_icmf-1
         
         % get support point
         tmpH    = cmf_support(icmfCNT);
         
         
-        lowerIDXs = find(cmf<tmpH);
+        higherIDXs = find(cmf>tmpH);
         
         
-        if ~isempty(lowerIDXs)
+        if ~isempty(higherIDXs)
             
-            tmpIDX = lowerIDXs(end);
+            tmpIDX = higherIDXs(1);
             
             icmf(icmfCNT) =  x_values(tmpIDX);
             
             
         end
         
-        
     end
     
     
-    eval(['CMF.dist_' num2str(distCNT) '.icmf = icmf;']);
-    eval(['CMF.dist_' num2str(distCNT) '.xval = x_values;']);
+    icmf(end) = icmf(end-1);
+    % close all, plot(x_values,pmf), figure ,plot(x_values,cmf), figure, plot(cmf_support,icmf)
     
     
-    %     CMF{distCNT}.XVAL = x_values;
-    %     CMF{distCNT}.ICMF = icmf;
+    if(valid(distCNT)==1)
+        eval(['ICMF.icmf_' num2str(distCNT) ' = icmf;']);
+        %eval(['ICMF.dist_' num2str(distCNT) '.xval = x_values;']);
+    end
     
-    
+end
+
+% remove empty cumulants
+validIDX    = cellfun(@(x) ~isempty(x), H);
+tmpAmps     = tmpAmps(validIDX);
+H           = H(validIDX);
+
+%cmf_support = cmf_support(validIDX);
+
+
+N_distributions = length(H);
+ICMF.support    = cmf_support;
+ICMF.values     = tmpAmps;
+
+xxx = 666;
+
+
+
+%     CMF{distCNT}.XVAL = x_values;
+%     CMF{distCNT}.ICMF = icmf;
+
+
 end
 
 

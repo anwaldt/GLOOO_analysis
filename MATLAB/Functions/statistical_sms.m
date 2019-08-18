@@ -73,7 +73,7 @@ for partCNT = 1:param.PART.nPartials
     
     
     
-    [H, CMF, cmf_values] = get_transition_probabilities(fS, param.MARKOV.N_distributions, param.MARKOV.N_icmf);
+    [H, CMF, cmf_values, support] = get_transition_probabilities(fS, param.MARKOV.N_distributions, param.MARKOV.N_icmf);
     
     
     % write to struct
@@ -85,7 +85,7 @@ for partCNT = 1:param.PART.nPartials
     
     % the direct distribution
     eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.ICMF = CMF;']);
-    %eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.xval = cmf_values;']);
+    eval(['SUS.PARTIALS.P_' num2str(partCNT) '.FRE' '.xval = support;']);
     
     
     % get AMP partial trajectory for sustain part

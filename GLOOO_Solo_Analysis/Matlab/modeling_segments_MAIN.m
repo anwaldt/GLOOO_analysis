@@ -179,9 +179,7 @@ if do_basic_analysis == true
             if param.info == true
                 disp(['starting basic analysis for: ',fileNames{fileCNT}]);
             end
-            
-            
-            
+             
             % Get control- and   trajectories and features
             [CTL, INF]           = basic_analysis(baseName, paths, param, setToDo);
             
@@ -254,9 +252,9 @@ end
 if do_statistical_sms == true
     
     % YAML stuff does not like parallel
-    parfor (fileCNT = filesToDo,parMode)
+       parfor (fileCNT = filesToDo,parMode)
         
-        % for fileCNT = filesToDo
+       %for fileCNT = filesToDo
         
         
         if param.info == true
