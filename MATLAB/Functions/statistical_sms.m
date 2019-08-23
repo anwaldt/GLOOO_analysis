@@ -73,7 +73,7 @@ for partCNT = 1:param.PART.nPartials
     
     
     
-    [H, CMF, cmf_values, support] = get_transition_probabilities(fS, param.MARKOV.N_distributions, param.MARKOV.N_icmf);
+    [H, CMF, cmf_values, support] = get_transition_probabilities(fS, param);
     
     
     % write to struct
@@ -104,7 +104,7 @@ for partCNT = 1:param.PART.nPartials
     [tmp_a, a_cor, a_mod, a_fluct] = decompose_trajectory(aS', param);
     
     
-    [H, CMF, cmf_values] = get_transition_probabilities(a_fluct, param.MARKOV.N_distributions, param.MARKOV.N_icmf);
+    [H, CMF, cmf_values] = get_transition_probabilities(a_fluct, param);
     
     % write to struct
     
@@ -133,7 +133,7 @@ for bandCNT = 1:size(SMS.BET,2)
     
     [tmp_e, e_cor, e_mod, e_fluct] = decompose_trajectory(nS, param);
      
-    [H, CMF, cmf_values] = get_transition_probabilities(e_fluct, param.MARKOV.N_distributions, param.MARKOV.N_icmf);
+    [H, CMF, cmf_values] = get_transition_probabilities(e_fluct, param);
     
     % write to struct
     

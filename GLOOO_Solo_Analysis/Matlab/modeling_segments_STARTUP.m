@@ -17,5 +17,8 @@ addpath('../../MATLAB/Classes/');
 p = genpath('../../MATLAB/orchidas-pitch-tracking');
 addpath(p)
 
+p = genpath('../../MATLAB/matlab2tikz');
+addpath(p)
+
 p = genpath('./');
 addpath(p);

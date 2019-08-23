@@ -35,7 +35,7 @@ ds = '2019-07-12';
 run_parallel             = 1;
 
 % overwrite existing results
-renew_all                = 0;
+renew_all                = 1;
 
 % Decide which parts should be executed:
 do_basic_analysis        = 0;
@@ -91,7 +91,7 @@ param.fs = 96000;
 
 p = gcp('nocreate'); % If no pool, do not create new one.
 if isempty(p)
-    parpool(4)
+    parpool(2)
 else
     disp(['Pool with '   num2str(p.NumWorkers) ' already active!']);
 end
@@ -254,7 +254,7 @@ if do_statistical_sms == true
     % YAML stuff does not like parallel
        parfor (fileCNT = filesToDo,parMode)
         
-       %for fileCNT = filesToDo
+       %     for fileCNT = filesToDo
         
         
         if param.info == true

@@ -90,15 +90,20 @@ param.PART.nPhaseSteps   = 11;
 
 %% MODLEING /  NOISE
 
-% number of steps for discrete value range
-param.MARKOV.N_distributions  = 11;
-param.MARKOV.N_icmf = 11;
+% number of ICMFs for each paramter:
+param.MARKOV.N_distributions  = 21;
+% number of support points in each ICMF:
+param.MARKOV.N_icmf = 21;
 
 % cutoff frequency for preprocessing partial 
 % trajectories before Markovian modeling
 % (heuristic standard: 10 Hz)
 param.MARKOV.hpf_cutoff = 7;
 
+% plot the inversion process during statistical modeling?
+param.MARKOV.plot = 0;
+
+%%
 
 param.NOISE.order  = 2;
 param.NOISE.ripple = 3;
