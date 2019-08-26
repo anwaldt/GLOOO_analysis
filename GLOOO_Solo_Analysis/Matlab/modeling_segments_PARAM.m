@@ -4,7 +4,7 @@
 %       
 %       - control trajectories and features
 %       - 
-%
+%   
 % Author : Henrik von Coler
 %
 % Created: 2014-02-17
@@ -101,7 +101,7 @@ param.MARKOV.N_icmf = 21;
 param.MARKOV.hpf_cutoff = 7;
 
 % plot the inversion process during statistical modeling?
-param.MARKOV.plot = 0;
+param.MARKOV.plot = 1;
 
 %%
 
