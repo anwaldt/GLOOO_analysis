@@ -23,13 +23,13 @@ addpath(p)
 p = genpath('../GLOOO_Solo_Analysis/Matlab');
 addpath(p);
  
-
+ 
 %%
 
-fs      = 44100;
+fs      = 48000;
 
-order   = 2;
-ripple  = 1;
+order   = 3;
+ripple  = 0.5;
 
 % this cell structure is for use in MATLAB
 C       = make_bark_filterbank(fs,order,ripple);

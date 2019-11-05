@@ -22,7 +22,7 @@ BF          = cell(nFilters,1);
 
 for i=1:nFilters
 
-    [b,a] = cheby1(order, ripple,[edges(i)/fs, edges(i+1)/fs]);
+    [b,a] = cheby1(order, ripple,[edges(i)/(fs/2), edges(i+1)/(fs/2)]);
 
 %    impz(b,a)
     
