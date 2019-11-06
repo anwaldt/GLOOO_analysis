@@ -40,7 +40,7 @@ bark_filterbank_to_YAML(C,['bark-bank_' num2str(fs) '.yml'], fs, order)
 
 %% import from .mat files
 
-P =  '/home/anwaldt/WORK/GLOOO/Violin_Library_2015/Analysis/SingleSounds_ BuK_ yin_2019-01-21/Sinusoids/';
+P =  '/home/anwaldt/WORK/GLOOO/Violin_Library_2015/Analysis/2019-08-12/Sinusoids/';
 
 nr = '01';
 
@@ -48,16 +48,16 @@ load([P 'SampLib_BuK_' nr '.mat'])
     
 
 %[x,fs] = audioread([P 'Residual_BuK_' nr '.wav']);
-scp -r studio@130.149.23.16:/mnt/DATA
 
 lHop = SMS.param.lHop*0.5;
 lWin = SMS.param.lWinNoise;
 
-
+%axis x line=bottom,
+%axis y line=left,
 %% import from txt data
 
 nr = '01';
-X = importfile('/home/anwaldt/WORK/GLOOO/GLOOO_synth/MODEL/txt_60P/SampLib_BuK_01.BBE');
+X = importfile('/home/anwaldt/WORK/GLOOO/Violin_Library_2015/Analysis/2019-08-12/SinusoidsTXT/SampLib_BuK_01.BBE');
 
 lHop = 128;
 lWin = 4096;
@@ -150,13 +150,14 @@ close all
 
 h = figure;
 
-for bandCNT = 3:10
+for bandCNT = [1,4,8,12,18,24]
     
+    tmp = smooth(abs(X(:,bandCNT)),10);
     
     % downsample by 4 when plotting
-    xxx = semilogy(X(1:4:end,bandCNT));
+    xxx = plot(smooth(X(1:4:end,bandCNT),4));
     
-    set(xxx,{'linew'},{1.2},'Color',[0 0 0])
+    set(xxx,{'linew'},{1.1},'Color',[0 0 0])
     
     
     
@@ -164,15 +165,15 @@ for bandCNT = 3:10
     set(xxx,'MarkerEdgeColor',[0 0 0 ]);
     set(xxx,'MarkerFaceColor',[0.7 0.7 0.7 ]);
     
-    ylim([10e-7,0.01])
+    %ylim([10e-7,0.01])
     ylabel(['$RMS_{' num2str(bandCNT) '}$'])
     
-    
-    axoptions={'scaled y ticks = false',...
-        'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=2}'};
+%     
+%     axoptions={'scaled y ticks = false',...
+%         'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=2}'};
     
         
-    matlab2tikz(['/home/anwaldt/Desktop/UCSD_presentation/tikz/bark-energies_' num2str(bandCNT) '.tex'],'width','0.9\textwidth','height','0.075\textheight', ...
+    matlab2tikz(['bark-energies_' num2str(bandCNT) '.tex'],'width','0.6\textwidth','height','0.2\textwidth', ...
         'tikzFileComment','created from: residual_synth_MAIN. ', ...
         'parseStrings',false,'extraAxisOptions',axoptions);
     
