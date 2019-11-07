@@ -147,7 +147,11 @@ for frameCNT = frameStart:nFrames-1
                 get_partial_frame(frame, lastPartials, f0est, param);
         
         else
+            
             resFrame = frame;
+            
+            % resFrame = zeros(size(frame));
+
             sinusoidal = zeros(size(frame));
             tmpPartials.FREQ = zeros(param.PART.nPartials,1);
             tmpPartials.AMPL = zeros(param.PART.nPartials,1);

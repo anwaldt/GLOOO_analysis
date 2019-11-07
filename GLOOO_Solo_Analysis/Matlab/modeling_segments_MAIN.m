@@ -15,6 +15,7 @@
 %
 %% RESET
 
+
 close all
 clearvars
 restoredefaultpath
@@ -38,9 +39,9 @@ run_parallel             = 1;
 renew_all                = 1;
 
 % Decide which parts should be executed:
-do_basic_analysis        = 0;
-do_partial_analysis      = 0;
-do_modeling_segments     = 0;
+do_basic_analysis        = 1;
+do_partial_analysis      = 1;
+do_modeling_segments     = 1;
 
 % only for single sounds:
 do_statistical_sms       = 1;
@@ -54,13 +55,13 @@ setToDo     = 'SingleSounds';
 % setToDo     = 'TwoNote';
 
 % Decide which microphone to use
-%micToDo     = 'DPA';
-micToDo     = 'BuK';
+micToDo     = 'DPA';
+% micToDo     = 'BuK';
 
 % chose whether to process all files,
 % a single file by name, or a subset:
 
-filesToDo  = 'All';
+% filesToDo  = 'All';
 
 % filesToDo  = '1-oct-sweep.wav';
 % filesToDo  = 'TwoNote_BuK_22.wav';
@@ -71,7 +72,7 @@ filesToDo  = 'All';
 % filesToDo   = 'TwoNote_BuK_22.wav';
 % filesToDo   = 'SampLib_BuK_301.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';
-% filesToDo = 'TwoNote_BUK_01.wav';
+filesToDo = 'SampLib_DPA_01.wav';
 
 %% PARAMETERS AND PATHS
 
@@ -193,9 +194,9 @@ end
 
 if do_partial_analysis == true
     
-    parfor (fileCNT = filesToDo,parMode)
+    % parfor (fileCNT = filesToDo,parMode)
         
-        % for fileCNT = filesToDo
+    for fileCNT = filesToDo
         
         
         

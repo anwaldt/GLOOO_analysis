@@ -67,7 +67,7 @@ param.PART.info         = true;
 
 % threshold of the swipe pitch strength above which the partials are
 % tracked
-param.PART.psThresh     = 0.1;
+param.PART.psThresh     = 0.05;
 
 param.PART.getPhases    = true;
 
@@ -101,7 +101,7 @@ param.MARKOV.N_icmf = 21;
 param.MARKOV.hpf_cutoff = 7;
 
 % plot the inversion process during statistical modeling?
-param.MARKOV.plot = 1;
+param.MARKOV.plot = 0;
 
 %%
 
