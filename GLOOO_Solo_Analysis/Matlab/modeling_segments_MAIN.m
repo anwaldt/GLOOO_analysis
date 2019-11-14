@@ -26,10 +26,10 @@ restoredefaultpath
 
 % Set the (output) path for this set
 % either by actual date
-% ds = datestr(now,'yyyy-mm-dd');
+ds = datestr(now,'yyyy-mm-dd');
 
 % work on specific set, instead:
-ds = '2019-07-12';
+% ds = '2019-07-12';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
@@ -61,7 +61,7 @@ micToDo     = 'DPA';
 % chose whether to process all files,
 % a single file by name, or a subset:
 
-% filesToDo  = 'All';
+filesToDo  = 'All';
 
 % filesToDo  = '1-oct-sweep.wav';
 % filesToDo  = 'TwoNote_BuK_22.wav';
@@ -72,7 +72,7 @@ micToDo     = 'DPA';
 % filesToDo   = 'TwoNote_BuK_22.wav';
 % filesToDo   = 'SampLib_BuK_301.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';
-filesToDo = 'SampLib_DPA_01.wav';
+% filesToDo = 'SampLib_DPA_01.wav';
 
 %% PARAMETERS AND PATHS
 
@@ -92,7 +92,7 @@ param.fs = 96000;
 
 p = gcp('nocreate'); % If no pool, do not create new one.
 if isempty(p)
-    parpool(2)
+    parpool()
 else
     disp(['Pool with '   num2str(p.NumWorkers) ' already active!']);
 end
