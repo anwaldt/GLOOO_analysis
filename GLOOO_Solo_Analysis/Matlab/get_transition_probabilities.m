@@ -82,8 +82,14 @@ N_distributions = length(H);
 valid = zeros(1,N_distributions);
 valid(validIDX) = 1;
 
-PMF = hist(in, distribution_centers);
-PMF = PMF/sum(PMF);
+
+if size(distribution_centers)>1
+    PMF = hist(in, distribution_centers);
+    PMF = PMF/sum(PMF);
+else
+        PMF = 1;
+end
+
 
 if param.MARKOV.plot == 1
     
