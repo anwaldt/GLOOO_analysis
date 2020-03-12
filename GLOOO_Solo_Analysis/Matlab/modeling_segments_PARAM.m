@@ -101,7 +101,21 @@ param.MARKOV.N_icmf = 21;
 param.MARKOV.hpf_cutoff = 7;
 
 % plot the inversion process during statistical modeling?
-param.MARKOV.plot = 0;
+% DO THIS ONLY IN STEPWISE DEBUGGING !!!
+% (or generate millions of plots)
+%
+% 1: export multiple icmfs
+% 2: plot decomposition
+% 3: export surface plot pmf data
+% 'noise-decomp'
+param.MARKOV.plot = 'noise-decomp';
+
+
+
+% plot the trajectory decomposition
+% DO THIS ONLY IN STEPWISE DEBUGGING !!!
+% (or generate millions of plots)
+param.MARKOV.plot_decomp = 0; 
 
 %%
 

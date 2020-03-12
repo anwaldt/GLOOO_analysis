@@ -41,6 +41,7 @@ maxval      = max(in);%prctile(in,99);
 minval      = min(in);%median(in) + (median(in) - prctile(in,99));
 
 distribution_centers     = linspace(minval,maxval, N_distributions);
+plot_centers     = linspace(minval,maxval, 100);
 
 %% count transitions
 
@@ -88,13 +89,16 @@ PMF = PMF/sum(PMF);
 if param.MARKOV.plot == 1
     
     figure(2)
-    plot(distribution_centers, PMF,'Color', [0 0 0]);
+    stem(distribution_centers, PMF,'Color', [0 0 0]);
     
 end
 
 
-ICMF            = struct();
+ICMF = struct();
 
+% used for storing and plotting
+PMF  = {};
+X    = {};
 
 for distCNT = 1:N_distributions
     
@@ -135,12 +139,11 @@ for distCNT = 1:N_distributions
         if param.MARKOV.plot == 1
             
             figure(1)
-    
             line([icmf{1} icmf{1}], [0 1] ,'DisplayName',['$PMF_{' num2str(distCNT) '}$'],'Color',[1 1 1]* distCNT/(N_distributions*1.5),'LineStyle',linest);
             
             figure(3)
             line([icmf{1} icmf{1}], [0 1] ,'DisplayName',['$CMF_{' num2str(distCNT) '}$'],'Color',[1 1 1]* distCNT/(N_distributions*1.5),'LineStyle',linest);
-                        
+            
             figure(4)
             line([0 1], [icmf{1} icmf{1} ] ,'DisplayName',['$ICMF_{' num2str(distCNT) '}$'],'Color',[1 1 1]* distCNT/(N_distributions*1.5),'LineStyle',linest);
             
@@ -150,7 +153,7 @@ for distCNT = 1:N_distributions
         
         
         % rule of thumb - use sqrt for number of data points:
-%        N_icmf          = ceil(sqrt(n_values));
+        %        N_icmf          = ceil(sqrt(n_values));
         % restrict size by parameter settings:
         N_icmf          = min(n_values, param.MARKOV.N_icmf);
         
@@ -161,11 +164,15 @@ for distCNT = 1:N_distributions
         [pmf,x_values]  = hist(tmpValues, tmp_icmf_val);
         pmf             = pmf./sum(pmf);
         
+        % store PMFs
+        PMF = [PMF, pmf];
+        X = [X, x_values];
         
         if param.MARKOV.plot == 1
             
             figure(1)
             plot(x_values,pmf,'DisplayName',['$PMF_{' num2str(distCNT) '}$'],'Color',[1 1 1]* distCNT/(N_distributions*1.5),'LineStyle',linest);
+            
             
         end
         
@@ -201,7 +208,7 @@ for distCNT = 1:N_distributions
                 
                 
             else
-               1;
+                1;
             end
             
         end
@@ -216,7 +223,7 @@ for distCNT = 1:N_distributions
         
         % alternative version (only for plots, now)
         icmf2  = sort(tmpValues);
-                
+        
         
         eval(['ICMF.icmf_' num2str(distCNT) '.icmf = icmf;']);
         eval(['ICMF.icmf_' num2str(distCNT) '.support = cmf_support;']);
@@ -264,7 +271,7 @@ for distCNT = 1:N_distributions
         axis tight
         xlabel('a')
         ylabel('$P_x(PMF,a)$')
-        legend show
+        %legend show
         legend('Location','northeastoutside')
         
         axoptions={'scaled y ticks = false',...
@@ -282,7 +289,7 @@ for distCNT = 1:N_distributions
         axoptions={'scaled y ticks = false',...
             'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=2}'};
         
-        matlab2tikz(['single-pmf.tex'],'width','0.9\textwidth','height','0.4\textwidth', ...
+        matlab2tikz(['single-pmf.tex'],'width','0.75\textwidth','height','0.4\textwidth', ...
             'tikzFileComment','created from: get_transition_probabilites.m ', ...
             'parseStrings',false,'extraAxisOptions',axoptions);
         
@@ -307,8 +314,8 @@ for distCNT = 1:N_distributions
         axis tight
         xlabel('Uniform')
         ylabel('$a_i$')
-        legend show
-        legend('Location','northeastoutside')
+        %legend hide
+        %legend('Location','northeastoutside')
         
         
         axoptions={'scaled y ticks = false',...
@@ -322,6 +329,46 @@ for distCNT = 1:N_distributions
     
 end
 
+%% this is for plotting a matrix of transition probabilities
 
 
+
+if param.MARKOV.plot == 3
+    fid = fopen(    'data.txt', 'w');
+    N = length(PMF);
+    T = [];
+    
+    for(i=1:N)
+        
+        t1 = PMF{i};imagesc(T);
+        x1 = X{i};
+        
+        t2 = interp1(x1,t1,plot_centers);
+        
+        t2(isnan(t2)) = 0;
+        
+        T = [T; t2];
+    end
+    
+    T = [zeros(1, size(T,2)) ; T; zeros(1, size(T,2))];
+    
+    for(i=1:size(T,1))
+        
+        for(j=1:size(T,2))
+            
+            s = [num2str(j), ' ',num2str(i), ' ' num2str(T(i,j)), '\n'];
+            
+            fprintf(fid, s);
+            
+        end
+        
+        fprintf(fid, '\n');
+        
+        
+    end
+    
+    dlmwrite('test.txt', T', 'delimiter', ' ');
+    fclose(fid);
+    
+end
 

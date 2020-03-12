@@ -26,10 +26,10 @@ restoredefaultpath
 
 % Set the (output) path for this set
 % either by actual date
-ds = datestr(now,'yyyy-mm-dd');
+% ds = datestr(now,'yyyy-mm-dd');
 
 % work on specific set, instead:
-% ds = '2019-07-12';
+ds = '2019-08-12';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
@@ -39,9 +39,9 @@ run_parallel             = 1;
 renew_all                = 1;
 
 % Decide which parts should be executed:
-do_basic_analysis        = 1;
-do_partial_analysis      = 1;
-do_modeling_segments     = 1;
+do_basic_analysis        = 0;
+do_partial_analysis      = 0;
+do_modeling_segments     = 0;
 
 % only for single sounds:
 do_statistical_sms       = 1;
@@ -55,8 +55,8 @@ setToDo     = 'SingleSounds';
 % setToDo     = 'TwoNote';
 
 % Decide which microphone to use
-micToDo     = 'DPA';
-% micToDo     = 'BuK';
+% micToDo     = 'DPA';
+ micToDo     = 'BuK';
 
 % chose whether to process all files,
 % a single file by name, or a subset:
