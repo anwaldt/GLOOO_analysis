@@ -122,7 +122,7 @@ for partCNT = 1:param.PART.nPartials
     end
     
     
-    [H, CMF, cmf_values, support] = get_transition_probabilities(fS, param);
+    [H, CMF, cmf_values, support] = get_transition_probabilities(fS, param, baseName);
     
     
     % write to struct
@@ -154,24 +154,37 @@ for partCNT = 1:param.PART.nPartials
     
     
     
-    if param.MARKOV.plot == 2
+    if strcmp(param.MARKOV.plot, 'amp-decomp')
         
         f1 = figure;
         
         hold on
         
         
-        plot(aS ,'Color', 0.8 * [1 1 1 ], 'LineWidth', 1.2);
+        plot(aS ,      'Color', 0.8 * [1 1 1 ], 'LineWidth', 0.75, 'DisplayName','$a$');              
+        plot(a_fluct , 'Color', 0.1 * [1 1 1 ], 'LineWidth', 0.75, 'DisplayName','$a_\mathit{AC} + a_\mathit{fluct}$');         
+         
+         
         
-        plot(a_fluct ,'Color', 0.1 * [1 1 1 ], 'LineWidth', 1.2);
+        xlabel('Frame')
+        ylabel('$a[n]$')
+        
+        legend show
+
+        axoptions={
+            'axis on top', ...
+            'axis x line=bottom' , ...
+            'axis y line=left', ...
+            'scaled x ticks = false',...
+            'scaled y ticks = false',...
+            'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=4 , 1000 sep = {}}', ...
+            'x tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=0 , 1000 sep = {}}', ...
+            'legend style={at={(1.03,1)}, anchor=north west, legend cell align=left, align=left, draw=white!15!black}'};
         
         
-        xlabel('t')
-        ylabel('a')
-        axoptions={'scaled y ticks = false',...
-            'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=2}'};
         
-        matlab2tikz(['decomp_t_amp_p' num2str(partCNT) '_' baseName '.tex'],'width','0.9\textwidth','height','0.4\textwidth', ...
+        matlab2tikz(['decomp_t_amp_p' num2str(partCNT) '_' baseName '.tex'],...
+            'width','0.75\textwidth','height','0.4\textwidth', ...
             'tikzFileComment','created from: statistical_sms.m ', ...
             'parseStrings',false,'extraAxisOptions',axoptions);
         
@@ -209,7 +222,7 @@ for partCNT = 1:param.PART.nPartials
     
     
     
-    [H, CMF, cmf_values] = get_transition_probabilities(a_fluct, param);
+    [H, CMF, cmf_values] = get_transition_probabilities(a_fluct, param, baseName);
     
     % write to struct
     
@@ -245,13 +258,13 @@ for bandCNT = 1:size(SMS.BET,2)
         
         hold on
         
-        plot(nS ,'Color', 0.8 * [1 1 1 ], 'LineWidth', 1);
+        plot(nS ,'Color', 0.8 * [1 1 1 ], 'LineWidth', 1, 'DisplayName','$\mathit{RMS}$'); 
         
-        plot(e_fluct ,'Color', 0.1 * [1 1 1 ], 'LineWidth', 1);
+        plot(e_fluct ,'Color', 0.1 * [1 1 1 ], 'LineWidth', 1,'$\mathit{RMS}_\mathit{AC} + \mathit{RMS}_\mathit{fluct}$');  
         
         
-        xlabel('n')
-        ylabel('a[n]')
+        xlabel('Frame')
+        ylabel('$\mathit{RMS}[n]$')
         axoptions={'axis x line=bottom' , ...
             'axis y line=left', ...
             'scaled x ticks = false',...
@@ -262,7 +275,7 @@ for bandCNT = 1:size(SMS.BET,2)
         matlab2tikz([
             'decomp_t_noise' num2str(bandCNT) '_' baseName '.tex'], ...
             'width','0.5\textwidth','height','0.3\textwidth', ...
-            'tikzFileComment','created from: statistical_sms.m ', ...
+            'tikzFileComment','created from: statistical_sms.m ', ...   
             'parseStrings',false,'extraAxisOptions',axoptions);
         
         close(f1)
@@ -305,7 +318,7 @@ for bandCNT = 1:size(SMS.BET,2)
     
     
     
-    [H, CMF, cmf_values] = get_transition_probabilities(e_fluct, param);
+    [H, CMF, cmf_values] = get_transition_probabilities(e_fluct, param, baseName);
     
     % write to struct
     

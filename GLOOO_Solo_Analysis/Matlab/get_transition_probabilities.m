@@ -5,11 +5,11 @@
 % HVC
 % 2017-02-20
 
-function [H, ICMF, cmf_support, distribution_centers] = get_transition_probabilities(in, param)
+function [H, ICMF, cmf_support, distribution_centers] = get_transition_probabilities(in, param, fileName)
 
 
 
-if param.MARKOV.plot == 1
+if  strcmp(param.MARKOV.plot, 'multiple-distributions')
     
     close all
     f1 = figure(1);
@@ -22,6 +22,9 @@ if param.MARKOV.plot == 1
     hold on;
     
     f4 = figure(4);
+    
+    mapC = [];
+    
     hold on;
     
 end
@@ -41,7 +44,7 @@ maxval      = max(in);%prctile(in,99);
 minval      = min(in);%median(in) + (median(in) - prctile(in,99));
 
 distribution_centers     = linspace(minval,maxval, N_distributions);
-plot_centers     = linspace(minval,maxval, 100);
+plot_centers         = linspace(minval,maxval, 100);
 
 %% count transitions
 
@@ -88,7 +91,7 @@ if size(distribution_centers)>1
     PMF = hist(in, distribution_centers);
     PMF = PMF/sum(PMF);
 else
-        PMF = 1;
+    PMF = 1;
 end
 
 
@@ -110,12 +113,17 @@ for distCNT = 1:N_distributions
     
     
     % toggle line style for plots
-    if rem(distCNT,2) == 0
+    if rem(distCNT,3) == 0
         linest = '-';
+        mark = '*';
+    elseif rem(distCNT,2) == 0
+        linest = '-';
+        mark = 'x';
     else
-        linest = '--';
+        linest = '-';
+        mark = 'o';
     end
-    
+     
     
     %% create cmf
     
@@ -124,8 +132,8 @@ for distCNT = 1:N_distributions
     n_values  = length(tmpValues);
     
     tmpMax      = max(tmpValues);
-    
-    tmpMin      = min(tmpValues);
+        
+        tmpMin      = min(tmpValues);
     
     if n_values == 0
         
@@ -142,7 +150,7 @@ for distCNT = 1:N_distributions
         eval(['ICMF.icmf_' num2str(distCNT) '.support = x_values;']);
         
         
-        if param.MARKOV.plot == 1
+        if strcmp(param.MARKOV.plot, 'multiple-distributions')
             
             figure(1)
             line([icmf{1} icmf{1}], [0 1] ,'DisplayName',['$PMF_{' num2str(distCNT) '}$'],'Color',[1 1 1]* distCNT/(N_distributions*1.5),'LineStyle',linest);
@@ -151,8 +159,17 @@ for distCNT = 1:N_distributions
             line([icmf{1} icmf{1}], [0 1] ,'DisplayName',['$CMF_{' num2str(distCNT) '}$'],'Color',[1 1 1]* distCNT/(N_distributions*1.5),'LineStyle',linest);
             
             figure(4)
-            line([0 1], [icmf{1} icmf{1} ] ,'DisplayName',['$ICMF_{' num2str(distCNT) '}$'],'Color',[1 1 1]* distCNT/(N_distributions*1.5),'LineStyle',linest);
             
+            colVec = [0.7725    0.0549    0.1216] * (distCNT/(N_distributions));
+            % [0.15 1 1]* distCNT/(N_distributions) + [0.15 1 0]* (1-distCNT/(N_distributions));
+            mapC = [mapC;colVec];            
+            
+            line([0 1], [icmf{1} icmf{1} ] , ...
+                'DisplayName',['$\mathit{ICMF}_{' num2str(distCNT) '}$'], ...
+                'Color', colVec , ...
+                'Marker', mark, ...
+                'LineStyle',linest);
+                                    
         end
         
     elseif n_values > 1
@@ -174,7 +191,7 @@ for distCNT = 1:N_distributions
         PMF = [PMF, pmf];
         X = [X, x_values];
         
-        if param.MARKOV.plot == 1
+        if strcmp(param.MARKOV.plot, 'multiple-distributions')
             
             figure(1)
             plot(x_values,pmf,'DisplayName',['$PMF_{' num2str(distCNT) '}$'],'Color',[1 1 1]* distCNT/(N_distributions*1.5),'LineStyle',linest);
@@ -185,7 +202,7 @@ for distCNT = 1:N_distributions
         % create cmf by integration:
         cmf     = cumsum(pmf);
         
-        if param.MARKOV.plot == 1
+        if strcmp(param.MARKOV.plot, 'multiple-distributions')
             
             figure(3)
             plot(x_values,cmf,'DisplayName',['$CMF_{' num2str(distCNT) '}$'],'Color',[1 1 1]* distCNT/(N_distributions*1.5), 'LineStyle',linest);
@@ -238,12 +255,22 @@ for distCNT = 1:N_distributions
         
         linestyle = '';
         
-        if param.MARKOV.plot == 1
+        if strcmp(param.MARKOV.plot, 'multiple-distributions')
             
             
             figure(4)
-            plot(cmf_support,icmf,'DisplayName',['$ICMF_{' num2str(distCNT) '}$'],'Color',[1 1 1]* distCNT/(N_distributions*1.5), 'LineStyle',linest);
-            plot(linspace(0,1,length(icmf2)),icmf2)
+            
+            colVec = [0.7725    0.0549    0.1216] * (distCNT/(N_distributions));
+            
+            mapC = [mapC;colVec];
+            
+            
+            plot(cmf_support,icmf,'DisplayName',['$\mathit{ICMF}_{' num2str(distCNT) '}$'], ...
+                'Color', colVec , ...
+                'Marker', mark, ...
+                'LineStyle',linest);
+            %plot(linspace(0,1,length(icmf2)),icmf2)
+            % text(cmf_support(1)+0.05,icmf(1) ,['$' num2str(distCNT) '$'],   'VerticalAlignment', 'bottom');
         end
         
         
@@ -271,7 +298,13 @@ for distCNT = 1:N_distributions
     %     CMF{distCNT}.XVAL = x_values;
     %     CMF{distCNT}.ICMF = icmf;
     
-    if param.MARKOV.plot == 1
+    
+    
+end
+
+%%
+
+if strcmp(param.MARKOV.plot, 'multiple-distributions')
         
         figure(1)
         axis tight
@@ -317,22 +350,36 @@ for distCNT = 1:N_distributions
         
         
         figure(4)
+        
         axis tight
-        xlabel('Uniform')
+        xlabel('$P_i(a)$')
         ylabel('$a_i$')
+        
+        
         %legend hide
-        %legend('Location','northeastoutside')
+        legend('Location','northeastoutside')
         
         
-        axoptions={'scaled y ticks = false',...
-            'x tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=2}'};
+%         h=colorbar;
+%         colormap(mapC)
+% 
+%         caxis([0 21]);  
+% 
+%         
+%         set(get(h,'title'),'string','$i$');
+%         
+        axoptions={'axis x line=bottom' , ...
+            'axis y line=left', ...
+            'scaled x ticks = false',...
+            'scaled y ticks = false',...
+            'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=4 , 1000 sep = {}}', ...
+            'x tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=1 , 1000 sep = {}}', ...
+            'legend style={at={(1.05,1)}, anchor=north west, legend cell align=left, align=left, draw=white!15!black}'};
         
-        matlab2tikz(['multiple-icmf.tex'],'width','0.9\textwidth','height','0.4\textwidth', ...
+        matlab2tikz(['icmfs_bnd_enrg_' fileName '.tex'],'width','0.9\textwidth','height','0.9\textwidth', ...
             'tikzFileComment','created from: get_transition_probabilites.m ', ...
             'parseStrings',false,'extraAxisOptions',axoptions);
         
-    end
-    
 end
 
 %% this is for plotting a matrix of transition probabilities

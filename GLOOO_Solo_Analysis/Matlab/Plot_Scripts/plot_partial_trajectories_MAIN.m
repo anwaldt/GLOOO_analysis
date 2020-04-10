@@ -48,7 +48,7 @@ ylabel('$f / Hz$')
 colormap(mapC)
 caxis([0 30]);  
 
-h=colorbar
+h=colorbar;
 
 set(get(h,'title'),'string','Partial index');
 
