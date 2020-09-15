@@ -76,7 +76,7 @@ for partCNT = 1:param.PART.nPartials
     
     
     
-    if param.MARKOV.plot == 2
+    if strcmp(param.MARKOV.plot, 'f0-dist')
         
         f1 = figure;
         
@@ -84,8 +84,8 @@ for partCNT = 1:param.PART.nPartials
         
         plot(fS ,'Color', 0.8 * [1 1 1 ], 'LineWidth', 1.5);
         
-        xlabel('t')
-        ylabel('a')
+        xlabel('Frame')
+        ylabel('$f_i$')
         axoptions={'scaled y ticks = false',...
             'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=2}'};
         
@@ -161,16 +161,16 @@ for partCNT = 1:param.PART.nPartials
         hold on
         
         
-        plot(aS ,      'Color', 0.8 * [1 1 1 ], 'LineWidth', 0.75, 'DisplayName','$a$');              
-        plot(a_fluct , 'Color', 0.1 * [1 1 1 ], 'LineWidth', 0.75, 'DisplayName','$a_\mathit{AC} + a_\mathit{fluct}$');         
-         
-         
+        plot(aS ,      'Color', 0.8 * [1 1 1 ], 'LineWidth', 0.75, 'DisplayName','$a$');
+        plot(a_fluct , 'Color', 0.1 * [1 1 1 ], 'LineWidth', 0.75, 'DisplayName','$a_\mathit{AC} + a_\mathit{fluct}$');
+        
+        
         
         xlabel('Frame')
         ylabel('$a[n]$')
         
         legend show
-
+        
         axoptions={
             'axis on top', ...
             'axis x line=bottom' , ...
@@ -209,7 +209,7 @@ for partCNT = 1:param.PART.nPartials
             'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=2}'};
         
         
-        legend('$f_0$', '$f_{0_{AC}} f_{0_{fluct}} $')
+        %legend('$f_0$', '$f_{0_{AC}} f_{0_{fluct}} $')
         
         matlab2tikz(['decomp_h_amp_p' num2str(partCNT) '_' baseName '.tex'],'width','0.4\textwidth','height','0.3\textwidth', ...
             'tikzFileComment','created from: statistical_sms.m ', ...
@@ -258,9 +258,9 @@ for bandCNT = 1:size(SMS.BET,2)
         
         hold on
         
-        plot(nS ,'Color', 0.8 * [1 1 1 ], 'LineWidth', 1, 'DisplayName','$\mathit{RMS}$'); 
+        plot(nS ,'Color', 0.8 * [1 1 1 ], 'LineWidth', 1, 'DisplayName','$\mathit{RMS}$');
         
-        plot(e_fluct ,'Color', 0.1 * [1 1 1 ], 'LineWidth', 1,'$\mathit{RMS}_\mathit{AC} + \mathit{RMS}_\mathit{fluct}$');  
+        plot(e_fluct ,'Color', 0.1 * [1 1 1 ], 'LineWidth', 1, 'DisplayName', '$\mathit{RMS}_\mathit{AC} + \mathit{RMS}_\mathit{fluct}$');
         
         
         xlabel('Frame')
@@ -272,10 +272,14 @@ for bandCNT = 1:size(SMS.BET,2)
             'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=3 , 1000 sep = {}}', ...
             'x tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=0 , 1000 sep = {}}'};
         
+                
+        legend('RMS', '$RMS_{AC} + RMS_{fluct} $')
+
+                
         matlab2tikz([
             'decomp_t_noise' num2str(bandCNT) '_' baseName '.tex'], ...
             'width','0.5\textwidth','height','0.3\textwidth', ...
-            'tikzFileComment','created from: statistical_sms.m ', ...   
+            'tikzFileComment','created from: statistical_sms.m ', ...
             'parseStrings',false,'extraAxisOptions',axoptions);
         
         close(f1)
@@ -304,7 +308,7 @@ for bandCNT = 1:size(SMS.BET,2)
             'x tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=3}'};
         
         
-        % legend('RMS', '$RMS_{AC} + RMS_{fluct} $')
+        legend('RMS', '$RMS_{AC} + RMS_{fluct} $')
         
         
         matlab2tikz(['decomp_h_noise' num2str(bandCNT) '_' baseName '.tex'],...

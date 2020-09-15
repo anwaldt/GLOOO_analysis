@@ -12,8 +12,8 @@
 clearvars
 restoredefaultpath
 
-%%
 
+%%
 
 addpath('../../common');
 
@@ -22,7 +22,6 @@ addpath(p)
 
 p = genpath('../GLOOO_Solo_Analysis/Matlab');
 addpath(p);
-
 
 %% make filters
 
@@ -36,6 +35,8 @@ C       = make_bark_filterbank(fs,order,ripple);
 
 
 %% make gaussian models for frequency response
+
+nBands = 24;
 
 options = fitoptions('Method', 'LinearLeastSquares');
 
@@ -68,7 +69,7 @@ for bandCNT = 1:nBands
     gaussout.mu    = gausmod.b1;
     gaussout.sigma = gausmod.c1;
     
-    G(bandCNT) = {gaussout};
+    G(bandCNT)     = {gaussout};
     
     z = exp(-((f-gausmod.b1)/gausmod.c1).^2);
     
@@ -81,9 +82,9 @@ for bandCNT = 1:nBands
     %set(xxx,{'linew'},{0.4},'Color',colVec);
     
     set(yyy,{'linew'},{0.4},'Color',colVec);
-     
+    
     mapC = [mapC;colVec];
-     
+    
 end
 
 
@@ -120,14 +121,11 @@ matlab2tikz('bark_bank_gaussian_models.tex','width','0.7\textwidth','height','0.
 
 %%
 
-
 for bandCNT = 1:2:nBands
-   
- 
+    
     fprintf([num2str(bandCNT) ' & %6.2f & %6.2f & '],G{bandCNT}.mu, G{bandCNT}.sigma);
-
+    
     fprintf([num2str(bandCNT+1) ' & %6.2f & %6.2f  \\\\ \n'],G{bandCNT+1}.mu, G{bandCNT+1}.sigma);
-
     
 end
 
@@ -157,7 +155,7 @@ lWin = SMS.param.lWinNoise;
 
 nr  = '01';
 
-X   = importfile('/home/anwaldt/WORK/GLOOO/Violin_Library_2015/Analysis/2019-08-12/SinusoidsTXT/SampLib_BuK_01.BBE');
+X   = importfile('/home/anwaldt/WORK/GLOOO/Violin_Library_2015/Analysis/2019-08-12/SinusoidsTXT/SampLib_BuK_08.BBE');
 
 lHop = 128;
 lWin = 4096;
@@ -248,14 +246,19 @@ soundsc(y,fs)
 
 close all
 
-h = figure;
 
-for bandCNT = [1,4,8,12,18,24]
+
+for bandCNT = [1 2 4 8 16]
     
-    tmp = smooth(abs(X(:,bandCNT)),10);
+    h = figure;
+
+    
+    t = linspace(0,4,length(X));
+    
+    tmp = smooth(abs(X(1:622,bandCNT)),10);
     
     % downsample by 4 when plotting
-    xxx = plot(smooth(X(1:4:end,bandCNT),4));
+    xxx = plot(t(100:4:2200),smooth(X(100:4:2200,bandCNT),4));
     
     set(xxx,{'linew'},{1.1},'Color',[0 0 0])
     
@@ -268,9 +271,10 @@ for bandCNT = [1,4,8,12,18,24]
     %ylim([10e-7,0.01])
     ylabel(['$RMS_{' num2str(bandCNT) '}$'])
     
-    %
-    %     axoptions={'scaled y ticks = false',...
-    %         'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=2}'};
+    axoptions={'axis on top',...
+        'scaled y ticks = false',...
+        'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=0}'
+        };
     
     
     matlab2tikz(['bark-energies_' num2str(bandCNT) '.tex'],'width','0.6\textwidth','height','0.2\textwidth', ...

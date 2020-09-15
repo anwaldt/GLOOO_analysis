@@ -36,7 +36,7 @@ addpath(p);
 
 %% paths
 
-paths.sinmod = ('../../GLOOO_Sample_Preparation/Sinusoidal_Data/');
+paths.sinmod   = ('../../GLOOO_Sample_Preparation/Sinusoidal_Data/');
 paths.residual = ('../../GLOOO_Sample_Preparation/Residual/');
 paths.original = ('../../GLOOO_Sample_Preparation/Samples/');
 

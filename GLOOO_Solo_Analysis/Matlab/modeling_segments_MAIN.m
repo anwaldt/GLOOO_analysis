@@ -20,28 +20,28 @@ clearvars
 restoredefaultpath
 
 
-%%  SET
+%%  SET Parameters
 
 
 % Set the (output) path for this set
 % either by actual date
-% ds = datestr(now,'yyyy-mm-dd');
+%ds = datestr(now,'yyyy-mm-dd');
 
 % work on specific set, instead:
-ds = '2019-08-12';
-% ds = '2019-11-14';
+ds = '2020-09-14';
+% ds = '2019-11-14';ui
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
 run_parallel             = 1;
 
 % overwrite existing results
-renew_all                = 1;
+renew_all                = 0;
 
 % Decide which parts should be executed:
-do_basic_analysis        = 0;
-do_partial_analysis      = 0;
-do_modeling_segments     = 0;
+do_basic_analysis        = 1;
+do_partial_analysis      = 1;
+do_modeling_segments     = 1;
 
 
 % only for single sounds:
@@ -52,12 +52,12 @@ do_move_files_to_server  = 0;
 
 % Decide which files should be processed
 % setToDo     = 'SynthResults';
-setToDo     = 'SingleSounds';
-% setToDo     = 'TwoNote';
+% setToDo     = 'SingleSounds';
+setToDo     = 'TwoNote';
 
 % Decide which microphone to use
-% micToDo     = 'DPA';
- micToDo     = 'BuK';
+micToDo     = 'DPA';
+% micToDo     = 'BuK';
 
 % chose whether to process all files,
 % a single file by name, or a subset:
@@ -65,13 +65,13 @@ setToDo     = 'SingleSounds';
 filesToDo  = 'All';
 
 % filesToDo  = '1-oct-sweep.wav';
-% filesToDo  = 'TwoNote_BuK_22.wav';
+%filesToDo  = 'TwoNote_DPA_8.wav';
 
-%filesToDo  = {'SampLib_BuK_01.wav','SampLib_BuK_02.wav','SampLib_BuK_03.wav','SampLib_BuK_04.wav', ...
-%   'SampLib_BuK_05.wav','SampLib_BuK_06.wav','SampLib_BuK_07.wav','SampLib_BuK_08.wav' };
+% filesToDo  = {'SampLib_BuK_01.wav','SampLib_BuK_02.wav','SampLib_BuK_03.wav','SampLib_BuK_04.wav', ...
+% 'SampLib_BuK_05.wav','SampLib_BuK_06.wav','SampLib_BuK_07.wav','SampLib_BuK_08.wav' };
 
 % filesToDo   = 'TwoNote_BuK_22.wav';
-% filesToDo   = 'SampLib_BuK_301.wav';
+% filesToDo   = 'SampLib_BuK_40.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';
  
 % filesToDo = 'SampLib_DPA_32.wav';
@@ -229,8 +229,8 @@ end
 
 if do_modeling_segments == true
     
-%    parfor (fileCNT = filesToDo,parMode)
-        for  fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+%         for  fileCNT = filesToDo
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);

@@ -98,18 +98,19 @@ param.MARKOV.N_icmf = 21;
 % cutoff frequency for preprocessing partial 
 % trajectories before Markovian modeling
 % (heuristic standard: 10 Hz)[0.15 0 1]* distCNT/(N_distributions) + [0.15 1 0]* (1-distCNT/(N_distributions))
-param.MARKOV.hpf_cutoff = 7;
+param.MARKOV.hpf_cutoff = 10;
 
 % plot the inversion process during statistical modeling?
 % DO THIS ONLY IN STEPWISE DEBUGGING !!!
 % (or generate millions of plots)
 
-% param.MARKOV.plot = 0;
-% param.MARKOV.plot = 'amp-decomp'
-% 3: export surface plot pmf data
+param.MARKOV.plot = 0;
+
+% param.MARKOV.plot = 'f0-dist';
+% param.MARKOV.plot = 'amp-decomp';
 % param.MARKOV.plot = 'noise-decomp'
 
-param.MARKOV.plot = 'multiple-distributions';
+% param.MARKOV.plot = 'multiple-distributions';
 
 
 

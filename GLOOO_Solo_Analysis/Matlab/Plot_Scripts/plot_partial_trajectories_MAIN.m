@@ -7,7 +7,7 @@ addpath(p)
 
 %%
 
-fileName = '/home/anwaldt/WORK/GLOOO/Violin_Library_2015/Analysis/TwoNote_ BuK_ swipe/Sinusoids/TwoNote_BuK_22.mat';
+fileName = '/home/anwaldt/WORK/GLOOO/Violin_Library_2015/Analysis/2019-08-12/Sinusoids/SampLib_BuK_24.mat';
 
 load(fileName);
 
