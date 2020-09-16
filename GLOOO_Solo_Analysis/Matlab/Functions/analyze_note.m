@@ -80,12 +80,17 @@ if strcmp(noteModel.vibrato,'true') == 1
     % the frequency (considered fixed at this stage)
     modFFT          = abs(fft(f0_mod));
     modFFT          = modFFT(1:round(length(f0_mod)/2));
+    
     % get rough position
     [~,modPeak]     = max(modFFT);
+
     % refine position
-    [truePeakVal, truePeakPos]  =  get_peak_hight(modFFT,modPeak);
-    noteModel.F0.fVib = (truePeakPos/length(f0seg))*(  param.fs/param.lHop);
-    
+    try
+        [truePeakVal, truePeakPos]  =  get_peak_hight(modFFT,modPeak);
+        noteModel.F0.fVib = (truePeakPos/length(f0seg))*(  param.fs/param.lHop);
+    catch
+        noteModel.F0.fVib = -1;
+    end    
     
     % the amplitude (considered varying/envelope)
     y = hilbert(f0_mod);

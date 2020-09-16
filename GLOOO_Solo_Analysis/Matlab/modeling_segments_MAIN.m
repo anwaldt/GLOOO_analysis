@@ -25,10 +25,10 @@ restoredefaultpath
 
 % Set the (output) path for this set
 % either by actual date
-%ds = datestr(now,'yyyy-mm-dd');
+% ds = datestr(now,'yyyy-mm-dd');
 
 % work on specific set, instead:
-ds = '2020-09-14';
+ds = '2020-09-15';
 % ds = '2019-11-14';ui
 
 % set this false for debugging
@@ -198,7 +198,7 @@ if do_partial_analysis == true
     
     parfor (fileCNT = filesToDo,parMode)
         
-%    for fileCNT = filesToDo
+%   for fileCNT = filesToDo
         
         
         
@@ -229,8 +229,8 @@ end
 
 if do_modeling_segments == true
     
-    parfor (fileCNT = filesToDo,parMode)
-%         for  fileCNT = filesToDo
+%    parfor (fileCNT = filesToDo,parMode)
+         for  fileCNT = filesToDo
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);
