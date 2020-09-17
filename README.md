@@ -70,6 +70,9 @@ Sub-Project for rendering a solo, based on the analysis results of
  
 Scripts shared by the sub-projects.
 
+# Contributions
 
+- Henrik von Coler
+- Moritz Götz
 
 
