@@ -67,7 +67,7 @@ param.PART.info         = true;
 
 % threshold of the swipe pitch strength above which the partials are
 % tracked
-param.PART.psThresh     = 0.05;
+param.PART.psThresh     = 0.1;
 
 param.PART.getPhases    = true;
 
@@ -77,7 +77,7 @@ param.PART.lWin         = 2^12;
 param.PART.upsampFactor  = 5;
 
 % windowsize of peak picking
-param.PART.nFFT          = 2^14;
+param.PART.nFFT          = 2^13;
 param.PART.nPartials     = 80;
 param.PART.fMin          = 20;
 param.PART.fMax          = 4000;
