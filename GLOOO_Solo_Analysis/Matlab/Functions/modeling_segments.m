@@ -4,6 +4,9 @@
 %   after control- and partial trajectories
 %   have been calculated!
 %
+% - it is basically processing the annotation 
+%   data.
+%
 % Henrik von Coler
 %
 % Created : 2016-08-08
@@ -47,7 +50,7 @@ if 1%...%exist(outName,'file') == 0 &&
             try
                 INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , paths, setToDo, micToDo);
             catch
-                'xxx'    
+                'File not found'    
             end
             
             f1 = fopen([paths.segmentationPrepared regexprep(baseName,'BuK','DPA') '.txt']);

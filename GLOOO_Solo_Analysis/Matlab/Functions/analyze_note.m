@@ -14,6 +14,7 @@ end
 
 % select the f0-trajectory
 switch param.F0.f0Mode
+    
     case 'swipe'
         f0vec = CTL.f0.swipe.f0;
     case 'yin'

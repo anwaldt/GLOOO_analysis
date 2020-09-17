@@ -272,10 +272,10 @@ for bandCNT = 1:size(SMS.BET,2)
             'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=3 , 1000 sep = {}}', ...
             'x tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=0 , 1000 sep = {}}'};
         
-                
+        
         legend('RMS', '$RMS_{AC} + RMS_{fluct} $')
-
-                
+        
+        
         matlab2tikz([
             'decomp_t_noise' num2str(bandCNT) '_' baseName '.tex'], ...
             'width','0.5\textwidth','height','0.3\textwidth', ...
@@ -415,6 +415,11 @@ REL.duration =  SOLO.SEG{3}.stopSEC - SOLO.SEG{3}.startSEC;
 REL.start   =  SOLO.SEG{3}.startIND;
 REL.stop   =  SOLO.SEG{3}.stopIND;
 
+L_rel = REL.stop - REL.start;
+
+eval(['REL.length = L_rel;']);
+
+
 for partCNT = 1:param.PART.nPartials
     
     % partial frequencies
@@ -423,15 +428,32 @@ for partCNT = 1:param.PART.nPartials
     tmpVal  = tmpVal./tmpVal(1);
     
     tmpL    = length(tmpF);
-    
-    eval(['REL.PARTIALS.P_' num2str(partCNT) '.length = tmpL;']);
-    
+ 
     %
     %     eval(['REL.PARTIALS.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
     %
-    %     % partial amplitudes
-    %     tmpTra = SMS.AMP(partCNT,stopSamp:end);
-    %
+    % partial amplitudes
+    tmpTra = SMS.AMP(partCNT,REL.start:end);
+    
+    % get lambda value
+    
+    
+    tmpTra = tmpTra./max(tmpTra);
+    
+    L = length(tmpTra);
+    
+    NN = 200;
+    
+    errors = zeros(1,NN);
+    
+    for lambda = 1:NN
+        
+        a_model = exponential_release(L,lambda);
+        
+        errors(lambda) = (1/L)   * sum(  (a_model-tmpTra).^2 );
+        
+    end
+    
     %     if length(find(tmpTra==0)) ~= length(tmpTra)
     %
     %         if tmpTra(1) == 0
@@ -448,13 +470,22 @@ for partCNT = 1:param.PART.nPartials
     %
     %     eval(['REL.PARTIALS.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
     %
-    %     if any(isnan(tmpF)) || any(isnan(tmpTra))
-    %         error(['NaN in: ' baseName])
-    %     end
+    if any(isnan(tmpF)) || any(isnan(tmpTra))
+        error(['NaN in: ' baseName])
+    end
     %
     %
+    [~, lambda_min] = min(errors);
+    
+    
+    eval(['REL.PARTIALS.P_' num2str(partCNT) '.lambda = lambda_min;']);
+    
+    
+    
     
 end
+ 
+
 
 
 

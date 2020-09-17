@@ -29,7 +29,7 @@ restoredefaultpath
 
 % work on specific set, instead:
 ds = '2020-09-15';
-% ds = '2019-11-14';ui
+ds = '2020-09-12';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
@@ -39,9 +39,9 @@ run_parallel             = 1;
 renew_all                = 0;
 
 % Decide which parts should be executed:
-do_basic_analysis        = 1;
-do_partial_analysis      = 1;
-do_modeling_segments     = 1;
+do_basic_analysis        = 0;
+do_partial_analysis      = 0;
+do_modeling_segments     = 0;
 
 
 % only for single sounds:
@@ -52,8 +52,8 @@ do_move_files_to_server  = 0;
 
 % Decide which files should be processed
 % setToDo     = 'SynthResults';
-% setToDo     = 'SingleSounds';
-setToDo     = 'TwoNote';
+setToDo     = 'SingleSounds';
+% setToDo     = 'TwoNote';
 
 % Decide which microphone to use
 micToDo     = 'DPA';
