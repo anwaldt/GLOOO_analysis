@@ -470,9 +470,9 @@ for partCNT = 1:param.PART.nPartials
     %
     %     eval(['REL.PARTIALS.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
     %
-    if any(isnan(tmpF)) || any(isnan(tmpTra))
-        error(['NaN in: ' baseName])
-    end
+%     if any(isnan(tmpF)) || any(isnan(tmpTra))
+%         error(['NaN in: ' baseName])
+%     end
     %
     %
     [~, lambda_min] = min(errors);

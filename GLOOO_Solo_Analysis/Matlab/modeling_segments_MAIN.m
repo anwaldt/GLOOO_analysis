@@ -25,10 +25,10 @@ restoredefaultpath
 
 % Set the (output) path for this set
 % either by actual date
-ds = datestr(now,'yyyy-mm-dd');
+% ds = datestr(now,'yyyy-mm-dd');
 
 % work on specific set, instead:
-% ds = '2020-09-15';
+ds = '2020-09-17';
 % ds = '2020-09-12';
 
 % set this false for debugging
@@ -72,7 +72,7 @@ filesToDo  = 'All';
 % filesToDo   = 'TwoNote_BuK_22.wav';
 % filesToDo   = 'SampLib_BuK_40.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';
- 
+
 % filesToDo = 'SampLib_DPA_32.wav';
 
 %% PARAMETERS AND PATHS
@@ -181,7 +181,7 @@ if do_basic_analysis == true
             if param.info == true
                 disp(['starting basic analysis for: ',fileNames{fileCNT}]);
             end
-             
+            
             % Get control- and   trajectories and features
             [CTL, INF]           = basic_analysis(baseName, paths, param, setToDo);
             
@@ -197,7 +197,7 @@ if do_partial_analysis == true
     
     parfor (fileCNT = filesToDo,parMode)
         
-%   for fileCNT = filesToDo
+        %   for fileCNT = filesToDo
         
         
         
@@ -228,8 +228,8 @@ end
 
 if do_modeling_segments == true
     
-%    parfor (fileCNT = filesToDo,parMode)
-         for  fileCNT = filesToDo
+    %    parfor (fileCNT = filesToDo,parMode)
+    for  fileCNT = filesToDo
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);
@@ -254,19 +254,22 @@ end
 if do_statistical_sms == true
     
     % YAML stuff does not like parallel
-    % parfor (fileCNT = filesToDo,parMode)
+    parfor (fileCNT = filesToDo,parMode)
     
-    for fileCNT = filesToDo
-        
-        
-        if param.info == true
-            disp(['starting statistical SMS for: ',fileNames{fileCNT}]);
-        end
-        
-        [~,baseName,~]   = fileparts(fileNames{fileCNT});
-        
-        % Analysis
-        MOD = statistical_sms(baseName, param, paths, setToDo, micToDo);
+    %for fileCNT = filesToDo
+                   
+            if param.info == true
+                disp(['starting statistical SMS for: ',fileNames{fileCNT}]);
+            end
+            
+%             if ~exist([paths.statSMS baseName '.mat'],'file') || renew_all == 1
+
+            [~,baseName,~]   = fileparts(fileNames{fileCNT});
+            
+            % Analysis
+            MOD = statistical_sms(baseName, param, paths, setToDo, micToDo);
+            
+%         end
         
     end
     
