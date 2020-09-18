@@ -429,16 +429,11 @@ for partCNT = 1:param.PART.nPartials
     
     tmpL    = length(tmpF);
  
-    %
-    %     eval(['REL.PARTIALS.P_' num2str(partCNT) '.FRE' '.trajectory = tmpVal;']);
-    %
     % partial amplitudes
     tmpTra = SMS.AMP(partCNT,REL.start:end);
     
-    % get lambda value
-    
-    
-    tmpTra = tmpTra./max(tmpTra);
+    % normalize
+    tmpTra = tmpTra./tmpTra(1);
     
     L = length(tmpTra);
     
@@ -454,35 +449,35 @@ for partCNT = 1:param.PART.nPartials
         
     end
     
-    %     if length(find(tmpTra==0)) ~= length(tmpTra)
-    %
-    %         if tmpTra(1) == 0
-    %
-    %             firstVal = find(tmpTra>0,1);
-    %             tmpTra(1:firstVal-1)=tmpTra(firstVal);
-    %
-    %         end
-    %
-    %         tmpTra = tmpTra./(tmpTra(1));
-    %
-    %     end
-    %
-    %
-    %     eval(['REL.PARTIALS.P_' num2str(partCNT) '.AMP' '.trajectory = tmpTra;']);
-    %
-%     if any(isnan(tmpF)) || any(isnan(tmpTra))
-%         error(['NaN in: ' baseName])
-%     end
-    %
-    %
     [~, lambda_min] = min(errors);
-    
     
     eval(['REL.PARTIALS.P_' num2str(partCNT) '.lambda = lambda_min;']);
     
     
     
+    % Only in debug mode - lots of plots!!
+    if(param.TRANS.plot == 1)
+       
+        x=1;
+        
+        plot(exponential_release(L,lambda_min)); 
+        hold on; 
+        plot(tmpTra); 
+        hold off
+        
+        xlabel('Frame')
+        ylabel('$a$')
+        axoptions={'scaled y ticks = false',...
+            'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=2}'};
+        
+        matlab2tikz(['release_model_' num2str(partCNT) '_' baseName '.tex'],'width','0.9\textwidth','height','0.4\textwidth', ...
+            'tikzFileComment','created from: statistical_sms.m ', ...
+            'parseStrings',false,'extraAxisOptions',axoptions);
+        
+        
     
+    end
+       
 end
  
 

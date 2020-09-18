@@ -33,15 +33,15 @@ ds = '2020-09-17';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
-run_parallel             = 1;
+run_parallel             = 0;
 
 % overwrite existing results
 renew_all                = 0;
 
 % Decide which parts should be executed:
-do_basic_analysis        = 1;
-do_partial_analysis      = 1;
-do_modeling_segments     = 1;
+do_basic_analysis        = 0;
+do_partial_analysis      = 0;
+do_modeling_segments     = 0;
 
 % only for single sounds:
 do_statistical_sms       = 1;
@@ -254,9 +254,9 @@ end
 if do_statistical_sms == true
     
     % YAML stuff does not like parallel
-    parfor (fileCNT = filesToDo,parMode)
+    % parfor (fileCNT = filesToDo,parMode)
     
-    %for fileCNT = filesToDo
+    for fileCNT = filesToDo
                    
             if param.info == true
                 disp(['starting statistical SMS for: ',fileNames{fileCNT}]);

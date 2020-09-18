@@ -119,6 +119,10 @@ param.MARKOV.plot = 0;
 % (or generate millions of plots)
 param.MARKOV.plot_decomp = 0; 
 
+%% Modeling Release
+
+param.TRANS.plot = 1;
+
 %%
 
 param.NOISE.order  = 2;
