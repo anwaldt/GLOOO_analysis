@@ -22,6 +22,8 @@ param.saveit      = true;
 % debug information
 param.info        = true;
 
+param.tuningFreq = 445;
+
 
 %% GLOABAL analyis parameters
 
@@ -46,6 +48,7 @@ param.F0.lWinYIN        = 2^14;
 param.F0.lWinF0         = 2^13;
 
 param.F0.minStrength    = -Inf;
+
 
 %% f0 decomposition
 
@@ -121,7 +124,9 @@ param.MARKOV.plot_decomp = 0;
 
 %% Modeling Release
 
-param.TRANS.plot = 1;
+% param.TRANS.plot = 'individual';
+% param.TRANS.plot = 'groups';
+param.TRANS.plot = 0;
 
 %%
 

@@ -56,13 +56,11 @@ if strcmp(setToDo,'Solo') ==1
         case 'BuK'
             %             outPath             = ['../Results/TwoNote/BuK/' ds '/'];
             paths.wavPrepared   = [libDIR 'WAV/Solo/BuK/'];
-            
              
         case 'DPA'
             %             outPath             = ['../Results/TwoNote/DPA/' ds '/'];
             paths.wavPrepared   = [libDIR 'WAV/Solo/DPA/'];
-            
-             
+                         
     end
     
     

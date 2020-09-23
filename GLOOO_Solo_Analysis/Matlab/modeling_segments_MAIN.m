@@ -10,7 +10,6 @@
 % Author : Henrik von Coler
 %
 % Created: 2014-02-17
-% Edited : 2019-01-08
 %
 %% RESET
 
@@ -33,7 +32,7 @@ ds = '2020-09-17';
 
 % set this false for debugging
 % (enables breakpoints in parfor loops)
-run_parallel             = 0;
+run_parallel             = 1;
 
 % overwrite existing results
 renew_all                = 0;
@@ -44,7 +43,11 @@ do_partial_analysis      = 0;
 do_modeling_segments     = 0;
 
 % only for single sounds:
-do_statistical_sms       = 1;
+do_statistical_sms         = 0;
+
+do_transition_statistics   = 1;
+
+do_export_yaml             = 1;
 
 % automatically copy files (legacy)
 do_move_files_to_server  = 0;
@@ -58,11 +61,14 @@ setToDo     = 'SingleSounds';
 % micToDo     = 'DPA';
 micToDo     = 'BuK';
 
+
+
+%% Files to do?!
+
 % chose whether to process all files,
 % a single file by name, or a subset:
 
 filesToDo  = 'All';
-
 % filesToDo  = '1-oct-sweep.wav';
 %filesToDo  = 'TwoNote_DPA_8.wav';
 
@@ -70,7 +76,7 @@ filesToDo  = 'All';
 % 'SampLib_BuK_05.wav','SampLib_BuK_06.wav','SampLib_BuK_07.wav','SampLib_BuK_08.wav' };
 
 % filesToDo   = 'TwoNote_BuK_22.wav';
-% filesToDo   = 'SampLib_BuK_40.wav';
+%filesToDo   = 'SampLib_BuK_40.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';
 
 % filesToDo = 'SampLib_DPA_32.wav';
@@ -254,22 +260,63 @@ end
 if do_statistical_sms == true
     
     % YAML stuff does not like parallel
-    % parfor (fileCNT = filesToDo,parMode)
+    %     parfor (fileCNT = filesToDo,parMode)
     
     for fileCNT = filesToDo
-                   
-            if param.info == true
-                disp(['starting statistical SMS for: ',fileNames{fileCNT}]);
-            end
-            
-%             if ~exist([paths.statSMS baseName '.mat'],'file') || renew_all == 1
+        
+        if param.info == true
+            disp(['starting statistical SMS for: ',fileNames{fileCNT}]);
+        end
+        
+        %             if ~exist([paths.statSMS baseName '.mat'],'file') || renew_all == 1
+        
+        [~,baseName,~]   = fileparts(fileNames{fileCNT});
+        
+        % Analysis
+        MOD = statistical_sms(baseName, param, paths, setToDo, micToDo);
+        
+        %         end
+        
+    end
+    
+end
 
-            [~,baseName,~]   = fileparts(fileNames{fileCNT});
-            
-            % Analysis
-            MOD = statistical_sms(baseName, param, paths, setToDo, micToDo);
-            
-%         end
+
+%% Release modeling
+
+% transition statistics are calculated
+% in a second loop over all files
+
+
+if do_transition_statistics == true
+    
+    transition_statistics(fileNames, param, paths);
+    
+    % Fragments of an alternative version:
+    % transition_statistics_partial_2(fileNames, param, paths);
+    
+end
+
+
+%% Export to YAML
+
+if do_export_yaml == true
+    
+    for fileCNT = 1:length(fileNames)
+        
+        [~,baseName,~] = fileparts(fileNames{fileCNT});
+        
+        if param.info == true
+            disp(['Exporting statistical model for: ',baseName]);
+        end
+        
+        MATname = [paths.statSMS baseName '.mat'];
+        load(MATname, 'MOD');
+        
+        
+        YAMLname = [paths.yaml baseName '.yml'];
+        %S = YAML.dump(MOD);
+        YAML.write(YAMLname,MOD);
         
     end
     

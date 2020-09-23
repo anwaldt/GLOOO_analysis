@@ -26,9 +26,9 @@ load( [paths.features regexprep(baseName,'.wav','.mat')] );
 
 switch setToDo
     case 'TwoNote'
-        INF = load_solo_properties(regexprep(baseName,'BuK','DPA') , paths);
+        INF = load_solo_properties(regexprep(baseName,'BuK','DPA') , param, paths);
     case 'SingleSounds'
-        INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , paths);
+        INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , param, paths);
 end
 
 
@@ -433,7 +433,11 @@ for partCNT = 1:param.PART.nPartials
     tmpTra = SMS.AMP(partCNT,REL.start:end);
     
     % normalize
-    tmpTra = tmpTra./tmpTra(1);
+    tmpTra = tmpTra./max(tmpTra);
+    
+    if find(isnan(tmpTra))
+        xxx=1;
+    end
     
     L = length(tmpTra);
     
@@ -451,16 +455,20 @@ for partCNT = 1:param.PART.nPartials
     
     [~, lambda_min] = min(errors);
     
+    if(isnan(lambda_min))
+        xxx=1;
+    end
+    
     eval(['REL.PARTIALS.P_' num2str(partCNT) '.lambda = lambda_min;']);
     
     
     
     % Only in debug mode - lots of plots!!
-    if(param.TRANS.plot == 1)
+    if(param.TRANS.plot == 'individual')
        
         x=1;
         
-        plot(exponential_release(L,lambda_min)); 
+        plot(exponential_release(L,lambda_min),'Color', 0.8 * [1 1 1 ],'LineWidth', 0.8); 
         hold on; 
         plot(tmpTra); 
         hold off
@@ -469,6 +477,8 @@ for partCNT = 1:param.PART.nPartials
         ylabel('$a$')
         axoptions={'scaled y ticks = false',...
             'y tick label style={/pgf/number format/.cd, fixed, fixed zerofill,precision=2}'};
+        
+        legend({'$a^*$','$a$'})
         
         matlab2tikz(['release_model_' num2str(partCNT) '_' baseName '.tex'],'width','0.9\textwidth','height','0.4\textwidth', ...
             'tikzFileComment','created from: statistical_sms.m ', ...
@@ -528,9 +538,9 @@ MOD.ATT     = ATT;
 MOD.SUS     = SUS;
 MOD.REL     = REL;
 
-YAMLname = [paths.yaml baseName '.yml'];
-%S = YAML.dump(MOD);
-YAML.write(YAMLname,MOD);
+% YAMLname = [paths.yaml baseName '.yml'];
+% %S = YAML.dump(MOD);
+% YAML.write(YAMLname,MOD);
 
 MATname = [paths.statSMS baseName '.mat'];
 save(MATname, 'MOD');
