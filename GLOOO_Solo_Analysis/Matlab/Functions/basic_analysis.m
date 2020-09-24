@@ -10,8 +10,9 @@
 
 function [CTL, INF, param] = basic_analysis(baseName, paths, param, setToDo)
 
-
-outName = [paths.features baseName '.mat'];
+% remove microphone identifier for the data set:
+tmpName = regexprep(regexprep(baseName, '_BuK', ''),  '_DPA', '');
+outName = [paths.features  tmpName '.mat'];
 
 if 1%exist(outName,'file')==0
     
@@ -40,9 +41,9 @@ if 1%exist(outName,'file')==0
     
     switch setToDo
         case 'TwoNote'
-            INF = load_solo_properties(regexprep(baseName,'BuK','BuK') , paths);
+            INF = load_solo_properties(regexprep(baseName,'BuK','BuK') , param, paths);
         case 'SingleSounds'
-            INF = load_tone_properties(regexprep(baseName,'BuK','BuK') , paths);
+            INF = load_tone_properties(regexprep(baseName,'BuK','BuK') , param, paths);
         case 'SynthResults'
             INF = 0;            
     end
@@ -81,5 +82,5 @@ if 1%exist(outName,'file')==0
     save(outName,'CTL')
     
 else
-    load( [paths.features regexprep(baseName,'.wav','.mat')] );
+    load(outName);
 end

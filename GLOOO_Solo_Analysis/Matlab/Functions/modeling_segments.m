@@ -16,8 +16,9 @@
 function [] = modeling_segments(baseName, paths, setToDo, micToDo)
 
 
+tmpName = regexprep(regexprep(baseName, '_BuK', ''),  '_DPA', '');
 
-outName = [paths.segments baseName '.mat'];
+outName = [paths.segments tmpName '.mat'];
 
 if 1%...%exist(outName,'file') == 0 &&  
     %exist([paths.features baseName '.mat'],'file') ~= 0 
@@ -25,14 +26,14 @@ if 1%...%exist(outName,'file') == 0 &&
     
     %% load controll and sinusoid data
     
-    load([paths.sinusoids baseName]);
-    load([paths.features baseName]);
+    load([paths.sinusoids tmpName]);
+    load([paths.features tmpName]);
      
     
     param = CTL.param;
     
     if param.info == true
-        disp(['    modeling_segments(): Starting with: ' baseName]);
+        disp(['    modeling_segments(): Starting with: ' tmpName]);
     end
     
     %% load properties of sequence
@@ -48,7 +49,7 @@ if 1%...%exist(outName,'file') == 0 &&
         case 'SingleSounds'
 
             try
-                INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , paths, setToDo, micToDo);
+                INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , param, paths, setToDo, micToDo);
             catch
                 'File not found'    
             end

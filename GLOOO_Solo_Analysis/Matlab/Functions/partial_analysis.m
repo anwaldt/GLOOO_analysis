@@ -14,13 +14,18 @@ function [SMS] = partial_analysis(baseName, paths)
 
 %% load control trajectories
 
-load([paths.features baseName])
+tmpName = regexprep(regexprep(baseName, '_BuK', ''),  '_DPA', '');
+
+load([paths.features tmpName])
 
 param = CTL.param;
 
-partialName = [paths.sinusoids baseName '.mat'];
+tmpName = regexprep(regexprep(baseName, '_BuK', ''),  '_DPA', '');
 
-if 1%exist(partialName,'file') == 0
+
+partialName = [paths.sinusoids tmpName '.mat'];
+
+if  exist(partialName,'file') == 0
     
     
     %% READ WAV
@@ -77,28 +82,28 @@ if 1%exist(partialName,'file') == 0
     
     
     
-    tmpName     =[ paths.txtDir baseName '.F0'];
-    fid         = fopen(tmpName,'w');
+    outName     =[ paths.txtDir tmpName '.F0'];
+    fid         = fopen(outName,'w');
     fprintf(fid, '%e ;\n', f0vec );
     fclose(fid);
     
-    tmpName     =[ paths.txtDir baseName '.AMPL'];
-    fid         = fopen(tmpName,'w');
+    outName     =[ paths.txtDir tmpName '.AMPL'];
+    fid         = fopen(outName,'w');
     fprintf(fid, [repmat('%e ', 1, size(SMS.AMP, 1) ), ';\n'], SMS.AMP );
     fclose(fid);
     
-    tmpName     =[ paths.txtDir baseName '.FREQ'];
-    fid         = fopen(tmpName,'w');
+    outName     =[ paths.txtDir tmpName '.FREQ'];
+    fid         = fopen(outName,'w');
     fprintf(fid, [repmat('%e ', 1, size(SMS.FRE, 1) ), ';\n'], SMS.FRE );
     fclose(fid);
     
-    tmpName     =[ paths.txtDir baseName '.PHA'];
-    fid         = fopen(tmpName,'w');
+    outName     =[ paths.txtDir tmpName '.PHA'];
+    fid         = fopen(outName,'w');
     fprintf(fid, [repmat('%e ', 1, size(SMS.FRE, 1) ), ';\n'], SMS.PHA );
     fclose(fid);
     
-    tmpName     =[ paths.txtDir baseName '.BBE'];
-    fid         = fopen(tmpName,'w');
+    outName     =[ paths.txtDir tmpName '.BBE'];
+    fid         = fopen(outName,'w');
     fprintf(fid, [repmat('%e ', 1, size(SMS.BET', 1) ), ';\n'], SMS.BET' );
     fclose(fid); 
     

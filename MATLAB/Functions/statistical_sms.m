@@ -15,13 +15,16 @@ function [MOD] = statistical_sms(baseName, param, paths, setToDo, micToDo)
 
 %% load partial data
 
-inName     = [paths.sinusoids baseName '.mat'];
+% remove microphone identifier for the data set:
+tmpName = regexprep(regexprep(baseName, '_BuK', ''),  '_DPA', '');
+
+inName     = [paths.sinusoids tmpName '.mat'];
 load(inName);
 
 
 %% load control features
 
-load( [paths.features regexprep(baseName,'.wav','.mat')] );
+load( inName);
 
 
 switch setToDo
@@ -34,7 +37,7 @@ end
 
 %% Read text labels
 
-load([paths.segments   baseName  '.mat']);
+load([paths.segments   tmpName  '.mat']);
 % C   = textscan(fid, '%f %s');
 % fclose(fid);
 
@@ -64,7 +67,8 @@ for partCNT = 1:param.PART.nPartials
     
     % get segment and normalize to: deviation from f / (f0*N)
     fS      = fSteady(partCNT,: );
-    fS      = fS./ mean(CTL.f0.swipe.f0(startSamp:stopSamp))'./partCNT;
+    fS      = fS./ mean(SOLO.SEG{2}.F0.trajectory)'./partCNT;
+    
     
     %  get standard distribution features
     tmpMed  = median(fS);
@@ -351,7 +355,7 @@ for partCNT = 1:param.PART.nPartials
     
     % partial frequencies
     tmpF    = SMS.FRE(partCNT,1:startSamp);
-    tmpVal  = tmpF./mean(CTL.f0.swipe.f0(startSamp:stopSamp))./partCNT;
+    tmpVal  = tmpF./mean(SOLO.SEG{1}.F0.trajectory)./partCNT;
     
     tmpVal  = tmpVal./tmpVal(end);
     tmpL    = length(tmpVal);
@@ -424,7 +428,7 @@ for partCNT = 1:param.PART.nPartials
     
     % partial frequencies
     tmpF    = SMS.FRE(partCNT,stopSamp:end);
-    tmpVal  = tmpF./mean(CTL.f0.swipe.f0(startSamp:stopSamp))./partCNT;
+    tmpVal  = tmpF./mean(SOLO.SEG{3}.F0.trajectory)./partCNT;
     tmpVal  = tmpVal./tmpVal(1);
     
     tmpL    = length(tmpF);

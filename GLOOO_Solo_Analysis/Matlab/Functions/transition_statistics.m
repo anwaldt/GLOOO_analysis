@@ -18,15 +18,18 @@ for fileCNT = 1:length(fileNames)
     
     [~,baseName,~] = fileparts(fileNames{fileCNT});
     
+    % remove microphone identifier for the data set:
+    tmpName = regexprep(regexprep(baseName, '_BuK', ''),  '_DPA', '');
+    
     if param.info == true
-        disp(['gathering release statistics for: ',baseName]);
+        disp(['gathering release statistics for: ',tmpName]);
     end
     
-    MATname = [paths.statSMS baseName '.mat'];
+    MATname = [paths.statSMS tmpName '.mat'];
     load(MATname, 'MOD');
     
     
-    INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , param, paths, 'x', 'x');
+    INF = load_tone_properties(regexprep(tmpName,'BuK','DPA') , param, paths, 'x', 'x');
     
     if(INF.midinote < 67)
         tmp_note = 1;
@@ -140,12 +143,14 @@ for fileCNT = 1:length(fileNames)
     
     [~,baseName,~] = fileparts(fileNames{fileCNT});
     
+    % remove microphone identifier for the data set:
+    tmpName = regexprep(regexprep(baseName, '_BuK', ''),  '_DPA', '');
     
     if param.info == true
-        disp(['evaluating release statistics for: ',baseName]);
+        disp(['evaluating release statistics for: ',tmpName]);
     end
     
-    MATname = [paths.statSMS baseName '.mat'];
+    MATname = [paths.statSMS tmpName '.mat'];
     load(MATname, 'MOD');
     
     
