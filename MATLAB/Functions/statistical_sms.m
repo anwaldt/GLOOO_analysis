@@ -431,9 +431,12 @@ for partCNT = 1:param.PART.nPartials
  
     % partial amplitudes
     tmpTra = SMS.AMP(partCNT,REL.start:end);
-    
+
+    % smooth
+    tmpTra = smooth(tmpTra,50)';
+
     % normalize
-    tmpTra = tmpTra./max(tmpTra);
+    tmpTra = tmpTra./tmpTra(1);
     
     if find(isnan(tmpTra))
         xxx=1;

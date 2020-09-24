@@ -1,10 +1,10 @@
 %% modelling_segments_MAIN.m
 %
-%   Does the solo analysis for a complete
-%   directory or a chosen subset.
+%  Does the solo analysis for a complete
+%  directory or a chosen subset.
 %
-%   This script needs the audio files to be segmented
-%   according to the Note-Rest-Transition model!
+%  This script needs the audio files to be segmented
+%  according to the Note-Rest-Transition model!
 %
 %
 % Author : Henrik von Coler
@@ -43,7 +43,7 @@ do_partial_analysis      = 0;
 do_modeling_segments     = 0;
 
 % only for single sounds:
-do_statistical_sms         = 0;
+do_statistical_sms         = 1;
 
 do_transition_statistics   = 1;
 
@@ -260,9 +260,9 @@ end
 if do_statistical_sms == true
     
     % YAML stuff does not like parallel
-    %     parfor (fileCNT = filesToDo,parMode)
+    parfor (fileCNT = filesToDo,parMode)
     
-    for fileCNT = filesToDo
+ %   for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting statistical SMS for: ',fileNames{fileCNT}]);
