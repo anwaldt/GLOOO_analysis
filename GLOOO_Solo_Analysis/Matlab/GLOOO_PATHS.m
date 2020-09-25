@@ -15,17 +15,14 @@
 version_string  = [ setToDo '_' micToDo '_'  param.F0.f0Mode  '_' ds '/'];
 
 % set the path to the library
-
-%libDIR  = '/media/DATA/USERS/HvC/GLOOO/Violin_Library_2015/';
-
 % should be irrelevant, now
-% libDIR     = '/home/anwaldt/WORK/TU-Note_Violin/';
-libDIR     =  '/home/studio/Documents/TU-Note_Violin/';
+libDIR     = '/home/anwaldt/WORK/TU-Note_Violin/';
+% libDIR     =  '/home/studio/Documents/TU-Note_Violin/';
 
 
-% tunoteDIR  = '/mnt/wintermute/mnt/DATA/USERS/HvC/TU-Note_Violin/';
-% tunoteDIR  = '/mnt/DATA/USERS/HvC/TU-Note_Violin/';
-tunoteDIR     =  '/home/studio/Documents/TU-Note_Violin/';
+% tunoteDIR     =  '/home/studio/Documents/TU-Note_Violin/';
+tunoteDIR  = '/home/anwaldt/WORK/TU-Note_Violin/';
+
 
 %'/media/DATA/USERS/HvC/GLOOO/Violin_Library_2015/';
 
@@ -131,21 +128,20 @@ paths.analysis         = [libDIR 'Analysis/' version_string];
 
 tmpPath = paths.analysis;
 
-% tmpPath = '/home/anwaldt/WORK/GLOOO/Violin_Library_2015/Analysis/2019-08-12/';
+% MAT files:
+paths.features      = [tmpPath 'MAT/Features/'];
+paths.segments      = [tmpPath 'MAT/Segments/'];
+paths.sinusoids     = [tmpPath 'MAT/Sinusoids/'];
+paths.statSMS       = [tmpPath 'MAT/StatisticalSMS/']; 
 
-paths.features      = [tmpPath 'Features/'];
-paths.segments      = [tmpPath 'Segments/'];
+% MODEL data:
+paths.txtDir        = [tmpPath 'MODEL/txt/'];
+paths.yaml          = [tmpPath 'MODEL/yaml/'];
 
-paths.txtDir        = [tmpPath 'SinusoidsTXT/'];
+% AUDIO data:
+paths.tonal         = [tmpPath 'WAV/Tonal/'];
+paths.residual      = [tmpPath 'WAV/Residual/'];
+paths.complete      = [tmpPath 'WAV/Complete/'];
 
-paths.sinusoids     = [tmpPath 'Sinusoids/'];
-paths.statSMS       = [tmpPath 'StatisticalSMS/'];
-    
- paths.yaml             = [tmpPath 'yaml/'];
-
-paths.tonal         = [tmpPath 'Tonal/'];
-paths.residual      = [tmpPath 'Residual/'];
-paths.complete      = [tmpPath 'Complete/'];
-
-paths.plot          = [tmpPath 'Plots/'];
+paths.plot          = [tmpPath 'PLOTS/'];
 

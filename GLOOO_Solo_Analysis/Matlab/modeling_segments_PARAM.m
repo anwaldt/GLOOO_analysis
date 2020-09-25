@@ -90,6 +90,7 @@ param.PART.fMax          = 4000;
 % and 'param.nPhaseSteps' fine steps
 param.PART.nPhaseSteps   = 11;
 
+param.PART.getWav   = 1;
 
 %% MODLEING /  NOISE
 
