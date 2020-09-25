@@ -19,13 +19,13 @@ version_string  = [ setToDo '_' micToDo '_'  param.F0.f0Mode  '_' ds '/'];
 %libDIR  = '/media/DATA/USERS/HvC/GLOOO/Violin_Library_2015/';
 
 % should be irrelevant, now
-libDIR     = '/home/anwaldt/WORK/TU-Note_Violin/';
-%'../../../../Violin_Library_2015/';
+% libDIR     = '/home/anwaldt/WORK/TU-Note_Violin/';
+libDIR     =  '/home/studio/Documents/TU-Note_Violin/';
 
 
 % tunoteDIR  = '/mnt/wintermute/mnt/DATA/USERS/HvC/TU-Note_Violin/';
 % tunoteDIR  = '/mnt/DATA/USERS/HvC/TU-Note_Violin/';
-tunoteDIR  = '/home/anwaldt/WORK/TU-Note_Violin/';
+tunoteDIR     =  '/home/studio/Documents/TU-Note_Violin/';
 
 %'/media/DATA/USERS/HvC/GLOOO/Violin_Library_2015/';
 

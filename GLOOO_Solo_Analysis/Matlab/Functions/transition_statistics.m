@@ -29,7 +29,7 @@ for fileCNT = 1:length(fileNames)
     load(MATname, 'MOD');
     
     
-    INF = load_tone_properties(regexprep(tmpName,'BuK','DPA') , param, paths, 'x', 'x');
+    INF = load_tone_properties(regexprep(baseName,'BuK','DPA') , param, paths, 'x', 'x');
     
     if(INF.midinote < 67)
         tmp_note = 1;

@@ -39,8 +39,8 @@ renew_all                = 1;
 
 % Decide which parts should be executed:
 do_basic_analysis        = 0;
-do_partial_analysis      = 1;
-do_modeling_segments     = 1;
+do_partial_analysis      = 0;
+do_modeling_segments     = 0;
 
 % only for single sounds:
 do_statistical_sms         = 1;
@@ -76,7 +76,7 @@ filesToDo  = 'All';
 % 'SampLib_BuK_05.wav','SampLib_BuK_06.wav','SampLib_BuK_07.wav','SampLib_BuK_08.wav' };
 
 % filesToDo   = 'TwoNote_BuK_22.wav';
-filesToDo   = 'SampLib_BuK_40.wav';
+% filesToDo   = 'SampLib_BuK_40.wav';
 % filesToDo   = 'SampLib_BuK_332.wav';
 
 % filesToDo = 'SampLib_DPA_32.wav';
@@ -175,8 +175,8 @@ end
 
 if do_basic_analysis == true
     
-    % parfor (fileCNT = filesToDo,parMode)
-         for fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+   %      for fileCNT = filesToDo
         
         
         [~,baseName,~]    = fileparts(fileNames{fileCNT});
@@ -201,9 +201,9 @@ end
 
 if do_partial_analysis == true
     
-    % parfor (fileCNT = filesToDo,parMode)
+    parfor (fileCNT = filesToDo,parMode)
         
-        for fileCNT = filesToDo
+     %   for fileCNT = filesToDo
         
         
         
@@ -234,8 +234,8 @@ end
 
 if do_modeling_segments == true
     
-    %    parfor (fileCNT = filesToDo,parMode)
-    for  fileCNT = filesToDo
+    parfor (fileCNT = filesToDo,parMode)
+    % for  fileCNT = filesToDo
         
         if param.info == true
             disp(['starting modeling for: ',fileNames{fileCNT}]);
@@ -260,9 +260,9 @@ end
 if do_statistical_sms == true
     
     % YAML stuff does not like parallel
-    % parfor (fileCNT = filesToDo,parMode)
+     parfor (fileCNT = filesToDo,parMode)
     
-   for fileCNT = filesToDo
+   % for fileCNT = filesToDo
         
         if param.info == true
             disp(['starting statistical SMS for: ',fileNames{fileCNT}]);
@@ -302,19 +302,21 @@ end
 
 if do_export_yaml == true
     
+%    parfor fileCNT = 1:length(fileNames)
     for fileCNT = 1:length(fileNames)
         
         [~,baseName,~] = fileparts(fileNames{fileCNT});
-        
+        tmpName = regexprep(regexprep(baseName, '_BuK', ''),  '_DPA', '');
+
         if param.info == true
-            disp(['Exporting statistical model for: ',baseName]);
+            disp(['Exporting statistical model for: ',tmpName]);
         end
         
-        MATname = [paths.statSMS baseName '.mat'];
+        MATname = [paths.statSMS tmpName '.mat'];
         load(MATname, 'MOD');
         
         
-        YAMLname = [paths.yaml baseName '.yml'];
+        YAMLname = [paths.yaml tmpName '.yml'];
         %S = YAML.dump(MOD);
         YAML.write(YAMLname,MOD);
         

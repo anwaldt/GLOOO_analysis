@@ -549,5 +549,5 @@ MOD.REL     = REL;
 % %S = YAML.dump(MOD);
 % YAML.write(YAMLname,MOD);
 
-MATname = [paths.statSMS baseName '.mat'];
+MATname = [paths.statSMS tmpName '.mat'];
 save(MATname, 'MOD');
