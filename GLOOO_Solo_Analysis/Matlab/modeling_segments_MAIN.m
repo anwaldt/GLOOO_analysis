@@ -54,7 +54,7 @@ do_move_files_to_server  = 0;
 % Decide which files should be processed
 % setToDo     = 'SynthResults';
 setToDo     = 'SingleSounds';
-% setToDo     = 'TwoNote';
+setToDo     = 'TwoNote';
 
 % Decide which microphone to use
 % micToDo     = 'DPA';
@@ -68,8 +68,8 @@ micToDo     = 'BuK';
 
 filesToDo  = 'All';
 
-% filesToDo   = 'TwoNote_BuK_22.wav';
-filesToDo   = 'SampLib_BuK_01.wav';
+filesToDo   = 'TwoNote_BuK_22.wav';
+% filesToDo   = 'SampLib_BuK_01.wav';
 
 
 % filesToDo  = {'SampLib_BuK_01.wav','SampLib_BuK_02.wav','SampLib_BuK_03.wav','SampLib_BuK_04.wav', ...
@@ -285,6 +285,8 @@ end
 % NOTE: This only works if all single sounds 
 %       have been processed, before.
 
+if setToDo     == 'SingleSounds'
+
 
 if do_transition_statistics == true
     
@@ -295,8 +297,12 @@ if do_transition_statistics == true
     
 end
 
+end
 
 %% Export to YAML
+
+if setToDo     == 'SingleSounds'
+
 
 if do_export_yaml == true
     
@@ -322,6 +328,7 @@ if do_export_yaml == true
     
 end
 
+end
 
 %% Push files
 
